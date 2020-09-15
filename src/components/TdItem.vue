@@ -12,7 +12,7 @@ export default defineComponent({
   props: {
     item: {
       type: Object,
-      required: true,
+      required: false,
     },
   },
 })

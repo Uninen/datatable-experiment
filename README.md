@@ -1,6 +1,6 @@
-# Vite Typescript + Tailwind Starter
+# Datatable experiment
 
-Simple, opinionated TS + Tailwind project template for experimenting w/ Vite.
+Experimenting w/ datatable design.
 
 ## Project setup
 

@@ -1,23 +1,22 @@
 <template>
-  <div class="px-8">
-    <table>
-      <slot />
-    </table>
-  </div>
+  <table>
+    <slot />
+  </table>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRef } from 'vue'
-import { globalState } from '../store'
+import { defineComponent, toRefs, provide } from 'vue'
 
 export default defineComponent({
   props: {
-    data: Object,
+    data: {
+      type: Array,
+      required: true,
+    },
   },
-  setup() {
-    return {
-      count: toRef(globalState, 'count'),
-    }
+  setup(props) {
+    const { data } = toRefs(props)
+    provide('data', data)
   },
 })
 </script>

@@ -1,14 +1,14 @@
 <template>
   <div class="justify-center flex-1">
     <div class="container pt-8 mx-auto">
-      <data-table>
-        <table-head>
-          <th-item>Heading 1</th-item>
-          <th-item>Heading 2</th-item>
+      <data-table class="w-full border divide-y divide-gray-200" :data="artistList">
+        <table-head class="rounded-t-md">
+          <th-item class="text-left bg-gray-300">Name</th-item>
+          <th-item class="text-left bg-gray-300">Heading 2</th-item>
         </table-head>
-        <table-row>
-          <td-item>Col 1</td-item>
-          <td-item>Col 2</td-item>
+        <table-row class="divide-y divide-gray-200" v-slot="{ item }">
+          <td-item :item="item">{{ item.name }}</td-item>
+          <td-item :item="item">{{ item.created }}</td-item>
         </table-row>
       </data-table>
     </div>
@@ -22,12 +22,14 @@ import DataTable from './components/DataTable.vue'
 import TableHead from './components/TableHead.vue'
 import TableRow from './components/TableRow.vue'
 import ThItem from './components/ThItem.vue'
+import TdItem from './components/TdItem.vue'
 
 export default defineComponent({
   components: {
     DataTable,
     TableHead,
     ThItem,
+    TdItem,
     TableRow,
   },
 

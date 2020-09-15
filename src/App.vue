@@ -2,7 +2,7 @@
   <div class="justify-center flex-1">
     <div class="container pt-8 mx-auto">
       <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-        <data-table class="w-full border divide-y divide-gray-200" :data="artistList">
+        <data-table class="w-full divide-y divide-gray-200" :data="artistList">
           <table-head class="rounded-t-md">
             <th-item
               class="px-6 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-600 uppercase bg-gray-100"
@@ -30,15 +30,15 @@
             v-slot="{ item }"
           >
             <td-item>
-              <div class="flex items-center">
+              <div class="flex items-center px-6">
                 <img class="w-6 h-6 rounded-full" :src="item.photo" alt="" />
                 <span class="ml-2">{{ item.name }}</span>
               </div>
             </td-item>
-            <td-item>
+            <td-item class="px-6">
               {{ item.subscriptionType }}
             </td-item>
-            <td-item>
+            <td-item class="px-6">
               <svg
                 v-if="item.isVip"
                 class="w-5 h-5 text-indigo-600"
@@ -53,26 +53,13 @@
                 />
               </svg>
             </td-item>
-            <td-item>{{ formatDate(item.created) }}</td-item>
-            <td-item>
-              <button
-                class="inline-flex items-center px-2 py-1 text-sm font-medium leading-4 text-white transition duration-150 ease-in-out bg-indigo-600 border border-transparent rounded hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700"
-              >
-                <svg
-                  class="w-3 h-3 mr-1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-                  />
-                </svg>
-                Edit
-              </button>
+            <td-item class="px-6">{{ formatDate(item.created) }}</td-item>
+            <td-item class="px-6">
+              <button class="flex items-center leading-5 text-indigo-700">Edit</button>
             </td-item>
           </table-row>
         </data-table>
+        <table-pagination> </table-pagination>
       </div>
     </div>
   </div>
@@ -84,6 +71,7 @@ import { defineComponent } from 'vue'
 import DataTable from './components/DataTable.vue'
 import TableHead from './components/TableHead.vue'
 import TableRow from './components/TableRow.vue'
+import TablePagination from './components/TablePagination.vue'
 import ThItem from './components/ThItem.vue'
 import TdItem from './components/TdItem.vue'
 
@@ -96,6 +84,7 @@ export default defineComponent({
     ThItem,
     TdItem,
     TableRow,
+    TablePagination,
   },
 
   setup() {

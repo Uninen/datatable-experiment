@@ -2,6 +2,8 @@
 
 Experimenting w/ highly opionated datatable design.
 
+Note: this is not intended as a final product but an experiment. Hence, the code and organisation is geared towards practicality, not purity.
+
 ## Design goals
 
 - Fully responsive, mobile-first
@@ -24,3 +26,7 @@ Run development server:
 ```
 yarn dev
 ```
+
+## ToDo
+
+- [ ] Add window resize observer that watches Tailwind breakpoints and stores current breakpoint in state. (We can then use it for programatically reshape the table based on user configuration.)

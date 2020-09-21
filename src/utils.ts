@@ -52,3 +52,15 @@ export function paginate(totalItems: number, currentPage: number = 1, perPage: n
     pages,
   }
 }
+
+export const enum breakpoint {
+  MOBILE = 1,
+  SM,
+  MD,
+  LG,
+  XL,
+}
+
+export function isWider(one: breakpoint, two: breakpoint): boolean {
+  return two > one
+}

@@ -1,3 +1,5 @@
+import { toRef } from 'vue'
+
 // heavily inspired by paginate() by Jason Watmore
 // https://jasonwatmore.com/post/2018/08/07/javascript-pure-pagination-logic-in-vanilla-js-typescript
 export function paginate(totalItems: number, currentPage: number = 1, perPage: number = 10) {
@@ -51,16 +53,4 @@ export function paginate(totalItems: number, currentPage: number = 1, perPage: n
     endIndex,
     pages,
   }
-}
-
-export const enum breakpoint {
-  MOBILE = 1,
-  SM,
-  MD,
-  LG,
-  XL,
-}
-
-export function isWider(one: breakpoint, two: breakpoint): boolean {
-  return two > one
 }

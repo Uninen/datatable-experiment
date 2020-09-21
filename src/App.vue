@@ -10,6 +10,7 @@
             >
             <th-item
               class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-600 uppercase bg-gray-100"
+              :hidden-below="2"
               >Subscription</th-item
             >
             <th-item
@@ -35,7 +36,7 @@
                 <span class="ml-2">{{ item.name }}</span>
               </div>
             </td-item>
-            <td-item class="px-6">
+            <td-item :hidden-below="2" class="px-6">
               {{ item.subscriptionType }}
             </td-item>
             <td-item class="px-6">

@@ -4,27 +4,11 @@
       <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
         <data-table class="w-full divide-y divide-gray-200" :data="artistList">
           <table-head class="rounded-t-md">
-            <th-item
-              class="px-6 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-600 uppercase bg-gray-100"
-              >Name</th-item
-            >
-            <th-item
-              class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-600 uppercase bg-gray-100"
-              :hidden-below="2"
-              >Subscription</th-item
-            >
-            <th-item
-              class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-600 uppercase bg-gray-100"
-              >VIP</th-item
-            >
-            <th-item
-              class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-600 uppercase bg-gray-100"
-              >Created</th-item
-            >
-            <th-item
-              class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-600 uppercase bg-gray-100"
-              >&nbsp;</th-item
-            >
+            <th-item>Name</th-item>
+            <th-item :hidden-below="2">Subscription</th-item>
+            <th-item>VIP</th-item>
+            <th-item>Created</th-item>
+            <th-item>&nbsp;</th-item>
           </table-head>
           <table-row
             class="text-xs text-gray-700 divide-y divide-gray-200 sm:text-base"

@@ -11,6 +11,7 @@ export function makeServer() {
         let start = end - perPage
         const count = schema.all('artist').models.length
         const results = schema.all('artist').models.slice(start, end)
+        console.log('mirage per page: ', perPage)
         return {
           count,
           results,

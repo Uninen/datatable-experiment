@@ -46,14 +46,14 @@
             </td-item>
           </table-row>
         </data-table>
-        <table-pagination :pagination="pagination" />
+        <table-pagination :pagination="pagination" @pagechange="changePage" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watchEffect } from 'vue'
 
 import dayjs from 'dayjs'
 
@@ -67,7 +67,7 @@ import TdItem from './components/datatable/TdItem.vue'
 
 import { api } from './utils/api'
 import { paginate } from './utils'
-import { PaginationObject } from './utils'
+import { PaginationObject } from './types'
 
 export default defineComponent({
   components: {
@@ -84,7 +84,7 @@ export default defineComponent({
     const isLoading = ref(true)
     const artistList = ref([])
     const artistsCount = ref(0)
-    const perPage = ref(30)
+    const perPage = ref(25)
     const currentPage = ref(1)
     const pagination = ref<PaginationObject>()
 
@@ -92,14 +92,28 @@ export default defineComponent({
       return dayjs(dateStr).format('MMMM D, YYYY')
     }
 
-    api.get(`/artists?page=${currentPage}&limit=${perPage}`).then((response) => {
-      artistList.value = response.data.results
-      artistsCount.value = response.data.count
-      pagination.value = paginate(artistsCount.value, currentPage.value, perPage.value)
-      isLoading.value = false
+    function queryPage(page: number): void {
+      isLoading.value = true
+      console.log('querying page: ', page)
+      api.get(`/artists?page=${page}&limit=${perPage.value}`).then((response) => {
+        artistList.value = response.data.results
+        artistsCount.value = response.data.count
+        pagination.value = paginate(artistsCount.value, page, perPage.value)
+        isLoading.value = false
+      })
+    }
+
+    watchEffect(() => {
+      queryPage(currentPage.value)
     })
 
+    function changePage(page: number) {
+      console.log('in main component changePage', page)
+      currentPage.value = page
+    }
+
     return {
+      changePage,
       isLoading,
       formatDate,
       artistList,

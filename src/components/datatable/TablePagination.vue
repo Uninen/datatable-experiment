@@ -6,12 +6,16 @@
       <a
         href="#"
         class="relative inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700"
+        v-if="hasPreviousPage"
+        @click.prevent="changePageTo(previousPage)"
       >
         Previous
       </a>
       <a
         href="#"
         class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700"
+        v-if="hasNextPage"
+        @click.prevent="changePageTo(nextPage)"
       >
         Next
       </a>
@@ -34,6 +38,8 @@
             href="#"
             class="relative inline-flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-l-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
             aria-label="Previous"
+            v-if="hasPreviousPage"
+            @click.prevent="changePageTo(previousPage)"
           >
             <!-- Heroicon name: chevron-left -->
             <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -46,49 +52,31 @@
           </a>
           <a
             href="#"
-            class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700"
+            class="relative inline-flex items-center px-4 py-2 -ml-px text-sm leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700"
+            v-for="page in pagination.pages"
+            :key="page"
+            :class="{
+              'font-medium': page !== pagination.currentPage,
+              'font-bold': page === pagination.currentPage,
+            }"
+            @click.prevent="changePageTo(page)"
           >
-            1
+            {{ page }}
           </a>
-          <a
-            href="#"
-            class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700"
-          >
-            2
-          </a>
-          <a
-            href="#"
-            class="relative items-center hidden px-4 py-2 -ml-px text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 md:inline-flex hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700"
-          >
-            3
-          </a>
+
           <span
             class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium leading-5 text-gray-700 bg-white border border-gray-300"
+            v-if="false"
           >
             ...
           </span>
-          <a
-            href="#"
-            class="relative items-center hidden px-4 py-2 -ml-px text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 md:inline-flex hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700"
-          >
-            8
-          </a>
-          <a
-            href="#"
-            class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700"
-          >
-            9
-          </a>
-          <a
-            href="#"
-            class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700"
-          >
-            10
-          </a>
+
           <a
             href="#"
             class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-r-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
             aria-label="Next"
+            v-if="hasNextPage"
+            @click.prevent="changePageTo(nextPage)"
           >
             <!-- Heroicon name: chevron-right -->
             <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -105,15 +93,45 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, computed } from 'vue'
 import { PaginationObject } from '../../types'
 
 export default defineComponent({
+  emits: ['pagechange'],
   props: {
     pagination: {
       type: Object as PropType<PaginationObject>,
       required: true,
     },
+  },
+  setup(props, { emit }) {
+    function changePageTo(page: number) {
+      emit('pagechange', page)
+    }
+
+    const hasPreviousPage = computed(() => {
+      return props.pagination.currentPage > 1
+    })
+
+    const hasNextPage = computed(() => {
+      return props.pagination.currentPage < props.pagination.totalPages
+    })
+
+    const previousPage = computed(() => {
+      return props.pagination.currentPage - 1
+    })
+
+    const nextPage = computed(() => {
+      return props.pagination.currentPage + 1
+    })
+
+    return {
+      previousPage,
+      nextPage,
+      hasPreviousPage,
+      hasNextPage,
+      changePageTo,
+    }
   },
 })
 </script>

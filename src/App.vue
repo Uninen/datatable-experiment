@@ -1,6 +1,6 @@
 <template>
   <div class="justify-center flex-1">
-    <div class="container pt-8 mx-auto">
+    <div v-if="!isLoading" class="container pt-8 pb-8 mx-auto">
       <data-table-filter></data-table-filter>
 
       <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
@@ -46,14 +46,16 @@
             </td-item>
           </table-row>
         </data-table>
-        <table-pagination> </table-pagination>
+        <table-pagination :pagination="pagination" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
+
+import dayjs from 'dayjs'
 
 import DataTable from './components/datatable/DataTable.vue'
 import DataTableFilter from './components/datatable/DataTableFilter.vue'
@@ -63,7 +65,9 @@ import TablePagination from './components/datatable/TablePagination.vue'
 import ThItem from './components/datatable/ThItem.vue'
 import TdItem from './components/datatable/TdItem.vue'
 
-import dayjs from 'dayjs'
+import { api } from './utils/api'
+import { paginate } from './utils'
+import { PaginationObject } from './utils'
 
 export default defineComponent({
   components: {
@@ -77,102 +81,29 @@ export default defineComponent({
   },
 
   setup() {
+    const isLoading = ref(true)
+    const artistList = ref([])
+    const artistsCount = ref(0)
+    const perPage = ref(30)
+    const currentPage = ref(1)
+    const pagination = ref<PaginationObject>()
+
     const formatDate = (dateStr: string): string => {
       return dayjs(dateStr).format('MMMM D, YYYY')
     }
 
+    api.get(`/artists?page=${currentPage}&limit=${perPage}`).then((response) => {
+      artistList.value = response.data.results
+      artistsCount.value = response.data.count
+      pagination.value = paginate(artistsCount.value, currentPage.value, perPage.value)
+      isLoading.value = false
+    })
+
     return {
+      isLoading,
       formatDate,
-      artistList: [
-        {
-          name: 'Danacat',
-          photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/maxlinderman/128.jpg',
-          eventsPlayed: 1,
-          subscriptionType: 'Rockstar',
-          isVip: false,
-          created: '2020-09-15T11:50:04+0300',
-        },
-        {
-          name: 'DJ Satai',
-          photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/reabo101/128.jpg',
-          eventsPlayed: 23,
-          subscriptionType: 'Superstar',
-          isVip: true,
-          created: '2020-03-11T11:50:04+0300',
-        },
-        {
-          name: 'dj Haavi',
-          photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/madcampos/128.jpg',
-          eventsPlayed: 173,
-          subscriptionType: null,
-          isVip: false,
-          created: '2018-02-05T11:50:04+0300',
-        },
-        {
-          name: 'DJ Janek',
-          photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/lonesomelemon/128.jpg',
-          eventsPlayed: 56,
-          subscriptionType: 'Pro',
-          isVip: false,
-          created: '2019-11-12T11:50:04+0300',
-        },
-        {
-          name: 'Rude-O-Matic',
-          photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/caspergrl/128.jpg',
-          eventsPlayed: 45,
-          subscriptionType: null,
-          isVip: false,
-          created: '2016-06-01T11:50:04+0300',
-        },
-        {
-          name: 'Marky J',
-          photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/turkutuuli/128.jpg',
-          eventsPlayed: 191,
-          subscriptionType: 'Pro',
-          isVip: false,
-          created: '2018-08-23T11:50:04+0300',
-        },
-        {
-          name: 'Tuulipukukoodi',
-          photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/smaczny/128.jpg',
-          eventsPlayed: 163,
-          subscriptionType: null,
-          isVip: false,
-          created: '2017-04-05T11:50:04+0300',
-        },
-        {
-          name: 'digitizedsoul',
-          photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/bagawarman/128.jpg',
-          eventsPlayed: 376,
-          subscriptionType: 'Superstar',
-          isVip: false,
-          created: '2019-10-05T11:50:04+0300',
-        },
-        {
-          name: 'Fidget Radio',
-          photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/joelcipriano/128.jpg',
-          eventsPlayed: 29,
-          subscriptionType: 'Rockstar',
-          isVip: false,
-          created: '2019-07-01T11:50:04+0300',
-        },
-        {
-          name: 'Phoole',
-          photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/ssiskind/128.jpg',
-          eventsPlayed: 143,
-          subscriptionType: 'Rockstar',
-          isVip: false,
-          created: '2019-07-02T11:50:04+0300',
-        },
-        {
-          name: 'Giorgio Blanco',
-          photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/saschamt/128.jpg',
-          eventsPlayed: 0,
-          subscriptionType: null,
-          isVip: false,
-          created: '2020-05-25T11:50:04+0300',
-        },
-      ],
+      artistList,
+      pagination,
     }
   },
 })

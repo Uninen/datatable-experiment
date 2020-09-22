@@ -1,8 +1,12 @@
-import { toRef } from 'vue'
+import { PaginationObject } from '../types'
 
 // heavily inspired by paginate() by Jason Watmore
 // https://jasonwatmore.com/post/2018/08/07/javascript-pure-pagination-logic-in-vanilla-js-typescript
-export function paginate(totalItems: number, currentPage: number = 1, perPage: number = 10) {
+export function paginate(
+  totalItems: number,
+  currentPage: number = 1,
+  perPage: number = 10
+): PaginationObject {
   const maxPages = 10
   const totalPages = Math.ceil(totalItems / perPage)
 
@@ -46,7 +50,9 @@ export function paginate(totalItems: number, currentPage: number = 1, perPage: n
 
   // return object with all pager properties required by the view
   return {
+    totalItems,
     totalPages,
+    currentPage,
     startPage,
     endPage,
     startIndex,

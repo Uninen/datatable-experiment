@@ -4,44 +4,26 @@ import faker from 'faker'
 export function makeServer() {
   new Server({
     routes() {
-      this.get('/movies', (schema) => {
-        return schema.movies.all()
-      })
-      this.get('/artists', (schema) => {
-        return schema.artists.all()
+      this.get('/api/artists', (schema, request) => {
+        let page = parseInt(request.queryParams.page) || 1
+        let perPage = parseInt(request.queryParams.limit) || 30
+        let end = perPage * page
+        let start = end - perPage
+        const count = schema.all('artist').models.length
+        const results = schema.all('artist').models.slice(start, end)
+        return {
+          count,
+          results,
+        }
       })
     },
 
     models: {
       artist: Model,
-      movie: Model,
     },
 
     factories: {
-      movie: Factory.extend({
-        title(i: number) {
-          return `Movie ${i}`
-        },
-
-        releaseDate() {
-          return faker.date.past().toLocaleDateString()
-        },
-
-        genre(i: number) {
-          const genres = ['Sci-Fi', 'Drama', 'Comedy']
-
-          return genres[i % genres.length]
-        },
-      }),
       artist: Factory.extend({
-        // {
-        //   name: 'Danacat',
-        //   photo: 'https://s3.amazonaws.com/uifaces/faces/twitter/maxlinderman/128.jpg',
-        //   eventsPlayed: 1,
-        //   subscriptionType: 'Rockstar',
-        //   isVip: false,
-        //   created: '2020-09-15T11:50:04+0300',
-        // }
         name() {
           return faker.name.findName()
         },
@@ -70,7 +52,7 @@ export function makeServer() {
     },
 
     seeds(server) {
-      server.createList('artist', 150)
+      server.createList('artist', 180)
     },
   })
 }

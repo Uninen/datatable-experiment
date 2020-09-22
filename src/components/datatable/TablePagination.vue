@@ -20,11 +20,11 @@
       <div>
         <p class="text-sm leading-5 text-gray-700">
           Showing
-          <span class="font-medium">1</span>
+          <span class="font-medium">{{ pagination.startIndex + 1 }}</span>
           to
-          <span class="font-medium">10</span>
+          <span class="font-medium">{{ pagination.endIndex + 1 }}</span>
           of
-          <span class="font-medium">97</span>
+          <span class="font-medium">{{ pagination.totalItems }}</span>
           results
         </p>
       </div>
@@ -104,3 +104,16 @@
     </div>
   </div>
 </template>
+<script lang="ts">
+import { defineComponent, PropType } from 'vue'
+import { PaginationObject } from '../../types'
+
+export default defineComponent({
+  props: {
+    pagination: {
+      type: Object as PropType<PaginationObject>,
+      required: true,
+    },
+  },
+})
+</script>

@@ -1,6 +1,8 @@
 <template>
   <div class="justify-center flex-1">
     <div class="container pt-8 mx-auto">
+      <data-table-filter></data-table-filter>
+
       <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
         <data-table class="w-full divide-y divide-gray-200" :data="artistList">
           <table-head class="rounded-t-md">
@@ -54,6 +56,7 @@
 import { defineComponent } from 'vue'
 
 import DataTable from './components/datatable/DataTable.vue'
+import DataTableFilter from './components/datatable/DataTableFilter.vue'
 import TableHead from './components/datatable/TableHead.vue'
 import TableRow from './components/datatable/TableRow.vue'
 import TablePagination from './components/datatable/TablePagination.vue'
@@ -70,6 +73,7 @@ export default defineComponent({
     TdItem,
     TableRow,
     TablePagination,
+    DataTableFilter,
   },
 
   setup() {

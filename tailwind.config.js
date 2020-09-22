@@ -13,7 +13,7 @@ module.exports = {
   //     },
   //   },
   // },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [require('@tailwindcss/ui'), require('@tailwindcss/typography')],
   future: {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,

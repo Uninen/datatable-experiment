@@ -8,7 +8,7 @@
 <script lang="ts">
 import { defineComponent, computed, Ref, inject, watchEffect } from 'vue'
 
-import { breakpoint } from '../types'
+import { Breakpoint } from '../../types'
 
 export default defineComponent({
   props: {
@@ -18,11 +18,11 @@ export default defineComponent({
     },
     hiddenBelow: {
       required: false,
-      default: breakpoint.MOBILE,
+      default: Breakpoint.MOBILE,
     },
   },
   setup(props) {
-    const currentBreakpoint = inject<Ref<breakpoint>>('currentBreakpoint')
+    const currentBreakpoint = inject<Ref<Breakpoint>>('currentBreakpoint')
 
     const isVisible = computed(() => {
       if (currentBreakpoint?.value) {

@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, provide, watchEffect } from 'vue'
-import { useBreakpoint } from '../utils/useTailwindBreakpoint'
+import { useBreakpoint } from '../../utils/useTailwindBreakpoint'
 
 export default defineComponent({
   props: {

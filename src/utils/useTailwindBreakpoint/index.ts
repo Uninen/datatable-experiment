@@ -1,8 +1,8 @@
 import { ref, onBeforeMount, onBeforeUnmount } from 'vue'
-import { breakpoint, breakpointMinWidths, breakpointObject } from '../../types'
+import { Breakpoint, BreakpointMinWidths, BreakpointObject } from '../../types'
 
 export function useBreakpoint(
-  minWidths: breakpointMinWidths = {
+  minWidths: BreakpointMinWidths = {
     1: 0,
     2: 640,
     3: 768,
@@ -10,10 +10,10 @@ export function useBreakpoint(
     5: 1280,
   }
 ) {
-  const currentBreakpoint = ref(breakpoint.MOBILE)
+  const currentBreakpoint = ref(Breakpoint.MOBILE)
 
   // Extract interface as object and order by pixels DESC to minimize value
-  const widths: Array<breakpointObject> = Object.entries(minWidths).map((key) => {
+  const widths: Array<BreakpointObject> = Object.entries(minWidths).map((key) => {
     return {
       breakpoint: parseInt(key[0]),
       pixels: key[1],

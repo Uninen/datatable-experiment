@@ -1,4 +1,4 @@
-export const enum breakpoint {
+export const enum Breakpoint {
   MOBILE = 1,
   SM,
   MD,
@@ -6,7 +6,7 @@ export const enum breakpoint {
   XL,
 }
 
-export interface breakpointMinWidths {
+export interface BreakpointMinWidths {
   1: number
   2: number
   3: number
@@ -14,7 +14,7 @@ export interface breakpointMinWidths {
   5: number
 }
 
-export interface breakpointObject {
+export interface BreakpointObject {
   breakpoint: number
   pixels: number
 }

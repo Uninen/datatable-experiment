@@ -53,12 +53,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import DataTable from './components/DataTable.vue'
-import TableHead from './components/TableHead.vue'
-import TableRow from './components/TableRow.vue'
-import TablePagination from './components/TablePagination.vue'
-import ThItem from './components/ThItem.vue'
-import TdItem from './components/TdItem.vue'
+import DataTable from './components/datatable/DataTable.vue'
+import TableHead from './components/datatable/TableHead.vue'
+import TableRow from './components/datatable/TableRow.vue'
+import TablePagination from './components/datatable/TablePagination.vue'
+import ThItem from './components/datatable/ThItem.vue'
+import TdItem from './components/datatable/TdItem.vue'
 
 import dayjs from 'dayjs'
 

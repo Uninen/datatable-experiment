@@ -60,3 +60,29 @@ export function paginate(
     pages,
   }
 }
+
+// Inspired by https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/
+export function sortByKey(key: string) {
+  return function innerSort(a: any, b: any) {
+    let desc = false
+    if (key.startsWith('-')) {
+      desc = true
+      key = key.substr(1)
+    }
+
+    if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+      return 0
+    }
+
+    const varA = typeof a[key] === 'string' ? a[key].toUpperCase() : a[key]
+    const varB = typeof b[key] === 'string' ? b[key].toUpperCase() : b[key]
+
+    let comparison = 0
+    if (varA > varB) {
+      comparison = 1
+    } else if (varA < varB) {
+      comparison = -1
+    }
+    return desc ? comparison * -1 : comparison
+  }
+}

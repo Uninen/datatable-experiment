@@ -1,17 +1,26 @@
 import { Server, Model, Factory } from 'miragejs'
 import faker from 'faker'
 
+import { sortByKey } from './index'
+
 export function makeServer() {
   new Server({
     routes() {
       this.get('/api/artists', (schema, request) => {
-        let page = parseInt(request.queryParams.page) || 1
-        let perPage = parseInt(request.queryParams.limit) || 30
+        const page = parseInt(request.queryParams.page) || 1
+        const perPage = parseInt(request.queryParams.limit) || 30
+        const ordering = request.queryParams.ordering || null
+
         let end = perPage * page
         let start = end - perPage
         const count = schema.all('artist').models.length
-        const results = schema.all('artist').models.slice(start, end)
-        console.log('mirage per page: ', perPage)
+        let results = schema.all('artist').models
+        if (ordering) {
+          console.log('SORTING ASKED!!')
+          console.log('by field: ', ordering)
+          results.sort(sortByKey(ordering))
+        }
+        results = results.slice(start, end)
         return {
           count,
           results,

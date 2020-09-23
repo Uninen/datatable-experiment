@@ -6,7 +6,7 @@
       <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
         <data-table class="w-full divide-y divide-gray-200" :data="artistList">
           <table-head class="rounded-t-md">
-            <th-item>Name</th-item>
+            <th-item order-key="name" @ordering="changeOrdering">Name</th-item>
             <th-item :hidden-below="2">Subscription</th-item>
             <th-item>VIP</th-item>
             <th-item>Created</th-item>
@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect } from 'vue'
+import { defineComponent, ref, watchEffect, watch } from 'vue'
 
 import dayjs from 'dayjs'
 
@@ -86,6 +86,7 @@ export default defineComponent({
     const artistsCount = ref(0)
     const perPage = ref(25)
     const currentPage = ref(1)
+    const ordering = ref('')
     const pagination = ref<PaginationObject>()
 
     const formatDate = (dateStr: string): string => {
@@ -93,9 +94,13 @@ export default defineComponent({
     }
 
     function queryPage(page: number): void {
+      console.log('*** doing queryPage', page)
       isLoading.value = true
-      console.log('querying page: ', page)
-      api.get(`/artists?page=${page}&limit=${perPage.value}`).then((response) => {
+      let url = `/artists?page=${page}&limit=${perPage.value}`
+      if (ordering.value.length > 0) {
+        url += `&ordering=${ordering.value}`
+      }
+      api.get(url).then((response) => {
         artistList.value = response.data.results
         artistsCount.value = response.data.count
         pagination.value = paginate(artistsCount.value, page, perPage.value)
@@ -107,12 +112,20 @@ export default defineComponent({
       queryPage(currentPage.value)
     })
 
-    function changePage(page: number) {
-      console.log('in main component changePage', page)
-      currentPage.value = page
+    watch(ordering, () => {
+      queryPage(currentPage.value)
+    })
+
+    function changePage(value: number) {
+      currentPage.value = value
+    }
+
+    function changeOrdering(value: string) {
+      ordering.value = value
     }
 
     return {
+      changeOrdering,
       changePage,
       isLoading,
       formatDate,

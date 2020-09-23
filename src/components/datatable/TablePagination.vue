@@ -96,15 +96,15 @@
 <script lang="ts">
 import { defineComponent, computed, inject, Ref } from 'vue'
 import { PaginationObject } from './types'
+import { tableState } from './tableStore'
 
 export default defineComponent({
-  emits: ['pagechange'],
-  setup(_, { emit }) {
+  setup() {
     const pagination = inject('pagination') as Ref<PaginationObject>
-    console.log('pagination: ', pagination.value.currentPage)
+    tableState.currentPage = pagination.value.currentPage
 
     function changePageTo(page: number) {
-      emit('pagechange', page)
+      tableState.currentPage = page
     }
 
     const hasPreviousPage = computed(() => {

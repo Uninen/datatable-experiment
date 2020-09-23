@@ -4,18 +4,19 @@
       <slot />
     </table>
     <slot v-if="pagination" name="pagination">
-      <table-pagination @pagechange="pageChange" />
+      <table-pagination />
     </slot>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, provide, PropType } from 'vue'
+import { defineComponent, toRefs, provide, PropType, watch } from 'vue'
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
 import { useBreakpoint } from '../../utils/useTailwindBreakpoint'
 import { PaginationObject } from './types'
+import { tableState } from './tableStore'
 
 export default defineComponent({
   props: {
@@ -44,6 +45,13 @@ export default defineComponent({
     function pageChange(value: number) {
       emit('pagechange', value)
     }
+
+    watch(
+      () => tableState.currentPage,
+      (page) => {
+        pageChange(page)
+      }
+    )
 
     return {
       pageChange,

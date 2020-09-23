@@ -88,7 +88,7 @@ export default defineComponent({
     }
 
     function queryPage(): void {
-      console.log('queryPage', currentPage.value)
+      // console.log('queryPage', currentPage.value)
       isFetchingData.value = true
       let url = `/artists?page=${currentPage.value}&limit=${perPage.value}`
       if (ordering.value.length > 0) {

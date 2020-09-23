@@ -1,16 +1,5 @@
-<template>
-  <div>
-    <table class="w-full">
-      <slot />
-    </table>
-    <slot v-if="pagination" name="pagination">
-      <table-pagination />
-    </slot>
-  </div>
-</template>
-
 <script lang="ts">
-import { defineComponent, toRefs, provide, PropType, watch } from 'vue'
+import { defineComponent, toRefs, provide, PropType, watch, h } from 'vue'
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
@@ -52,9 +41,17 @@ export default defineComponent({
         pageChange(page)
       }
     )
+  },
+  render() {
+    let slotContent: any = []
+    if (this.$slots?.default) {
+      slotContent = [this.$slots.default()]
+    }
 
-    return {
-      pageChange,
+    if (this.$props.pagination) {
+      return h('div', [h('table', { class: 'w-full' }, slotContent), h(TablePagination)])
+    } else {
+      return h('div', [h('table', { class: 'w-full' }, slotContent)])
     }
   },
 })

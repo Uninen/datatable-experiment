@@ -1,6 +1,6 @@
 <template>
   <div class="justify-center flex-1">
-    <div v-if="!isLoading" class="container pt-8 pb-8 mx-auto">
+    <div v-if="loadingDone && pagination" class="container pt-8 pb-8 mx-auto">
       <data-table-filter></data-table-filter>
 
       <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
@@ -26,19 +26,7 @@
               {{ item.subscriptionType }}
             </td-item>
             <td-item class="px-6">
-              <svg
-                v-if="item.isVip"
-                class="w-5 h-5 text-indigo-600"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+              <t-icon v-if="item.isVip" name="badge-check" class="w-5 h-5 text-indigo-600" />
             </td-item>
             <td-item class="px-6">{{ formatDate(item.created) }}</td-item>
             <td-item class="px-6">
@@ -46,14 +34,18 @@
             </td-item>
           </table-row>
         </data-table>
-        <table-pagination :pagination="pagination" @pagechange="changePage" />
+        <table-pagination
+          :is-fetching-data="isFetchingData"
+          :pagination="pagination"
+          @pagechange="changePage"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect, watch } from 'vue'
+import { defineComponent, ref, watch, onBeforeMount } from 'vue'
 
 import dayjs from 'dayjs'
 
@@ -81,7 +73,8 @@ export default defineComponent({
   },
 
   setup() {
-    const isLoading = ref(true)
+    const loadingDone = ref(true)
+    const isFetchingData = ref(true)
     const artistList = ref([])
     const artistsCount = ref(0)
     const perPage = ref(25)
@@ -93,27 +86,28 @@ export default defineComponent({
       return dayjs(dateStr).format('MMMM D, YYYY')
     }
 
-    function queryPage(page: number): void {
-      console.log('*** doing queryPage', page)
-      isLoading.value = true
-      let url = `/artists?page=${page}&limit=${perPage.value}`
+    function queryPage(): void {
+      console.log('queryPage', currentPage.value)
+      isFetchingData.value = true
+      let url = `/artists?page=${currentPage.value}&limit=${perPage.value}`
       if (ordering.value.length > 0) {
         url += `&ordering=${ordering.value}`
       }
       api.get(url).then((response) => {
         artistList.value = response.data.results
         artistsCount.value = response.data.count
-        pagination.value = paginate(artistsCount.value, page, perPage.value)
-        isLoading.value = false
+        pagination.value = paginate(artistsCount.value, currentPage.value, perPage.value)
+        isFetchingData.value = false
+        loadingDone.value = true
       })
     }
 
-    watchEffect(() => {
-      queryPage(currentPage.value)
+    onBeforeMount(() => {
+      queryPage()
     })
 
-    watch(ordering, () => {
-      queryPage(currentPage.value)
+    watch([ordering, currentPage], () => {
+      queryPage()
     })
 
     function changePage(value: number) {
@@ -125,9 +119,10 @@ export default defineComponent({
     }
 
     return {
+      loadingDone,
       changeOrdering,
       changePage,
-      isLoading,
+      isFetchingData,
       formatDate,
       artistList,
       pagination,

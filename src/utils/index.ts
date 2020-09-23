@@ -63,8 +63,8 @@ export function paginate(
 
 // Inspired by https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/
 export function sortByKey(key: string) {
+  let desc = false
   return function innerSort(a: any, b: any) {
-    let desc = false
     if (key.startsWith('-')) {
       desc = true
       key = key.substr(1)

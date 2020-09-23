@@ -1,6 +1,7 @@
 <template>
   <div
     class="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6"
+    v-if="pagination"
   >
     <div class="flex justify-between flex-1 sm:hidden">
       <a
@@ -102,6 +103,11 @@ export default defineComponent({
     pagination: {
       type: Object as PropType<PaginationObject>,
       required: true,
+    },
+    isFetchingData: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   setup(props, { emit }) {

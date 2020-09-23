@@ -1,14 +1,17 @@
 <template>
   <th
     v-if="isVisible"
-    class="px-6 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200"
+    class="items-center px-6 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200"
     @click="toggleOrdering"
   >
-    <slot />
-
-    <span v-if="orderKey" class="pl-4">
-      {{ orderingVisual }}
-    </span>
+    <div class="flex items-center">
+      <slot />
+      <t-icon
+        v-if="currentOrdering.length > 0"
+        :name="iconName"
+        class="inline-block w-4 h-4 ml-2"
+      />
+    </div>
   </th>
 </template>
 <script lang="ts">
@@ -31,7 +34,6 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const currentOrdering = ref('')
-    const orderingVisual = ref('NONE')
     const currentBreakpoint = inject<Ref<Breakpoint>>('currentBreakpoint')
 
     const isVisible = computed(() => {
@@ -42,28 +44,32 @@ export default defineComponent({
       }
     })
 
+    const iconName = computed(() => {
+      if (currentOrdering.value.startsWith('-')) {
+        return 'arrow-down'
+      } else {
+        return 'arrow-up'
+      }
+    })
+
     function toggleOrdering() {
       switch (currentOrdering.value) {
         case '':
           currentOrdering.value = props.orderKey
-          orderingVisual.value = currentOrdering.value
           break
         case props.orderKey:
           currentOrdering.value = '-' + props.orderKey
-          orderingVisual.value = currentOrdering.value
           break
         case '-' + props.orderKey:
           currentOrdering.value = ''
-          orderingVisual.value = 'NONE'
           break
       }
-      console.log('emitting toggleOrdering: ', currentOrdering.value)
-      console.log('orderingVisual: ', orderingVisual.value)
       emit('ordering', currentOrdering.value)
     }
 
     return {
-      orderingVisual,
+      iconName,
+      currentOrdering,
       toggleOrdering,
       isVisible,
     }

@@ -39,7 +39,6 @@
             <button class="flex items-center leading-5 text-indigo-700">Edit</button>
           </td-item>
         </table-row>
-        <template #pagination>foo</template>
       </data-table>
     </div>
   </div>

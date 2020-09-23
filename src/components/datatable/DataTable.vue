@@ -23,7 +23,7 @@ export default defineComponent({
     TableRow,
     TablePagination,
   },
-  setup(props, { emit }) {
+  setup(props, { slots, emit }) {
     const { data, pagination } = toRefs(props)
     const { currentBreakpoint } = useBreakpoint()
 
@@ -41,17 +41,21 @@ export default defineComponent({
         pageChange(page)
       }
     )
-  },
-  render() {
-    let slotContent: any = []
-    if (this.$slots?.default) {
-      slotContent = [this.$slots.default()]
-    }
 
-    if (this.$props.pagination) {
-      return h('div', [h('table', { class: 'w-full' }, slotContent), h(TablePagination)])
-    } else {
-      return h('div', [h('table', { class: 'w-full' }, slotContent)])
+    return () => {
+      let slotContent: any = []
+      slotContent = [slots.default!()]
+
+      if (props.pagination) {
+        let paginationMarkup = h(TablePagination)
+        if (slots.pagination) {
+          paginationMarkup = h(TablePagination, [slots.pagination!()])
+        }
+
+        return h('div', [h('table', { class: 'w-full' }, slotContent), paginationMarkup])
+      } else {
+        return h('div', [h('table', { class: 'w-full' }, slotContent)])
+      }
     }
   },
 })

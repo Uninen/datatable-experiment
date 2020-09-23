@@ -1,5 +1,5 @@
 import { ref, onBeforeMount, onBeforeUnmount } from 'vue'
-import { Breakpoint, BreakpointMinWidths, BreakpointObject } from '../../types'
+import { Breakpoint, BreakpointMinWidths, BreakpointObject } from '../../components/datatable/types'
 
 export function useBreakpoint(
   minWidths: BreakpointMinWidths = {

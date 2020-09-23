@@ -1,7 +1,7 @@
 import { Server, Model, Factory } from 'miragejs'
 import faker from 'faker'
 
-import { sortByKey } from './index'
+import { sortByKey } from '../components/datatable/utils'
 
 export function makeServer() {
   new Server({

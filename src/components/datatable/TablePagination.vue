@@ -95,7 +95,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import { PaginationObject } from '../../types'
+import { PaginationObject } from './types'
 
 export default defineComponent({
   emits: ['pagechange'],

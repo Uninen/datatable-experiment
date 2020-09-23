@@ -1,45 +1,45 @@
 <template>
   <div class="justify-center flex-1">
-    <div v-if="loadingDone && pagination" class="container pt-8 pb-8 mx-auto">
+    <div class="container pt-8 pb-8 mx-auto">
       <data-table-filter></data-table-filter>
+      <data-table
+        v-if="loadingDone && pagination"
+        :data="artistList"
+        :is-fetching-data="isFetchingData"
+        :pagination="pagination"
+        @pagechange="changePage"
+        class="overflow-hidden border-b border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
+      >
+        <table-head class="rounded-t-md">
+          <th-item order-key="name" @ordering="changeOrdering">Name</th-item>
+          <th-item :hidden-below="2">Subscription</th-item>
+          <th-item>VIP</th-item>
+          <th-item>Created</th-item>
+          <th-item>&nbsp;</th-item>
+        </table-head>
 
-      <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-        <data-table class="w-full divide-y divide-gray-200" :data="artistList">
-          <table-head class="rounded-t-md">
-            <th-item order-key="name" @ordering="changeOrdering">Name</th-item>
-            <th-item :hidden-below="2">Subscription</th-item>
-            <th-item>VIP</th-item>
-            <th-item>Created</th-item>
-            <th-item>&nbsp;</th-item>
-          </table-head>
-          <table-row
-            class="text-xs text-gray-700 divide-y divide-gray-200 sm:text-base"
-            v-slot="{ item }"
-          >
-            <td-item>
-              <div class="flex items-center px-6">
-                <img class="w-6 h-6 rounded-full" :src="item.photo" alt="" />
-                <span class="ml-2">{{ item.name }}</span>
-              </div>
-            </td-item>
-            <td-item :hidden-below="2" class="px-6">
-              {{ item.subscriptionType }}
-            </td-item>
-            <td-item class="px-6">
-              <t-icon v-if="item.isVip" name="badge-check" class="w-5 h-5 text-indigo-600" />
-            </td-item>
-            <td-item class="px-6">{{ formatDate(item.created) }}</td-item>
-            <td-item class="px-6">
-              <button class="flex items-center leading-5 text-indigo-700">Edit</button>
-            </td-item>
-          </table-row>
-        </data-table>
-        <table-pagination
-          :is-fetching-data="isFetchingData"
-          :pagination="pagination"
-          @pagechange="changePage"
-        />
-      </div>
+        <table-row
+          class="text-xs text-gray-700 divide-y divide-gray-200 sm:text-base"
+          v-slot="{ item }"
+        >
+          <td-item>
+            <div class="flex items-center px-6">
+              <img class="w-6 h-6 rounded-full" :src="item.photo" alt="" />
+              <span class="ml-2">{{ item.name }}</span>
+            </div>
+          </td-item>
+          <td-item :hidden-below="2" class="px-6">
+            {{ item.subscriptionType }}
+          </td-item>
+          <td-item class="px-6">
+            <t-icon v-if="item.isVip" name="badge-check" class="w-5 h-5 text-indigo-600" />
+          </td-item>
+          <td-item class="px-6">{{ formatDate(item.created) }}</td-item>
+          <td-item class="px-6">
+            <button class="flex items-center leading-5 text-indigo-700">Edit</button>
+          </td-item>
+        </table-row>
+      </data-table>
     </div>
   </div>
 </template>
@@ -58,10 +58,11 @@ import ThItem from './components/datatable/ThItem.vue'
 import TdItem from './components/datatable/TdItem.vue'
 
 import { api } from './utils/api'
-import { paginate } from './utils'
+import { paginate } from './components/datatable/utils'
 import { PaginationObject } from './types'
 
 export default defineComponent({
+  emits: ['pagechange'],
   components: {
     DataTable,
     TableHead,
@@ -77,7 +78,7 @@ export default defineComponent({
     const isFetchingData = ref(true)
     const artistList = ref([])
     const artistsCount = ref(0)
-    const perPage = ref(25)
+    const perPage = ref(20)
     const currentPage = ref(1)
     const ordering = ref('')
     const pagination = ref<PaginationObject>()

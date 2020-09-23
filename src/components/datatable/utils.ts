@@ -1,4 +1,4 @@
-import { PaginationObject } from '../types'
+import { PaginationObject } from '../components/datatable/types'
 
 // heavily inspired by paginate() by Jason Watmore
 // https://jasonwatmore.com/post/2018/08/07/javascript-pure-pagination-logic-in-vanilla-js-typescript

@@ -17,7 +17,7 @@
 <script lang="ts">
 import { defineComponent, inject, ref, Ref, computed } from 'vue'
 
-import { Breakpoint } from '../../types'
+import { Breakpoint } from './types'
 
 export default defineComponent({
   emits: ['ordering'],

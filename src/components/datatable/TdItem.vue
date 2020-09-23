@@ -6,9 +6,9 @@
   </td>
 </template>
 <script lang="ts">
-import { defineComponent, computed, Ref, inject, watchEffect } from 'vue'
+import { defineComponent, computed, Ref, inject } from 'vue'
 
-import { Breakpoint } from '../../types'
+import { Breakpoint } from './types'
 
 export default defineComponent({
   props: {

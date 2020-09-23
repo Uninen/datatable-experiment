@@ -29,4 +29,9 @@ yarn dev
 
 ## ToDo
 
+- [ ] Filtering based on boolean
+- [ ] Filtering based on string (equal)
+- [ ] Filtering based on date (equal, smaller, greater)
+- [ ] Filtering based on number (equal, smaller, greater)
+- [ ] Sorting by date
 - [x] Add window resize observer that watches Tailwind breakpoints and stores current breakpoint in state. (We can then use it for programatically reshape the table based on user configuration.)

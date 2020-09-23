@@ -4,7 +4,7 @@
       <slot />
     </table>
     <slot v-if="pagination" name="pagination">
-      <table-pagination :pagination="pagination" @pagechange="pageChange" />
+      <table-pagination @pagechange="pageChange" />
     </slot>
   </div>
 </template>
@@ -34,11 +34,12 @@ export default defineComponent({
     TablePagination,
   },
   setup(props, { emit }) {
-    const { data } = toRefs(props)
+    const { data, pagination } = toRefs(props)
     const { currentBreakpoint } = useBreakpoint()
 
     provide('data', data)
     provide('currentBreakpoint', currentBreakpoint)
+    provide('pagination', pagination)
 
     function pageChange(value: number) {
       emit('pagechange', value)

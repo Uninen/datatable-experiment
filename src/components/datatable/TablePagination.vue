@@ -94,44 +94,37 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { defineComponent, computed, inject, Ref } from 'vue'
 import { PaginationObject } from './types'
 
 export default defineComponent({
   emits: ['pagechange'],
-  props: {
-    pagination: {
-      type: Object as PropType<PaginationObject>,
-      required: true,
-    },
-    isFetchingData: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
-  setup(props, { emit }) {
+  setup(_, { emit }) {
+    const pagination = inject('pagination') as Ref<PaginationObject>
+    console.log('pagination: ', pagination.value.currentPage)
+
     function changePageTo(page: number) {
       emit('pagechange', page)
     }
 
     const hasPreviousPage = computed(() => {
-      return props.pagination.currentPage > 1
+      return pagination.value.currentPage > 1
     })
 
     const hasNextPage = computed(() => {
-      return props.pagination.currentPage < props.pagination.totalPages
+      return pagination.value.currentPage < pagination.value.totalPages
     })
 
     const previousPage = computed(() => {
-      return props.pagination.currentPage - 1
+      return pagination.value.currentPage - 1
     })
 
     const nextPage = computed(() => {
-      return props.pagination.currentPage + 1
+      return pagination.value.currentPage + 1
     })
 
     return {
+      pagination,
       previousPage,
       nextPage,
       hasPreviousPage,

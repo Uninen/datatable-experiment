@@ -13,7 +13,7 @@
     "dayjs": "^1.8.36",
     "faker": "^5.1.0",
     "minisearch": "^2.6.2",
-    "miragejs": "^0.1.40",
+    "miragejs": "^0.1.41",
     "tailwindcss": "^1.8.10",
     "vue": "^3.0.0"
   },
@@ -24,7 +24,7 @@
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^5.1.0",
     "eslint": "^7.9.0",
-    "eslint-plugin-vue": "^7.0.0-beta.3",
+    "eslint-plugin-vue": "^7.0.0-beta.4",
     "typescript": "^4.0.3",
     "vite": "^1.0.0-rc.4"
   }

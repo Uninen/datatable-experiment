@@ -1,7 +1,7 @@
 <template>
   <div class="justify-center flex-1">
     <div class="container pt-8 pb-8 mx-auto">
-      <data-table-filter></data-table-filter>
+      <data-table-filter v-if="false"></data-table-filter>
       <data-table
         v-if="loadingDone && pagination"
         :data="artistList"
@@ -40,6 +40,12 @@
           </td-item>
         </table-row>
       </data-table>
+
+      <hr class="my-8" />
+
+      <data-table v-if="loadingDone && pagination" :data="shortList">
+        <table-row></table-row>
+      </data-table>
     </div>
   </div>
 </template>
@@ -77,8 +83,9 @@ export default defineComponent({
     const loadingDone = ref(true)
     const isFetchingData = ref(true)
     const artistList = ref([])
+    const shortList = ref([])
     const artistsCount = ref(0)
-    const perPage = ref(20)
+    const perPage = ref(10)
     const currentPage = ref(1)
     const ordering = ref('')
     const pagination = ref<PaginationObject>()
@@ -96,6 +103,7 @@ export default defineComponent({
       }
       api.get(url).then((response) => {
         artistList.value = response.data.results
+        shortList.value = response.data.results
         artistsCount.value = response.data.count
         pagination.value = paginate(artistsCount.value, currentPage.value, perPage.value)
         isFetchingData.value = false
@@ -127,6 +135,7 @@ export default defineComponent({
       formatDate,
       artistList,
       pagination,
+      shortList,
     }
   },
 })

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, toRefs, provide, PropType, watch, h } from 'vue'
+import { defineComponent, toRefs, provide, PropType, watch, h, ref } from 'vue'
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
@@ -27,7 +27,7 @@ export default defineComponent({
     const { data, pagination } = toRefs(props)
     const { currentBreakpoint } = useBreakpoint()
 
-    provide('data', data)
+    provide('data', props.data)
     provide('currentBreakpoint', currentBreakpoint)
     provide('pagination', pagination)
 

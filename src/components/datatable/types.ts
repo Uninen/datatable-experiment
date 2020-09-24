@@ -14,6 +14,11 @@ export interface BreakpointMinWidths {
   5: number
 }
 
+export interface TableArrayObject {
+  count: number
+  results: object[]
+}
+
 export interface BreakpointObject {
   breakpoint: number
   pixels: number

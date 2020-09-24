@@ -1,21 +1,17 @@
 <script lang="ts">
-import { defineComponent, toRefs, provide, PropType, watch, h } from 'vue'
+import { defineComponent, unref, PropType, watch, h, watchEffect, provide } from 'vue'
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
 import { useBreakpoint } from '../../utils/useTailwindBreakpoint'
-import { PaginationObject } from './types'
-import { tableState } from './tableStore'
+import { store } from './tableStore'
+import { TableArrayObject } from './types'
 
 export default defineComponent({
   props: {
     data: {
-      type: Array,
+      type: Object as PropType<TableArrayObject>,
       required: true,
-    },
-    pagination: {
-      type: Object as PropType<PaginationObject>,
-      required: false,
     },
   },
   components: {
@@ -24,37 +20,61 @@ export default defineComponent({
     TablePagination,
   },
   setup(props, { slots, emit }) {
-    const { data, pagination } = toRefs(props)
     const { currentBreakpoint } = useBreakpoint()
 
-    provide('data', data)
-    provide('currentBreakpoint', currentBreakpoint)
-    provide('pagination', pagination)
+    store.state.objectList = props.data.results
+    store.state.objectCount = props.data.count
+    store.state.currentBreakpoint = unref(currentBreakpoint)
+    store.calculatePagination()
+
+    provide('state', store.state)
+    provide('objectList', props.data.results)
 
     function pageChange(value: number) {
       emit('pagechange', value)
     }
 
+    function changePageTo(page: number) {
+      store.state.currentPage = page
+    }
+
+    watchEffect(() => {
+      console.log('dataprop changed', props.data)
+    })
+
     watch(
-      () => tableState.currentPage,
+      () => store.state.currentPage,
       (page) => {
         pageChange(page)
       }
     )
 
+    watch(
+      () => store.state.objectList,
+      () => {
+        console.log('ObjectList changed!')
+      }
+    )
+
     return () => {
-      let slotContent: any = []
-      slotContent = [slots.default!()]
+      if (props.data.count) {
+        console.log('rendering table')
+        // console.log('datatable store: ')
+        // console.log(toRaw(store.state))
 
-      if (props.pagination) {
-        let paginationMarkup = h(TablePagination)
+        let slotContent: any = []
+        slotContent = [slots.default()]
+
         if (slots.pagination) {
-          paginationMarkup = h(TablePagination, [slots.pagination!()])
-        }
+          let paginationMarkup = h(TablePagination)
+          if (slots.pagination) {
+            paginationMarkup = h(TablePagination, { class: 'bg-black' }, [slots.pagination!()])
+          }
 
-        return h('div', [h('table', { class: 'w-full' }, slotContent), paginationMarkup])
-      } else {
-        return h('div', [h('table', { class: 'w-full' }, slotContent)])
+          return h('div', [h('table', { class: 'w-full' }, slotContent), paginationMarkup])
+        } else {
+          return h('div', [h('table', { class: 'w-full' }, slotContent)])
+        }
       }
     }
   },

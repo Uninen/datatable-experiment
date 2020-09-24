@@ -1,5 +1,5 @@
 import { ref, onBeforeMount, onBeforeUnmount } from 'vue'
-import { Breakpoint, BreakpointMinWidths, BreakpointObject } from '../../components/datatable/types'
+import { Breakpoint, BreakpointMinWidths, BreakpointObject } from '../components/datatable/types'
 
 export function useBreakpoint(
   minWidths: BreakpointMinWidths = {
@@ -12,7 +12,7 @@ export function useBreakpoint(
 ) {
   const currentBreakpoint = ref(Breakpoint.MOBILE)
 
-  // Extract interface as object and order by pixels DESC to minimize value
+  // Extract interface as object and order by pixels DESC to minimize jumps
   const widths: Array<BreakpointObject> = Object.entries(minWidths).map((key) => {
     return {
       breakpoint: parseInt(key[0]),

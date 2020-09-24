@@ -43,9 +43,7 @@
 
       <hr class="my-8" />
 
-      <data-table v-if="loadingDone && pagination" :data="shortList">
-        <table-row></table-row>
-      </data-table>
+      <data-table v-if="loadingDone && pagination" :data="artistList"></data-table>
     </div>
   </div>
 </template>

@@ -44,7 +44,11 @@ export default defineComponent({
 
     return () => {
       let slotContent: any = []
-      slotContent = [slots.default!()]
+      if (!slots.default) {
+        slotContent = [h(TableRow)]
+      } else {
+        slotContent = [slots.default()]
+      }
 
       if (props.pagination) {
         let paginationMarkup = h(TablePagination)

@@ -15,8 +15,7 @@
   </th>
 </template>
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
-import { store } from './tableStore'
+import { defineComponent, inject, ref, Ref, computed } from 'vue'
 
 import { Breakpoint } from './types'
 
@@ -35,10 +34,14 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const currentOrdering = ref('')
-    const currentBreakpoint = store.state.currentBreakpoint
+    const currentBreakpoint = inject<Ref<Breakpoint>>('currentBreakpoint')
 
     const isVisible = computed(() => {
-      return currentBreakpoint >= props.hiddenBelow
+      if (currentBreakpoint?.value) {
+        return currentBreakpoint.value >= props.hiddenBelow
+      } else {
+        return true
+      }
     })
 
     const iconName = computed(() => {

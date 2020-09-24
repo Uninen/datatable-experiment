@@ -6,10 +6,9 @@
   </td>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, Ref, inject } from 'vue'
 
 import { Breakpoint } from './types'
-import { store } from './tableStore'
 
 export default defineComponent({
   props: {
@@ -23,10 +22,14 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const currentBreakpoint = store.state.currentBreakpoint
+    const currentBreakpoint = inject<Ref<Breakpoint>>('currentBreakpoint')
 
     const isVisible = computed(() => {
-      return currentBreakpoint >= props.hiddenBelow
+      if (currentBreakpoint?.value) {
+        return currentBreakpoint.value >= props.hiddenBelow
+      } else {
+        return true
+      }
     })
 
     return {

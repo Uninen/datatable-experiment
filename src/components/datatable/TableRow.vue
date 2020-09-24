@@ -6,16 +6,14 @@
   </tbody>
 </template>
 <script lang="ts">
-import { defineComponent, watchEffect, inject } from 'vue'
+import { defineComponent, inject } from 'vue'
 
 export default defineComponent({
   setup() {
-    const state = inject('state')
-    const data = inject('objectList')
-
-    watchEffect(() => {
-      console.log('Got data into rows: ', state.objectList)
-    })
+    let data: Array<any> | undefined = inject('data')
+    if (data === undefined) {
+      data = []
+    }
 
     return {
       data,

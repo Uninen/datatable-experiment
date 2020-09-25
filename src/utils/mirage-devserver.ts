@@ -18,7 +18,7 @@ export function makeServer() {
           const count = schema.all('artist').models.length
           let results = schema.all('artist').models
           if (ordering) {
-            console.log('sorting results by field: ', ordering)
+            // console.log('sorting results by field: ', ordering)
             results.sort(sortByKey(ordering))
           }
           results = results.slice(start, end)
@@ -28,7 +28,7 @@ export function makeServer() {
           }
         },
         {
-          timing: 2000,
+          timing: 200,
         }
       )
     },

@@ -35,7 +35,25 @@
           </td-item>
           <td-item class="px-6">{{ formatDate(item.created) }}</td-item>
           <td-item class="px-6">
-            <button class="flex items-center leading-5 text-indigo-700">Edit</button>
+            <button class="flex items-center hidden leading-5 text-indigo-700 sm:block">
+              Edit
+            </button>
+            <button class="flex items-center block leading-5 text-gray-400 sm:hidden">
+              <svg
+                class="w-4 h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
           </td-item>
         </table-row>
       </data-table>

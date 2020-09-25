@@ -1,20 +1,29 @@
 <script lang="ts">
-import { defineComponent, toRefs, provide, PropType, watch, h, ref } from 'vue'
+import { defineComponent, toRefs, provide, PropType, watchEffect, h, ref, toRaw } from 'vue'
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
 import { useBreakpoint } from '../../utils/useTailwindBreakpoint'
 import { PaginationObject } from './types'
-import { tableState } from './tableStore'
+import { AxiosInstance } from 'axios'
+import { paginate } from './utils'
 
 export default defineComponent({
   props: {
     data: {
       type: Array,
-      required: true,
+      required: false,
     },
     pagination: {
       type: Object as PropType<PaginationObject>,
+      required: false,
+    },
+    axiosInstance: {
+      type: Function as PropType<AxiosInstance>,
+      required: false,
+    },
+    dataUrl: {
+      type: String,
       required: false,
     },
   },
@@ -23,42 +32,81 @@ export default defineComponent({
     TableRow,
     TablePagination,
   },
-  setup(props, { slots, emit }) {
-    const { data, pagination } = toRefs(props)
+  setup(props, { slots }) {
+    const initialLoadingDone = ref(false)
+    const isFetchingData = ref(false)
+    const currentPage = ref(1)
+    const perPage = ref(15)
     const { currentBreakpoint } = useBreakpoint()
+    const data = ref<unknown[]>([])
+    const dataCount = ref(0)
+    const pagination = ref<PaginationObject>()
 
-    provide('data', props.data)
-    provide('currentBreakpoint', currentBreakpoint)
-    provide('pagination', pagination)
-
-    function pageChange(value: number) {
-      emit('pagechange', value)
+    if (props.data) {
+      data.value = props.data
+    }
+    if (props.pagination) {
+      pagination.value = props.pagination
     }
 
-    watch(
-      () => tableState.currentPage,
-      (page) => {
-        pageChange(page)
+    function queryData(page: number, limit: number, ordering?: string): void {
+      if (props.axiosInstance) {
+        console.log('queryData', page)
+        isFetchingData.value = true
+        let url = `/artists?page=${page}&limit=${limit}`
+        if (ordering) {
+          url += `&ordering=${ordering}`
+        }
+        props.axiosInstance!.get(url).then((response) => {
+          data.value = response.data.results
+          dataCount.value = response.data.count
+          pagination.value = paginate(dataCount.value, page, limit)
+          isFetchingData.value = false
+        })
       }
-    )
+      initialLoadingDone.value = true
+    }
+
+    function pageChange(value: number) {
+      console.log('datatable pagechange captured')
+      currentPage.value = value
+    }
+
+    watchEffect(() => {
+      console.log('watchEffect queryData')
+      queryData(currentPage.value, perPage.value)
+    })
+
+    provide('data', data)
+    provide('pagination', pagination)
+    console.log('injecting pagination: ', toRaw(pagination.value))
+    provide('currentBreakpoint', currentBreakpoint)
 
     return () => {
-      let slotContent: any = []
-      if (!slots.default) {
-        slotContent = [h(TableRow)]
-      } else {
-        slotContent = [slots.default()]
-      }
-
-      if (props.pagination) {
-        let paginationMarkup = h(TablePagination)
-        if (slots.pagination) {
-          paginationMarkup = h(TablePagination, [slots.pagination!()])
+      if (initialLoadingDone.value) {
+        let slotContent: any = []
+        if (!slots.default) {
+          slotContent = [h(TableRow)]
+        } else {
+          slotContent = [slots.default()]
         }
 
-        return h('div', [h('table', { class: 'w-full' }, slotContent), paginationMarkup])
-      } else {
-        return h('div', [h('table', { class: 'w-full' }, slotContent)])
+        if (props.pagination || props.axiosInstance) {
+          let paginationMarkup = h(TablePagination, {
+            onPagechange: (value: number) => pageChange(value),
+          })
+          if (slots.pagination) {
+            paginationMarkup = h(
+              TablePagination,
+              { onPagechange: (value: number) => pageChange(value) },
+              [slots.pagination!()]
+            )
+          }
+
+          return h('div', [h('table', { class: 'w-full' }, slotContent), paginationMarkup])
+        } else {
+          return h('div', [h('table', { class: 'w-full' }, slotContent)])
+        }
       }
     }
   },

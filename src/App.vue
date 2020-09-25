@@ -3,11 +3,7 @@
     <div class="container pt-8 pb-8 mx-auto">
       <data-table-filter v-if="false"></data-table-filter>
       <data-table
-        v-if="loadingDone && pagination"
-        :data="artistList"
-        :is-fetching-data="isFetchingData"
-        :pagination="pagination"
-        @pagechange="changePage"
+        :axios-instance="api"
         class="overflow-hidden border-b border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
       >
         <table-head class="rounded-t-md">
@@ -43,15 +39,16 @@
 
       <hr class="my-8" />
 
-      <data-table v-if="loadingDone && pagination" :data="artistList"></data-table>
+      <data-table v-if="loadingDone && artistList" :data="artistList"></data-table>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onBeforeMount } from 'vue'
+import { defineComponent, ref, onBeforeMount } from 'vue'
 
 import dayjs from 'dayjs'
+import axios from 'axios'
 
 import DataTable from './components/datatable/DataTable.vue'
 import DataTableFilter from './components/datatable/DataTableFilter.vue'
@@ -60,10 +57,6 @@ import TableRow from './components/datatable/TableRow.vue'
 import TablePagination from './components/datatable/TablePagination.vue'
 import ThItem from './components/datatable/ThItem.vue'
 import TdItem from './components/datatable/TdItem.vue'
-
-import { api } from './utils/api'
-import { paginate } from './components/datatable/utils'
-import { PaginationObject } from './components/datatable/types'
 
 export default defineComponent({
   emits: ['pagechange'],
@@ -81,19 +74,16 @@ export default defineComponent({
     const loadingDone = ref(true)
     const isFetchingData = ref(true)
     const artistList = ref([])
-    const shortList = ref([])
-    const artistsCount = ref(0)
     const perPage = ref(10)
     const currentPage = ref(1)
     const ordering = ref('')
-    const pagination = ref<PaginationObject>()
 
-    const formatDate = (dateStr: string): string => {
-      return dayjs(dateStr).format('MMMM D, YYYY')
-    }
+    const api = axios.create({
+      baseURL: '/api',
+    })
 
-    function queryPage(): void {
-      // console.log('queryPage', currentPage.value)
+    function queryData(): void {
+      // console.log('queryData', page)
       isFetchingData.value = true
       let url = `/artists?page=${currentPage.value}&limit=${perPage.value}`
       if (ordering.value.length > 0) {
@@ -101,20 +91,17 @@ export default defineComponent({
       }
       api.get(url).then((response) => {
         artistList.value = response.data.results
-        shortList.value = response.data.results
-        artistsCount.value = response.data.count
-        pagination.value = paginate(artistsCount.value, currentPage.value, perPage.value)
         isFetchingData.value = false
         loadingDone.value = true
       })
     }
 
-    onBeforeMount(() => {
-      queryPage()
-    })
+    const formatDate = (dateStr: string): string => {
+      return dayjs(dateStr).format('MMMM D, YYYY')
+    }
 
-    watch([ordering, currentPage], () => {
-      queryPage()
+    onBeforeMount(() => {
+      queryData()
     })
 
     function changePage(value: number) {
@@ -132,8 +119,7 @@ export default defineComponent({
       isFetchingData,
       formatDate,
       artistList,
-      pagination,
-      shortList,
+      api,
     }
   },
 })

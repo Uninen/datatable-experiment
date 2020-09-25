@@ -50,8 +50,8 @@ export default defineComponent({
     }
 
     function queryData(page: number, limit: number, ordering?: string): void {
+      console.log('queryData', page)
       if (props.axiosInstance) {
-        console.log('queryData', page)
         isFetchingData.value = true
         let url = `/artists?page=${page}&limit=${limit}`
         if (ordering) {
@@ -68,18 +68,19 @@ export default defineComponent({
     }
 
     function pageChange(value: number) {
-      console.log('datatable pagechange captured')
       currentPage.value = value
     }
 
     watchEffect(() => {
-      console.log('watchEffect queryData')
       queryData(currentPage.value, perPage.value)
     })
 
-    provide('data', data)
+    if (props.data) {
+      provide('data', props.data)
+    } else {
+      provide('data', data)
+    }
     provide('pagination', pagination)
-    console.log('injecting pagination: ', toRaw(pagination.value))
     provide('currentBreakpoint', currentBreakpoint)
 
     return () => {

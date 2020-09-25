@@ -103,12 +103,9 @@ export default defineComponent({
   emits: ['pagechange'],
   setup(_, { emit }) {
     const pagination = inject('pagination') as Ref<PaginationObject>
-    // tableState.currentPage = pagination.value.currentPage
 
     function changePageTo(page: number) {
-      console.log('datatable pagechange emitted')
       emit('pagechange', page)
-      //      tableState.currentPage = page
     }
 
     const hasPreviousPage = computed(() => {

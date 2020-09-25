@@ -39,7 +39,10 @@
 
       <hr class="my-8" />
 
-      <data-table v-if="loadingDone && artistList" :data="artistList"></data-table>
+      <data-table
+        v-if="loadingDone && artistList && !isFetchingData"
+        :data="artistList"
+      ></data-table>
     </div>
   </div>
 </template>

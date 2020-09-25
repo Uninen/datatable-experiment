@@ -6,6 +6,9 @@
         :axios-instance="api"
         class="overflow-hidden border-b border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
       >
+        <template #loader>
+          <div class="p-4 text-base bg-gray-200">Loading data...</div>
+        </template>
         <table-head class="rounded-t-md">
           <th-item order-key="name" @ordering="changeOrdering">Name</th-item>
           <th-item :hidden-below="2">Subscription</th-item>
@@ -39,10 +42,7 @@
 
       <hr class="my-8" />
 
-      <data-table
-        v-if="loadingDone && artistList && !isFetchingData"
-        :data="artistList"
-      ></data-table>
+      <data-table v-if="artistList.length > 0" :data="artistList"></data-table>
     </div>
   </div>
 </template>
@@ -104,7 +104,9 @@ export default defineComponent({
     }
 
     onBeforeMount(() => {
-      queryData()
+      window.setTimeout(() => {
+        queryData()
+      }, 1000)
     })
 
     function changePage(value: number) {

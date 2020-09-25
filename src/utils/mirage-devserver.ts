@@ -6,25 +6,31 @@ import { sortByKey } from '../components/datatable/utils'
 export function makeServer() {
   new Server({
     routes() {
-      this.get('/api/artists', (schema, request) => {
-        const page = parseInt(request.queryParams.page) || 1
-        const perPage = parseInt(request.queryParams.limit) || 30
-        const ordering = request.queryParams.ordering || null
+      this.get(
+        '/api/artists',
+        (schema, request) => {
+          const page = parseInt(request.queryParams.page) || 1
+          const perPage = parseInt(request.queryParams.limit) || 30
+          const ordering = request.queryParams.ordering || null
 
-        let end = perPage * page
-        let start = end - perPage
-        const count = schema.all('artist').models.length
-        let results = schema.all('artist').models
-        if (ordering) {
-          console.log('sorting results by field: ', ordering)
-          results.sort(sortByKey(ordering))
+          let end = perPage * page
+          let start = end - perPage
+          const count = schema.all('artist').models.length
+          let results = schema.all('artist').models
+          if (ordering) {
+            console.log('sorting results by field: ', ordering)
+            results.sort(sortByKey(ordering))
+          }
+          results = results.slice(start, end)
+          return {
+            count,
+            results,
+          }
+        },
+        {
+          timing: 1000,
         }
-        results = results.slice(start, end)
-        return {
-          count,
-          results,
-        }
-      })
+      )
     },
 
     models: {

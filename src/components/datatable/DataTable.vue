@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, toRefs, provide, PropType, watchEffect, h, ref, toRaw } from 'vue'
+import { defineComponent, provide, PropType, watchEffect, h, ref, toRaw } from 'vue'
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
@@ -42,16 +42,13 @@ export default defineComponent({
     const dataCount = ref(0)
     const pagination = ref<PaginationObject>()
 
-    if (props.data) {
-      data.value = props.data
-    }
     if (props.pagination) {
       pagination.value = props.pagination
     }
 
     function queryData(page: number, limit: number, ordering?: string): void {
-      console.log('queryData', page)
       if (props.axiosInstance) {
+        console.log('queryData', page)
         isFetchingData.value = true
         let url = `/artists?page=${page}&limit=${limit}`
         if (ordering) {
@@ -62,9 +59,11 @@ export default defineComponent({
           dataCount.value = response.data.count
           pagination.value = paginate(dataCount.value, page, limit)
           isFetchingData.value = false
+          initialLoadingDone.value = true
         })
+      } else {
+        initialLoadingDone.value = true
       }
-      initialLoadingDone.value = true
     }
 
     function pageChange(value: number) {
@@ -77,6 +76,7 @@ export default defineComponent({
 
     if (props.data) {
       provide('data', props.data)
+      initialLoadingDone.value = true
     } else {
       provide('data', data)
     }
@@ -108,6 +108,8 @@ export default defineComponent({
         } else {
           return h('div', [h('table', { class: 'w-full' }, slotContent)])
         }
+      } else {
+        return h('div', slots.loader!())
       }
     }
   },

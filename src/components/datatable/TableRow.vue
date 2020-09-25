@@ -23,26 +23,18 @@ export default defineComponent({
     TdItem,
   },
   setup() {
-    let dataKeys = []
+    let dataKeys: string[] = []
     let data = inject('data')
-
-    console.log('row data: ', data)
 
     if (data[0]) {
       dataKeys = Object.keys(data[0])
-      console.log('Keys: ', dataKeys)
     }
 
     watch(
       () => data,
       () => {
-        console.log('row data changed')
-
         if (data[0]) {
           dataKeys = Object.keys(data[0])
-          console.log('Keys: ', dataKeys)
-        } else {
-          console.log('no keys')
         }
       }
     )

@@ -13,6 +13,12 @@
         >
           Previous
         </a>
+        <div v-if="isFetchingData" class="inline-flex items-center text-sm text-gray-700">
+          Loading...
+        </div>
+        <div v-else class="inline-flex items-center text-sm text-gray-700">
+          Page {{ pagination.currentPage }}/{{ pagination.totalPages }}
+        </div>
         <a
           href="#"
           class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700"
@@ -24,7 +30,7 @@
       </div>
       <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
         <div>
-          <p class="text-sm leading-5 text-gray-700">
+          <div class="text-sm leading-5 text-gray-700">
             Showing
             <span class="font-medium">{{ pagination.startIndex + 1 }}</span>
             to
@@ -32,7 +38,7 @@
             of
             <span class="font-medium">{{ pagination.totalItems }}</span>
             results
-          </p>
+          </div>
         </div>
         <div>
           <nav class="relative z-0 inline-flex shadow-sm">
@@ -63,7 +69,22 @@
               }"
               @click.prevent="changePageTo(page)"
             >
-              {{ page }}
+              <svg
+                v-if="isFetchingData && page === currentPage"
+                class="inline-block w-3 h-3 animate-spin"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <template v-else>
+                <span class="inline-block w-3 text-center">{{ page }}</span>
+              </template>
             </a>
 
             <span
@@ -96,15 +117,18 @@
   </slot>
 </template>
 <script lang="ts">
-import { defineComponent, computed, inject, Ref } from 'vue'
+import { defineComponent, computed, inject, Ref, ref } from 'vue'
 import { PaginationObject } from './types'
 
 export default defineComponent({
   emits: ['pagechange'],
   setup(_, { emit }) {
+    const currentPage = ref(1)
     const pagination = inject('pagination') as Ref<PaginationObject>
+    const isFetchingData = inject('isFetchingData') as Ref<boolean>
 
     function changePageTo(page: number) {
+      currentPage.value = page
       emit('pagechange', page)
     }
 
@@ -131,6 +155,8 @@ export default defineComponent({
       hasPreviousPage,
       hasNextPage,
       changePageTo,
+      isFetchingData,
+      currentPage,
     }
   },
 })

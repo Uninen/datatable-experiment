@@ -28,7 +28,7 @@ export function makeServer() {
           }
         },
         {
-          timing: 1000,
+          timing: 2000,
         }
       )
     },

@@ -42,7 +42,11 @@
 
       <hr class="my-8" />
 
-      <data-table v-if="artistList.length > 0" :data="artistList"></data-table>
+      <data-table
+        class="hidden sm:block"
+        v-if="artistList.length > 0"
+        :data="artistList"
+      ></data-table>
     </div>
   </div>
 </template>

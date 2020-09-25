@@ -48,7 +48,6 @@ export default defineComponent({
 
     function queryData(page: number, limit: number, ordering?: string): void {
       if (props.axiosInstance) {
-        console.log('queryData', page)
         isFetchingData.value = true
         let url = `/artists?page=${page}&limit=${limit}`
         if (ordering) {
@@ -81,6 +80,7 @@ export default defineComponent({
       provide('data', data)
     }
     provide('pagination', pagination)
+    provide('isFetchingData', isFetchingData)
     provide('currentBreakpoint', currentBreakpoint)
 
     return () => {

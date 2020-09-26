@@ -66,6 +66,7 @@ export default defineComponent({
           break
       }
       emit('ordering', currentOrdering.value)
+      console.log('emitted ordering', currentOrdering.value)
     }
 
     return {

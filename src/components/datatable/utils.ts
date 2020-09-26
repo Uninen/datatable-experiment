@@ -5,9 +5,9 @@ import { PaginationObject } from './types'
 export function paginate(
   totalItems: number,
   currentPage: number = 1,
-  perPage: number = 10
+  perPage: number = 10,
+  maxPages: number = 7
 ): PaginationObject {
-  const maxPages = 10
   const totalPages = Math.ceil(totalItems / perPage)
 
   // ensure current page isn't out of range

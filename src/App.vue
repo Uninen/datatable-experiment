@@ -84,7 +84,6 @@ import ThItem from './components/datatable/ThItem.vue'
 import TdItem from './components/datatable/TdItem.vue'
 
 export default defineComponent({
-  emits: ['pagechange'],
   components: {
     DataTable,
     TableHead,

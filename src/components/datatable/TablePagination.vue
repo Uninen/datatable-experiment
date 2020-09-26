@@ -61,7 +61,7 @@
             <a
               href="#"
               class="relative inline-flex items-center px-4 py-2 -ml-px text-sm leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700"
-              v-for="page in pagination.pages"
+              v-for="page in shrunkPageList"
               :key="page"
               :class="{
                 'font-medium': page !== pagination.currentPage,
@@ -148,6 +148,17 @@ export default defineComponent({
       return pagination.value.currentPage + 1
     })
 
+    const shrunkPageList = computed(() => {
+      // if (pagination.value.pages.length < 6) {
+      return pagination.value.pages
+      // } else {
+      //   let length = pagination.value.pages.length
+      //   let first = pagination.value.pages.slice(0, 3)
+      //   let last = pagination.value.pages.slice(0).slice(-3)
+      //   return [...first, ...last]
+      // }
+    })
+
     return {
       pagination,
       previousPage,
@@ -157,6 +168,7 @@ export default defineComponent({
       changePageTo,
       isFetchingData,
       currentPage,
+      shrunkPageList,
     }
   },
 })

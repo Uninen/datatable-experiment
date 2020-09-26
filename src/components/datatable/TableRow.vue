@@ -1,7 +1,7 @@
 <template>
   <tbody>
     <tr v-for="(obj, index) in data" :key="index">
-      <slot v-bind:item="obj">
+      <slot v-bind="$attrs" v-bind:item="obj">
         <template v-if="dataKeys">
           <td v-for="dk in dataKeys">
             {{ obj[dk] }}

@@ -9,8 +9,8 @@
         <template #loader>
           <div class="p-4 text-base bg-gray-200">Loading data...</div>
         </template>
-        <table-head class="rounded-t-md">
-          <th-item order-key="name" @ordering="changeOrdering">Name</th-item>
+        <table-head @ordering="foo" class="rounded-t-md">
+          <th-item order-key="name">Name</th-item>
           <th-item :hidden-below="2">Subscription</th-item>
           <th-item>VIP</th-item>
           <th-item>Created</th-item>
@@ -138,6 +138,10 @@ export default defineComponent({
       ordering.value = value
     }
 
+    function foo(value) {
+      console.log('OrderingFOO ', value)
+    }
+
     return {
       loadingDone,
       changeOrdering,
@@ -146,6 +150,7 @@ export default defineComponent({
       formatDate,
       artistList,
       api,
+      foo,
     }
   },
 })

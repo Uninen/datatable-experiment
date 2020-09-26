@@ -86,3 +86,16 @@ export function sortByKey(key: string) {
     return desc ? comparison * -1 : comparison
   }
 }
+
+// Inspired by https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+export function generateID(): string {
+  var d = new Date().getTime()
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    d += performance.now() //use high-precision timer if available
+  }
+  return 'xxxxxxxxxx'.replace(/[x]/g, function (c) {
+    var r = (d + Math.random() * 16) % 16 | 0
+    d = Math.floor(d / 16)
+    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16)
+  })
+}

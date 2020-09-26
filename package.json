@@ -14,6 +14,7 @@
     "faker": "^5.1.0",
     "minisearch": "^2.6.2",
     "miragejs": "^0.1.41",
+    "mitt": "^2.1.0",
     "tailwindcss": "^1.8.10",
     "vue": "^3.0.0"
   },

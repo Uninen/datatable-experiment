@@ -17,11 +17,11 @@
 </template>
 <script lang="ts">
 import { defineComponent, inject, ref, Ref, computed } from 'vue'
+import { Emitter } from 'mitt'
 
 import { Breakpoint } from './types'
 
 export default defineComponent({
-  emits: ['ordering'],
   props: {
     hiddenBelow: {
       required: false,
@@ -36,6 +36,8 @@ export default defineComponent({
   setup(props, { emit }) {
     const currentOrdering = ref('')
     const currentBreakpoint = inject<Ref<Breakpoint>>('currentBreakpoint')
+    const tableId = inject('tableId') as string
+    const bus = inject('bus') as Emitter
 
     const isVisible = computed(() => {
       if (currentBreakpoint?.value) {
@@ -66,7 +68,7 @@ export default defineComponent({
           break
       }
       emit('ordering', currentOrdering.value)
-      console.log('emitted ordering', currentOrdering.value)
+      bus.emit(`ordering-${tableId}`, currentOrdering.value)
     }
 
     return {

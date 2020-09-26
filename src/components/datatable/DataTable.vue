@@ -1,12 +1,15 @@
 <script lang="ts">
 import { defineComponent, provide, PropType, watchEffect, h, ref, toRaw } from 'vue'
+
+import mitt from 'mitt'
+
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
 import { useBreakpoint } from '../../utils/useTailwindBreakpoint'
 import { PaginationObject } from './types'
 import { AxiosInstance } from 'axios'
-import { paginate } from './utils'
+import { paginate, generateID } from './utils'
 
 export default defineComponent({
   props: {
@@ -43,6 +46,8 @@ export default defineComponent({
     const dataCount = ref(0)
     const maxPages = ref(7)
     const pagination = ref<PaginationObject>()
+    const bus = mitt()
+    const tableId = generateID()
 
     function calculatePagination(
       totalCount: number,
@@ -81,9 +86,9 @@ export default defineComponent({
     }
 
     function orderingChange(value: string) {
-      console.log('orderingChange', value)
       currentOrdering.value = value
     }
+    bus.on(`ordering-${tableId}`, (value) => orderingChange(value))
 
     watchEffect(() => {
       if (currentBreakpoint.value > 3) {
@@ -113,6 +118,8 @@ export default defineComponent({
     } else {
       provide('data', data)
     }
+    provide('bus', bus)
+    provide('tableId', tableId)
     provide('pagination', pagination)
     provide('isFetchingData', isFetchingData)
     provide('currentBreakpoint', currentBreakpoint)
@@ -137,7 +144,6 @@ export default defineComponent({
               [slots.pagination!()]
             )
           }
-          console.log('doing pagination')
           return h('div', [h('table', { class: 'w-full' }, slotContent), paginationMarkup])
         } else {
           return h('div', [h('table', { class: 'w-full' }, slotContent)])

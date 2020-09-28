@@ -1,3 +1,4 @@
+/// <reference types="cypress" />
 // ***********************************************************
 // This example support/index.js is processed and
 // loaded automatically before your test files.
@@ -16,8 +17,6 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
 Cypress.on('window:before:load', (win) => {
   win.handleFromCypress = function (request) {
     return fetch(request.url, {

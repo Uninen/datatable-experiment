@@ -4,3 +4,4 @@ dist
 *.local
 tests/e2e/screenshots
 tests/e2e/videos
+instrumented

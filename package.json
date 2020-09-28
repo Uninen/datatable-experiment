@@ -4,8 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "cy": "yarn dev & wait-on http://localhost:3000",
-    "test": "concurrently \"yarn dev\" \"yarn run cy\" --kill-others",
+    "start": "yarn dev & wait-on http://localhost:3000",
+    "test": "concurrently \"yarn dev\" \"cypress open\" --kill-others",
     "test:ci": "cypress run --headless"
   },
   "dependencies": {

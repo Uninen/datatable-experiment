@@ -59,7 +59,7 @@ jobs:
 
       ## Test
       - name: Start test server
-        run: yarn cy
+        run: yarn start
 
       - name: Run tests
         run: yarn test:ci

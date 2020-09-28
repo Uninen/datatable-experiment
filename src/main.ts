@@ -11,9 +11,11 @@ if (process.env.NODE_ENV === 'test') {
   if (window.Cypress) {
     makeTestServer()
   }
+  // We want to run MirageJS on Vercel as well
+  makeDevServer()
+} else {
+  // We want to run MirageJS on Vercel as well
+  makeDevServer('dev')
 }
-
-// We want to run MirageJS on Vercel as well
-makeDevServer()
 
 createApp(App).component('t-icon', TIcon).mount('#app')

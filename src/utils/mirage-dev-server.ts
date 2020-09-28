@@ -78,7 +78,6 @@ function searchData(
   const rd = requestData(request)
   const searchTerm: string | null = request.queryParams.search || null
 
-  const count: number = schema.all(model).models.length
   let results = schema.where(model, (obj: any) => {
     if (searchTerm !== null && searchTerm.length > 0) {
       return obj[property].toLowerCase().includes(searchTerm)
@@ -86,6 +85,7 @@ function searchData(
       return false
     }
   }).models
+  const count: number = results.length
 
   return {
     count,
@@ -158,7 +158,7 @@ export function makeDevServer(environment = 'test') {
 
     seeds(server) {
       // @ts-ignore
-      if (environment !== 'test') {
+      if (environment === 'test') {
         console.info('MirageJS: loading artists from JSON: ', artistsJson)
         server.db.loadData(artistsJson)
       } else {

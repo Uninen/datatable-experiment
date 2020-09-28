@@ -37,6 +37,7 @@ yarn dev
 ## Design decisions
 
 - The component assumes a strict API that looks like `GET [base URL]/[data-model]` and `GET [base URL]/search/[data-model]`
+- Search fields need to be hard-coded separately on backend and frontend (and obviously to be kept in sync)
 
 ## ToDo
 
@@ -45,5 +46,5 @@ yarn dev
 - [ ] Filtering based on date (equal, smaller, greater)
 - [ ] Filtering based on number (equal, smaller, greater)
 - [ ] Sorting by date
-- [ ] Search
+- [x] Search
 - [x] Add window resize observer that watches Tailwind breakpoints and stores current breakpoint in state. (We can then use it for programatically reshape the table based on user configuration.)

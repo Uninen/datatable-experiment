@@ -1,7 +1,7 @@
 import { Server, Model, Factory } from 'miragejs'
-// @ts-ignore
 import faker from 'faker'
 
+import artistsJson from './fixtures/artists.mirage.db.json'
 import { sortByKey } from '../components/datatable/utils'
 
 export function downloadMirageJson() {
@@ -18,9 +18,8 @@ export function downloadMirageJson() {
   a.dispatchEvent(e)
 }
 
-export function makeServer() {
-  // @ts-ignore
-  window.mirageServer = new Server({
+export function makeDevServer(environment = 'test') {
+  const server = new Server({
     routes() {
       this.get(
         '/api/artists',
@@ -83,7 +82,18 @@ export function makeServer() {
     },
 
     seeds(server) {
-      server.createList('artist', 180)
+      // @ts-ignore
+      if (environment !== 'dev') {
+        console.info('MirageJS: loading artists from JSON: ', artistsJson)
+        server.db.loadData(artistsJson)
+      } else {
+        console.info('MirageJS: loading artists dynamically.', environment)
+        server.createList('artist', 180)
+      }
     },
   })
+  // @ts-ignore
+  window.mirageServer = server
+
+  return server
 }

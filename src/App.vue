@@ -95,7 +95,7 @@ import TablePagination from './components/datatable/TablePagination.vue'
 import ThItem from './components/datatable/ThItem.vue'
 import TdItem from './components/datatable/TdItem.vue'
 
-import { downloadMirageJson } from './utils/mirage-devserver'
+import { downloadMirageJson } from './utils/mirage-dev-server'
 
 export default defineComponent({
   components: {

@@ -3,11 +3,14 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "strict": true,
     "noUnusedLocals": true,
+    "resolveJsonModule": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
-    "lib": ["dom", "esnext"]
+    "lib": ["dom", "esnext"],
+    "types": ["cypress"]
   },
   // "include": ["src/*.ts", "src/**/*.ts", "src/**/*.vue", "tests/**/*.ts"],
   "exclude": ["node_modules", "dist", "public"]

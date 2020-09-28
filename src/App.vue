@@ -1,13 +1,15 @@
 <template>
   <div class="justify-center flex-1">
     <div class="container pt-8 pb-8 mx-auto">
-      <data-table-filter v-if="false"></data-table-filter>
+      <div id="datatable-filters"></div>
+
       <data-table
         :axios-instance="api"
-        :search-term="searchTerm"
         data-model="artists"
+        id="artists-table"
         class="overflow-hidden border-b border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
       >
+        <template #filters></template>
         <template #loader>
           <div class="p-4 text-base bg-gray-200">Loading data...</div>
         </template>
@@ -90,7 +92,6 @@ import dayjs from 'dayjs'
 import axios from 'axios'
 
 import DataTable from './components/datatable/DataTable.vue'
-import DataTableFilter from './components/datatable/DataTableFilter.vue'
 import TableHead from './components/datatable/TableHead.vue'
 import TableRow from './components/datatable/TableRow.vue'
 import TablePagination from './components/datatable/TablePagination.vue'
@@ -107,7 +108,6 @@ export default defineComponent({
     TdItem,
     TableRow,
     TablePagination,
-    DataTableFilter,
   },
 
   setup() {
@@ -117,7 +117,6 @@ export default defineComponent({
     const perPage = ref(10)
     const currentPage = ref(1)
     const ordering = ref('')
-    const searchTerm = ref<string | null>(null)
 
     const api = axios.create({
       baseURL: '/api',
@@ -164,7 +163,6 @@ export default defineComponent({
       artistList,
       api,
       downloadMirageJson,
-      searchTerm,
     }
   },
 })

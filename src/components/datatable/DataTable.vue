@@ -1,11 +1,12 @@
 <script lang="ts">
-import { defineComponent, provide, PropType, watchEffect, h, ref } from 'vue'
+import { defineComponent, provide, PropType, watchEffect, h, ref, toRaw } from 'vue'
 
 import mitt from 'mitt'
 
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
+import DataTableFilter from './DataTableFilter.vue'
 import { useBreakpoint } from '../../utils/useTailwindBreakpoint'
 import { PaginationObject } from './types'
 import { AxiosInstance } from 'axios'
@@ -39,7 +40,7 @@ export default defineComponent({
     TableRow,
     TablePagination,
   },
-  setup(props, { slots }) {
+  setup(props, { slots, attrs }) {
     const initialLoadingDone = ref(false)
     const isFetchingData = ref(false)
     const currentPage = ref(1)
@@ -51,18 +52,35 @@ export default defineComponent({
     const maxPages = ref(7)
     const pagination = ref<PaginationObject>()
     const bus = mitt()
-    const tableId = generateID()
     const url = ref('')
+    const searchTerm = ref('')
+    let tableId: string = ''
+
+    // @ts-ignore
+    if (attrs.id && attrs.id.length > 0) {
+      tableId = attrs.id as string
+    } else {
+      tableId = generateID()
+    }
+    console.log('Assigned ID to', tableId)
 
     function calculatePagination() {
       pagination.value = paginate(dataCount.value, currentPage.value, perPage.value, maxPages.value)
     }
 
     function calculateApiUrl() {
-      url.value = `/${props.dataModel}?page=${currentPage.value}&limit=${perPage.value}`
+      let prefix = ''
+      let suffix = ''
+      if (searchTerm.value.length > 0) {
+        prefix = '/search'
+        suffix = `&search=${searchTerm.value}`
+      }
+
+      url.value = `${prefix}/${props.dataModel}?page=${currentPage.value}&limit=${perPage.value}`
       if (currentOrdering.value && currentOrdering.value.length > 0) {
         url.value += `&ordering=${currentOrdering.value}`
       }
+      url.value += suffix
     }
 
     function queryData(): void {
@@ -93,6 +111,16 @@ export default defineComponent({
       currentOrdering.value = value
     }
     bus.on(`ordering-${tableId}`, (value) => orderingChange(value))
+
+    function searchChange(value: string) {
+      searchTerm.value = value
+      if (searchTerm.value.length > 0) {
+        console.log(`search for "${value}"`)
+      } else {
+        console.log('clear search')
+      }
+    }
+    bus.on(`search-${tableId}`, (value) => searchChange(value))
 
     watchEffect(() => {
       if (currentBreakpoint.value > 3) {
@@ -132,6 +160,10 @@ export default defineComponent({
           slotContent = [h(TableRow)]
         } else {
           slotContent = [slots.default()]
+        }
+
+        if (slots.filters) {
+          slotContent.push(h(DataTableFilter))
         }
 
         if (props.pagination || props.axiosInstance) {

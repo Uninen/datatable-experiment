@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, provide, PropType, watchEffect, h, ref, toRaw } from 'vue'
+import { defineComponent, provide, PropType, watchEffect, h, ref } from 'vue'
 
 import mitt from 'mitt'
 

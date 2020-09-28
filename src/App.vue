@@ -65,6 +65,18 @@
         v-if="artistList.length > 0"
         :data="artistList"
       ></data-table>
+
+      <hr class="my-8" />
+
+      <p>
+        <button
+          class="px-3 py-2 text-sm text-gray-800 bg-gray-200 border border-gray-300 rounded-md shadow-md"
+          type="button"
+          @click="downloadMirageJson"
+        >
+          Download Mirage DB
+        </button>
+      </p>
     </div>
   </div>
 </template>
@@ -82,6 +94,8 @@ import TableRow from './components/datatable/TableRow.vue'
 import TablePagination from './components/datatable/TablePagination.vue'
 import ThItem from './components/datatable/ThItem.vue'
 import TdItem from './components/datatable/TdItem.vue'
+
+import { downloadMirageJson } from './utils/mirage-devserver'
 
 export default defineComponent({
   components: {
@@ -146,6 +160,7 @@ export default defineComponent({
       formatDate,
       artistList,
       api,
+      downloadMirageJson,
     }
   },
 })

@@ -13,9 +13,7 @@ if (process.env.NODE_ENV === 'test') {
   }
 }
 
-if (process.env.NODE_ENV === 'development') {
-  console.log('Making dev server')
-  makeDevServer()
-}
+// We want to run MirageJS on Vercel as well
+makeDevServer()
 
 createApp(App).component('t-icon', TIcon).mount('#app')

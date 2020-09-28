@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, provide, PropType, watchEffect, h, ref, toRaw } from 'vue'
+import { defineComponent, provide, PropType, watchEffect, h, ref } from 'vue'
 
 import mitt from 'mitt'
 
@@ -34,6 +34,10 @@ export default defineComponent({
       type: String,
       required: false,
     },
+    itemsPerPage: {
+      type: Number,
+      required: false,
+    },
   },
   components: {
     TableHead,
@@ -45,7 +49,7 @@ export default defineComponent({
     const isFetchingData = ref(false)
     const currentPage = ref(1)
     const currentOrdering = ref('')
-    const perPage = ref(15)
+    const perPage = ref(25)
     const { currentBreakpoint } = useBreakpoint()
     const data = ref<unknown[]>([])
     const dataCount = ref(0)
@@ -55,6 +59,10 @@ export default defineComponent({
     const url = ref('')
     const searchTerm = ref('')
     let tableId: string = ''
+
+    if (props.itemsPerPage && props.itemsPerPage > 0) {
+      perPage.value = props.itemsPerPage
+    }
 
     // @ts-ignore
     if (attrs.id && attrs.id.length > 0) {

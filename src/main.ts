@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import './index.css'
+import router from './router'
 import TIcon from './components/datatable/TIcon.vue'
 
 import { makeDevServer } from './utils/mirage-dev-server'
@@ -18,4 +19,4 @@ if (process.env.NODE_ENV === 'test') {
   makeDevServer('dev')
 }
 
-createApp(App).component('t-icon', TIcon).mount('#app')
+createApp(App).component('t-icon', TIcon).use(router).mount('#app')

@@ -25,7 +25,11 @@ export default defineComponent({
       type: Function as PropType<AxiosInstance>,
       required: false,
     },
-    dataUrl: {
+    dataModel: {
+      type: String,
+      required: false,
+    },
+    searchTerm: {
       type: String,
       required: false,
     },
@@ -48,27 +52,27 @@ export default defineComponent({
     const pagination = ref<PaginationObject>()
     const bus = mitt()
     const tableId = generateID()
+    const url = ref('')
 
-    function calculatePagination(
-      totalCount: number,
-      currentPage: number,
-      limit: number,
-      max: number
-    ) {
-      pagination.value = paginate(totalCount, currentPage, limit, max)
+    function calculatePagination() {
+      pagination.value = paginate(dataCount.value, currentPage.value, perPage.value, maxPages.value)
     }
 
-    function queryData(page: number, limit: number, ordering?: string): void {
+    function calculateApiUrl() {
+      url.value = `/${props.dataModel}?page=${currentPage.value}&limit=${perPage.value}`
+      if (currentOrdering.value && currentOrdering.value.length > 0) {
+        url.value += `&ordering=${currentOrdering.value}`
+      }
+    }
+
+    function queryData(): void {
       if (props.axiosInstance) {
         isFetchingData.value = true
-        let url = `/artists?page=${page}&limit=${limit}`
-        if (ordering && ordering.length > 0) {
-          url += `&ordering=${ordering}`
-        }
-        props.axiosInstance!.get(url).then((response) => {
+
+        props.axiosInstance!.get(url.value).then((response) => {
           data.value = response.data.results
           dataCount.value = response.data.count
-          calculatePagination(dataCount.value, page, limit, maxPages.value)
+          calculatePagination()
           isFetchingData.value = false
           initialLoadingDone.value = true
         })
@@ -99,17 +103,14 @@ export default defineComponent({
         maxPages.value = 5
       }
       if (initialLoadingDone.value && pagination.value) {
-        calculatePagination(
-          pagination.value.totalItems,
-          currentPage.value,
-          perPage.value,
-          maxPages.value
-        )
+        calculatePagination()
       }
     })
 
     watchEffect(() => {
-      queryData(currentPage.value, perPage.value, currentOrdering.value)
+      calculateApiUrl()
+      queryData()
+      console.log('Watching effect of calculateApiUrl + queryData')
     })
 
     if (props.data) {

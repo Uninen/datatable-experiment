@@ -4,6 +4,8 @@
       <data-table-filter v-if="false"></data-table-filter>
       <data-table
         :axios-instance="api"
+        :search-term="searchTerm"
+        data-model="artists"
         class="overflow-hidden border-b border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
       >
         <template #loader>
@@ -115,6 +117,7 @@ export default defineComponent({
     const perPage = ref(10)
     const currentPage = ref(1)
     const ordering = ref('')
+    const searchTerm = ref<string | null>(null)
 
     const api = axios.create({
       baseURL: '/api',
@@ -161,6 +164,7 @@ export default defineComponent({
       artistList,
       api,
       downloadMirageJson,
+      searchTerm,
     }
   },
 })

@@ -34,6 +34,10 @@ Run development server:
 yarn dev
 ```
 
+## Design decisions
+
+- The component assumes a strict API that looks like `GET [base URL]/[data-model]` and `GET [base URL]/search/[data-model]`
+
 ## ToDo
 
 - [ ] Filtering based on boolean

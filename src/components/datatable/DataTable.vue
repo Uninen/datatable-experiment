@@ -119,6 +119,7 @@ export default defineComponent({
       } else {
         console.log('clear search')
       }
+      currentPage.value = 1
     }
     bus.on(`search-${tableId}`, (value) => searchChange(value))
 

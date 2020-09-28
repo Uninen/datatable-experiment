@@ -14,27 +14,47 @@
           <div class="p-4 text-base bg-gray-200">Loading data...</div>
         </template>
         <table-head class="rounded-t-md">
-          <th-item order-key="name">Name</th-item>
-          <th-item :hidden-below="2">Subscription</th-item>
-          <th-item>VIP</th-item>
-          <th-item>Created</th-item>
-          <th-item>&nbsp;</th-item>
+          <th-item
+            class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+            order-key="name"
+            >Name</th-item
+          >
+          <th-item
+            class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+            :hidden-below="2"
+            >Subscription</th-item
+          >
+          <th-item
+            class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+            >VIP</th-item
+          >
+          <th-item
+            class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+            >Created</th-item
+          >
+          <th-item
+            class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+            >&nbsp;</th-item
+          >
         </table-head>
 
         <table-row
           class="text-xs text-gray-700 divide-y divide-gray-200 sm:text-base"
           v-slot="{ item }"
         >
-          <td-item>
-            <div class="flex items-center px-6">
-              <img class="w-6 h-6 rounded-full" :src="item.photo" alt="" />
-              <span class="ml-2">{{ item.name }}</span>
+          <td-item class="py-1">
+            <div class="flex items-center sm:px-6">
+              <img class="w-10 h-10 rounded-full" :src="item.photo" alt="" />
+              <div class="ml-2">
+                <span class="block text-sm sm:text-base">{{ item.name }}</span>
+                <span class="block text-gray-500 sm:text-sm">@{{ item.username }}</span>
+              </div>
             </div>
           </td-item>
-          <td-item :hidden-below="2" class="px-6">
+          <td-item :hidden-below="2" class="sm:px-6">
             {{ item.subscriptionType }}
           </td-item>
-          <td-item class="px-6">
+          <td-item class="sm:px-3 md:px-6">
             <t-icon v-if="item.isVip" name="badge-check" class="w-5 h-5 text-indigo-600" />
           </td-item>
           <td-item class="px-6">{{ formatDate(item.created) }}</td-item>

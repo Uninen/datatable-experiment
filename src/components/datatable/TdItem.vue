@@ -1,5 +1,5 @@
 <template>
-  <td v-if="isVisible" class="p-2">
+  <td v-if="isVisible">
     <slot>
       {{ item }}
     </slot>

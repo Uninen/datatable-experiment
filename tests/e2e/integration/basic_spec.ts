@@ -15,6 +15,6 @@ describe('Test Artist stuff', () => {
   it('First artist name is visible on the page', () => {
     cy.visit('/')
 
-    cy.contains('span', 'Dr. Jamie McGlynn')
+    cy.contains('span', 'Johnnie Batz')
   })
 })

@@ -72,7 +72,7 @@ function allData(schema: Schema<AnyRegistry>, model: string, request: Request): 
 function searchData(
   schema: Schema<AnyRegistry>,
   model: string,
-  property: string,
+  properties: string[],
   request: Request
 ): allDataModel {
   const rd = requestData(request)
@@ -80,10 +80,13 @@ function searchData(
 
   let results = schema.where(model, (obj: any) => {
     if (searchTerm !== null && searchTerm.length > 0) {
-      return obj[property].toLowerCase().includes(searchTerm)
-    } else {
-      return false
+      for (const property of properties) {
+        if (obj[property].toLowerCase().includes(searchTerm)) {
+          return true
+        }
+      }
     }
+    return false
   }).models
   const count: number = results.length
 
@@ -99,7 +102,7 @@ export function makeDevServer(environment = 'test') {
       this.get(
         '/api/search/artists',
         (schema, request) => {
-          const ad = searchData(schema, 'artist', 'name', request)
+          const ad = searchData(schema, 'artist', ['name', 'username'], request)
           return {
             count: ad.count,
             results: ad.results,
@@ -131,6 +134,10 @@ export function makeDevServer(environment = 'test') {
       artist: Factory.extend({
         name() {
           return faker.name.findName()
+        },
+
+        username() {
+          return faker.internet.userName()
         },
 
         photo() {

@@ -12,7 +12,7 @@
     "axios": "^0.20.0",
     "dayjs": "^1.8.36",
     "faker": "^5.1.0",
-    "minisearch": "^2.6.2",
+    "minisearch": "^3.0.0",
     "miragejs": "^0.1.41",
     "mitt": "^2.1.0",
     "tailwindcss": "^1.8.10",

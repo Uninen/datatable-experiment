@@ -138,10 +138,6 @@ export default defineComponent({
       ordering.value = value
     }
 
-    function foo(value) {
-      console.log('OrderingFOO ', value)
-    }
-
     return {
       loadingDone,
       changeOrdering,
@@ -150,7 +146,6 @@ export default defineComponent({
       formatDate,
       artistList,
       api,
-      foo,
     }
   },
 })

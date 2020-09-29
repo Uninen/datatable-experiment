@@ -4,7 +4,7 @@
       v-if="artistList.length > 0"
       :data="artistList"
       :items-per-page="15"
-      id="artists-table"
+      id="dark-artists-table"
       class="overflow-hidden border-b border-collapse border-gray-900 divide-y divide-gray-800 shadow-dark sm:rounded-lg"
     >
       <template #loader>

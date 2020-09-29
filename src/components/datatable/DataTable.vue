@@ -18,10 +18,6 @@ export default defineComponent({
       type: Array,
       required: false,
     },
-    pagination: {
-      type: Object as PropType<PaginationObject>,
-      required: false,
-    },
     axiosInstance: {
       type: Function as PropType<AxiosInstance>,
       required: false,
@@ -97,6 +93,12 @@ export default defineComponent({
       url.value += suffix
     }
 
+    function initLocalData(): void {
+      data.value = props.data!
+      dataCount.value = props.data!.length
+      calculatePagination()
+    }
+
     function queryData(): void {
       if (props.axiosInstance) {
         isFetchingData.value = true
@@ -111,10 +113,6 @@ export default defineComponent({
       } else {
         initialLoadingDone.value = true
       }
-    }
-
-    if (props.pagination) {
-      pagination.value = props.pagination
     }
 
     function pageChange(value: number) {
@@ -157,11 +155,11 @@ export default defineComponent({
     })
 
     if (props.data) {
-      provide('data', props.data)
+      initLocalData()
       initialLoadingDone.value = true
-    } else {
-      provide('data', data)
     }
+
+    provide('data', data)
     provide('bus', bus)
     provide('dateFormatter', dateFormatter)
     provide('tableId', tableId)
@@ -182,7 +180,7 @@ export default defineComponent({
           slotContent.push(h(DataTableFilter))
         }
 
-        if (props.pagination || props.axiosInstance) {
+        if (props.itemsPerPage || props.axiosInstance) {
           let paginationMarkup = h(TablePagination, {
             onPagechange: (value: number) => pageChange(value),
           })

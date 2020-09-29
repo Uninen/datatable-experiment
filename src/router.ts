@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Frame from './views/Frame.vue'
 import Local from './views/Local.vue'
+import Unstyled from './views/Unstyled.vue'
 import Remote from './views/Remote.vue'
 
 const router = createRouter({
@@ -23,6 +24,11 @@ const router = createRouter({
           path: '/local/',
           name: 'Local',
           component: Local,
+        },
+        {
+          path: '/unstyled/',
+          name: 'Unstyled',
+          component: Unstyled,
         },
       ],
     },

@@ -1,7 +1,7 @@
 // https://docs.cypress.io/api/introduction/api.html
 import { makeDevServer } from '../../../src/utils/mirage-dev-server'
 
-describe('Test remote stuff', () => {
+describe('Test remote table', () => {
   let server: any
 
   beforeEach(() => {
@@ -12,14 +12,14 @@ describe('Test remote stuff', () => {
     server.shutdown()
   })
 
-  it('shows correct artist names on the page', () => {
+  it('Show correct artist names', () => {
     cy.visit('/')
 
     cy.get('.datatable-name').first().should('contain', 'Johnnie Batz')
     cy.contains('div', 'Showing 1 to 12 of 180 results')
   })
 
-  it('sorts the table by name', () => {
+  it('Sort the table by name', () => {
     cy.visit('/')
 
     // Sort by name
@@ -42,7 +42,7 @@ describe('Test remote stuff', () => {
   })
 })
 
-describe('Test local stuff', () => {
+describe('Test local table', () => {
   let server: any
 
   beforeEach(() => {
@@ -55,6 +55,24 @@ describe('Test local stuff', () => {
 
   it('First artist name is visible on the page', () => {
     cy.visit('/local/')
+
+    cy.contains('td', 'Johnnie Batz')
+  })
+})
+
+describe('Test unstyled table', () => {
+  let server: any
+
+  beforeEach(() => {
+    server = makeDevServer()
+  })
+
+  afterEach(() => {
+    server.shutdown()
+  })
+
+  it('First artist name is visible on the page', () => {
+    cy.visit('/unstyled/')
 
     cy.contains('td', 'Johnnie Batz')
   })

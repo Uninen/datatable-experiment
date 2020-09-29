@@ -118,6 +118,7 @@ export default defineComponent({
     function pageChange(value: number) {
       currentPage.value = value
     }
+    bus.on(`pagechange-${tableId}`, (value) => pageChange(value))
 
     function orderingChange(value: string) {
       currentOrdering.value = value
@@ -170,6 +171,11 @@ export default defineComponent({
     return () => {
       if (initialLoadingDone.value) {
         let slotContent: any = []
+        console.log('rendering slots: ', slots)
+        for (const sl in slots) {
+          console.log('slot: ', sl)
+        }
+
         if (!slots.default) {
           slotContent = [h(TableRow)]
         } else {
@@ -180,16 +186,11 @@ export default defineComponent({
           slotContent.push(h(DataTableFilter))
         }
 
-        if (props.itemsPerPage || props.axiosInstance) {
-          let paginationMarkup = h(TablePagination, {
-            onPagechange: (value: number) => pageChange(value),
-          })
+        if (props.itemsPerPage || slots.pagination) {
+          let paginationMarkup = h(TablePagination)
           if (slots.pagination) {
-            paginationMarkup = h(
-              TablePagination,
-              { onPagechange: (value: number) => pageChange(value) },
-              [slots.pagination!()]
-            )
+            console.log('we are rendering PAGINATION')
+            paginationMarkup = h(TablePagination, [slots.pagination!()])
           }
           return h('div', [h('table', { class: 'w-full' }, slotContent), paginationMarkup])
         } else {

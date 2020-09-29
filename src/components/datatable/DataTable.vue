@@ -147,7 +147,7 @@ export default defineComponent({
     watchEffect(() => {
       calculateApiUrl()
       queryData()
-      console.log('Watching effect of calculateApiUrl + queryData')
+      // console.log('Watching effect of calculateApiUrl + queryData')
     })
 
     if (props.data) {

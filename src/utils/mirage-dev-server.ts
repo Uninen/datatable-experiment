@@ -170,7 +170,7 @@ export function makeDevServer(environment = 'test') {
         server.db.loadData(artistsJson)
       } else {
         console.info('MirageJS: loading artists dynamically.', environment)
-        server.createList('artist', 180)
+        server.createList('artist', 500)
       }
     },
   })

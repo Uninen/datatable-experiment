@@ -48,7 +48,7 @@
           <div class="flex items-center sm:px-6">
             <img class="w-10 h-10 rounded-full" :src="item.photo" alt="" />
             <div class="ml-2">
-              <span class="block text-sm sm:text-base">{{ item.name }}</span>
+              <span class="block text-sm sm:text-base datatable-name">{{ item.name }}</span>
               <span class="block text-gray-500 sm:text-sm">@{{ item.username }}</span>
             </div>
           </div>

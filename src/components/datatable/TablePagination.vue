@@ -30,7 +30,7 @@
       </div>
       <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
         <div>
-          <div class="text-sm leading-5 text-gray-700">
+          <div v-if="pagination.totalItems > 0" class="text-sm leading-5 text-gray-700">
             Showing
             <span class="font-medium">{{ pagination.startIndex + 1 }}</span>
             to
@@ -39,6 +39,7 @@
             <span class="font-medium">{{ pagination.totalItems }}</span>
             results
           </div>
+          <div v-else>No results found.</div>
         </div>
         <div>
           <nav class="relative z-0 inline-flex shadow-sm">

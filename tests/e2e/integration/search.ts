@@ -22,4 +22,12 @@ describe('Test remote search', () => {
 
     cy.contains('div', 'Showing 1 to 2 of 2 results')
   })
+
+  it('Search with no results hould say so', () => {
+    cy.visit('/')
+
+    cy.get('#search').type('noresults')
+
+    cy.contains('div', 'No results found.')
+  })
 })

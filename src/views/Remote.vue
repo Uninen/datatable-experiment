@@ -18,6 +18,7 @@
         <th-item
           class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
           order-key="name"
+          id="sortby-name"
           >Name</th-item
         >
         <th-item
@@ -32,6 +33,7 @@
         <th-item
           class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
           order-key="created"
+          id="sortby-created"
           >Created</th-item
         >
         <th-item

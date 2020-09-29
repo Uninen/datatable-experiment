@@ -163,6 +163,7 @@ export default defineComponent({
 
     function orderingChange(value: string) {
       currentOrdering.value = value
+      console.log('catch ordering change')
     }
 
     function searchChange(value: string) {
@@ -192,9 +193,9 @@ export default defineComponent({
       }
     })
 
-    watch(currentPage, () => {
+    watch([currentPage, currentOrdering, searchTerm], () => {
       prepareData()
-      console.log('Watching currentPage')
+      console.log('Watching [currentPage, currentOrdering, searchTerm]')
     })
     prepareData()
 

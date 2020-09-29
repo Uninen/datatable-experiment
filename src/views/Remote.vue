@@ -57,7 +57,7 @@
           {{ item.subscriptionType }}
         </td-item>
         <td-item class="px-0 sm:px-3 md:px-6">
-          <div class="sm:flex sm:items-center sm:justify-center sm:flex-1">
+          <div class="sm:flex sm:items-center sm:flex-1">
             <t-icon v-if="item.isVip" name="badge-check" class="w-5 h-5 text-indigo-600" />
           </div>
         </td-item>

@@ -5,42 +5,41 @@
       :data="artistList"
       :items-per-page="15"
       id="artists-table"
-      class="overflow-hidden border-b border-collapse border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
+      class="overflow-hidden border-b border-collapse border-gray-900 divide-y divide-gray-800 shadow-dark sm:rounded-lg"
     >
-      <template #filters></template>
       <template #loader>
-        <div class="p-4 text-base bg-gray-200">Loading data...</div>
+        <div class="p-4 text-base bg-gray-800">Loading data...</div>
       </template>
       <table-head class="rounded-t-md">
         <th-item
-          class="items-center px-1 py-3 pl-4 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+          class="items-center px-1 py-3 pl-4 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
           order-key="name"
           id="sortby-name"
           >Name</th-item
         >
         <th-item
-          class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+          class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
           :hidden-below="2"
           >Subscription</th-item
         >
         <th-item
-          class="items-center py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+          class="items-center py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
           >VIP</th-item
         >
         <th-item
-          class="items-center py-3 pl-2 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+          class="items-center py-3 pl-2 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
           order-key="created"
           id="sortby-created"
           >Created</th-item
         >
         <th-item
-          class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+          class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
           >&nbsp;</th-item
         >
       </table-head>
 
       <table-row
-        class="items-center text-sm text-gray-700 divide-y divide-gray-200 md:text-base"
+        class="items-center text-sm text-gray-400 divide-y divide-dark-400 md:text-base"
         v-slot="{ item, formatDate }"
       >
         <td-item class="py-1">
@@ -56,7 +55,7 @@
           {{ item.subscriptionType }}
         </td-item>
         <td-item class="px-0 sm:px-3 md:px-6">
-          <div class="sm:flex sm:items-center sm:justify-center sm:flex-1">
+          <div class="sm:flex sm:items-center sm:flex-1">
             <t-icon v-if="item.isVip" name="badge-check" class="w-5 h-5 text-indigo-600" />
           </div>
         </td-item>

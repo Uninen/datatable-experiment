@@ -2,9 +2,16 @@
   <tbody>
     <tr v-for="(obj, index) in data" :key="index">
       <slot v-bind:item="obj" v-bind:formatDate="dateFormatter">
-        <td v-for="dk in dataKeys">
-          {{ obj[dk] }}
-        </td>
+        <template v-if="dataKeys && index === 0">
+          <th v-for="dk in dataKeys" class="datatable">
+            {{ dk }}
+          </th>
+        </template>
+        <template v-else-if="dataKeys">
+          <td v-for="dk in dataKeys" class="datatable">
+            {{ obj[dk] }}
+          </td>
+        </template>
       </slot>
     </tr>
   </tbody>
@@ -17,25 +24,32 @@ export default defineComponent({
   components: {
     TdItem,
   },
-  setup() {
+  setup(_, { slots }) {
     let dataKeys: string[] = []
+    let keysShifted = false
+
     const data = inject('data') as Ref<object[]>
     const dateFormatter = inject('dateFormatter')
 
     function extractDataKeys() {
       console.log('extract dataKeys')
-      if (data.value && data.value.length > 0) {
+      if (!keysShifted && data.value && data.value.length > 0) {
         dataKeys = Object.keys(data.value[0])
+        dataKeys.reverse()
+        data.value.unshift({})
         console.log('dataKeys found!', dataKeys)
+        keysShifted = true
       } else {
         console.log('no dataKeys found.')
         console.log('data: ', data.value)
       }
     }
 
-    watchEffect(() => {
-      extractDataKeys()
-    })
+    if (!slots.default) {
+      watchEffect(() => {
+        extractDataKeys()
+      })
+    }
 
     return {
       data,
@@ -45,3 +59,19 @@ export default defineComponent({
   },
 })
 </script>
+<style scoped>
+td.datatable,
+th.datatable {
+  padding: 0.3rem 0.5rem;
+}
+
+th.datatable {
+  font-weight: bold;
+  text-align: left;
+  border-bottom: 2px solid #bbb;
+}
+
+td.datatable {
+  border-bottom: 1px solid #ddd;
+}
+</style>

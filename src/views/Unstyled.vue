@@ -1,6 +1,6 @@
 <template>
   <div>
-    <data-table v-if="artistList.length > 0" :data="artistList"></data-table>
+    <data-table v-if="unstyledArtistList.length > 0" :data="unstyledArtistList"></data-table>
   </div>
 </template>
 
@@ -16,11 +16,11 @@ export default defineComponent({
   },
 
   setup() {
-    const artistList: any = artists.artists
-    console.log('Loading artists: ', artistList)
+    const unstyledArtistList: any = JSON.parse(JSON.stringify(artists.artists))
+    console.log('Loading unstyled artists: ', unstyledArtistList)
 
     return {
-      artistList,
+      unstyledArtistList,
     }
   },
 })

@@ -28,13 +28,12 @@
 </template>
 <script lang="ts">
 import { defineComponent, inject, ref, watchEffect } from 'vue'
-import { Emitter } from 'mitt'
+import { TableConfig } from './types'
 import { debounce } from 'lodash-es'
 
 export default defineComponent({
   setup() {
-    const tableId = inject('tableId') as string
-    const bus = inject('bus') as Emitter
+    const tableConf = inject('tableConf') as TableConfig
 
     const searchTerm = ref<string>('')
 
@@ -42,18 +41,16 @@ export default defineComponent({
       console.log('searchterm changed to: ', searchTerm.value)
       if (searchTerm.value.length !== 1) {
         console.log('emitting search')
-        bus.emit(`search-${tableId}`, searchTerm.value)
+        tableConf.bus.emit(`search-${tableConf.tableId}`, searchTerm.value)
       }
     }
 
     const search = debounce(
-      function (inputEvent) {
+      function () {
         searchTermChange()
       },
       300,
-      {
-        maxWait: 500,
-      }
+      { maxWait: 500 }
     )
 
     watchEffect(() => {

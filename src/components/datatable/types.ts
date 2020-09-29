@@ -1,3 +1,5 @@
+import { Emitter } from 'mitt'
+
 export const enum Breakpoint {
   MOBILE = 1,
   SM,
@@ -33,4 +35,15 @@ export interface PaginationObject {
   startIndex: number
   endIndex: number
   pages: number[]
+}
+
+export const enum TableMode {
+  LOCAL,
+  REMOTE,
+}
+
+export interface TableConfig {
+  readonly mode: TableMode
+  readonly tableId: string
+  bus: Emitter
 }

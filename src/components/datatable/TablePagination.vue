@@ -15,7 +15,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, computed, inject, Ref, ref } from 'vue'
-import { Emitter } from 'mitt'
+import { TableConfig } from './types'
 import { PaginationObject } from './types'
 
 export default defineComponent({
@@ -24,13 +24,12 @@ export default defineComponent({
     const currentPage = ref(1)
     const pagination = inject('pagination') as Ref<PaginationObject>
     const isFetchingData = inject('isFetchingData') as Ref<boolean>
-    const bus = inject('bus') as Emitter
-    const tableId = inject('tableId') as string
+    const tableConf = inject('tableConf') as TableConfig
 
     function changePageTo(page: number) {
       currentPage.value = page
       emit('pagechange', page)
-      bus.emit(`pagechange-${tableId}`, page)
+      tableConf.bus.emit(`pagechange-${tableConf.tableId}`, page)
     }
 
     const hasPreviousPage = computed(() => {

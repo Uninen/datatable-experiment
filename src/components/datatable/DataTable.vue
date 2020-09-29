@@ -8,7 +8,7 @@ import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
 import DataTableFilter from './DataTableFilter.vue'
 import { useBreakpoint } from '../../utils/useTailwindBreakpoint'
-import { PaginationObject } from './types'
+import { PaginationObject, TableMode, TableConfig } from './types'
 import { AxiosInstance } from 'axios'
 import { paginate, generateID, formatDate } from './utils'
 
@@ -51,21 +51,32 @@ export default defineComponent({
     const dataCount = ref(0)
     const maxPages = ref(7)
     const pagination = ref<PaginationObject>()
-    const bus = mitt()
     const url = ref('')
     const searchTerm = ref('')
-    let tableId: string = ''
+    let tableId: string
+    let mode: TableMode = TableMode.REMOTE
 
     if (props.itemsPerPage && props.itemsPerPage > 0) {
       perPage.value = props.itemsPerPage
     }
 
-    // @ts-ignore
+    if (props.data) {
+      mode = TableMode.LOCAL
+    }
+
+    // @ts-expect-error
     if (attrs.id && attrs.id.length > 0) {
       tableId = attrs.id as string
     } else {
       tableId = generateID()
     }
+
+    const tableConf: TableConfig = {
+      mode: mode,
+      tableId: tableId,
+      bus: mitt(),
+    }
+
     function dateFormatter(dateStr: string): string {
       if (currentBreakpoint.value < 2) {
         return formatDate(dateStr, 'YYYY-MM-DD')
@@ -94,36 +105,44 @@ export default defineComponent({
     }
 
     function initLocalData(): void {
+      isFetchingData.value = true
       data.value = props.data!
       dataCount.value = props.data!.length
       calculatePagination()
+      isFetchingData.value = false
+      initialLoadingDone.value = true
     }
 
     function queryData(): void {
-      if (props.axiosInstance) {
-        isFetchingData.value = true
+      isFetchingData.value = true
 
-        props.axiosInstance!.get(url.value).then((response) => {
-          data.value = response.data.results
-          dataCount.value = response.data.count
-          calculatePagination()
-          isFetchingData.value = false
-          initialLoadingDone.value = true
-        })
-      } else {
+      props.axiosInstance!.get(url.value).then((response) => {
+        data.value = response.data.results
+        dataCount.value = response.data.count
+        calculatePagination()
+        isFetchingData.value = false
         initialLoadingDone.value = true
+      })
+    }
+
+    function prepareData(): void {
+      if (tableConf.mode == TableMode.REMOTE) {
+        calculateApiUrl()
+        queryData()
+      } else {
+        initLocalData()
       }
     }
 
     function pageChange(value: number) {
       currentPage.value = value
     }
-    bus.on(`pagechange-${tableId}`, (value) => pageChange(value))
+    tableConf.bus.on(`pagechange-${tableConf.tableId}`, (value) => pageChange(value))
 
     function orderingChange(value: string) {
       currentOrdering.value = value
     }
-    bus.on(`ordering-${tableId}`, (value) => orderingChange(value))
+    tableConf.bus.on(`ordering-${tableConf.tableId}`, (value) => orderingChange(value))
 
     function searchChange(value: string) {
       searchTerm.value = value
@@ -134,7 +153,7 @@ export default defineComponent({
       }
       currentPage.value = 1
     }
-    bus.on(`search-${tableId}`, (value) => searchChange(value))
+    tableConf.bus.on(`search-${tableConf.tableId}`, (value) => searchChange(value))
 
     watchEffect(() => {
       if (currentBreakpoint.value > 3) {
@@ -150,20 +169,13 @@ export default defineComponent({
     })
 
     watchEffect(() => {
-      calculateApiUrl()
-      queryData()
-      // console.log('Watching effect of calculateApiUrl + queryData')
+      prepareData()
+      console.log('Watching effect of prepareData')
     })
 
-    if (props.data) {
-      initLocalData()
-      initialLoadingDone.value = true
-    }
-
     provide('data', data)
-    provide('bus', bus)
+    provide('tableConf', tableConf)
     provide('dateFormatter', dateFormatter)
-    provide('tableId', tableId)
     provide('pagination', pagination)
     provide('isFetchingData', isFetchingData)
     provide('currentBreakpoint', currentBreakpoint)
@@ -189,7 +201,6 @@ export default defineComponent({
         if (props.itemsPerPage || slots.pagination) {
           let paginationMarkup = h(TablePagination)
           if (slots.pagination) {
-            console.log('we are rendering PAGINATION')
             paginationMarkup = h(TablePagination, [slots.pagination!()])
           }
           return h('div', [h('table', { class: 'w-full' }, slotContent), paginationMarkup])

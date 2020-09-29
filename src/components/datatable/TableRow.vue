@@ -2,20 +2,15 @@
   <tbody>
     <tr v-for="(obj, index) in data" :key="index">
       <slot v-bind:item="obj" v-bind:formatDate="dateFormatter">
-        <template v-if="dataKeys">
-          <td v-for="dk in dataKeys">
-            {{ obj[dk] }}
-          </td>
-        </template>
-        <template v-else>
-          {{ obj }}
-        </template>
+        <td v-for="dk in dataKeys">
+          {{ obj[dk] }}
+        </td>
       </slot>
     </tr>
   </tbody>
 </template>
 <script lang="ts">
-import { defineComponent, inject, watch } from 'vue'
+import { defineComponent, inject, watchEffect, Ref } from 'vue'
 import TdItem from './TdItem.vue'
 
 export default defineComponent({
@@ -24,21 +19,23 @@ export default defineComponent({
   },
   setup() {
     let dataKeys: string[] = []
-    let data = inject('data')
-    let dateFormatter = inject('dateFormatter')
+    const data = inject('data') as Ref<object[]>
+    const dateFormatter = inject('dateFormatter')
 
-    if (data[0]) {
-      dataKeys = Object.keys(data[0])
+    function extractDataKeys() {
+      console.log('extract dataKeys')
+      if (data.value && data.value.length > 0) {
+        dataKeys = Object.keys(data.value[0])
+        console.log('dataKeys found!', dataKeys)
+      } else {
+        console.log('no dataKeys found.')
+        console.log('data: ', data.value)
+      }
     }
 
-    watch(
-      () => data,
-      () => {
-        if (data[0]) {
-          dataKeys = Object.keys(data[0])
-        }
-      }
-    )
+    watchEffect(() => {
+      extractDataKeys()
+    })
 
     return {
       data,

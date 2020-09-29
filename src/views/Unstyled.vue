@@ -1,10 +1,6 @@
 <template>
   <div>
-    <data-table
-      class="hidden sm:block"
-      v-if="artistList.length > 0"
-      :data="artistList"
-    ></data-table>
+    <data-table v-if="artistList.length > 0" :data="artistList"></data-table>
   </div>
 </template>
 
@@ -21,7 +17,7 @@ export default defineComponent({
 
   setup() {
     const artistList: any = artists.artists
-    console.log('artists: ', artists)
+    console.log('Loading artists: ', artistList)
 
     return {
       artistList,

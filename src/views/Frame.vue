@@ -5,21 +5,22 @@
       'bg-dark-700': $route.path === '/local/',
     }"
   >
-    <div class="container pb-8 mx-auto">
-      <div class="w-full px-2 py-2 mb-8 bg-white sm:py-8">
-        <div
-          class="flex items-center justify-center pb-2 border-b border-gray-300 sm:justify-between"
-        >
-          <div class="flex items-center h-8 space-x-2 text-sm sm:text-base">
-            <router-link to="/">Remote</router-link> <span>|</span>
-            <router-link to="/local/">Local</router-link> <span class="hidden sm:block">|</span>
-            <router-link to="/unstyled/" class="hidden sm:block">Unstyled</router-link>
-          </div>
-          <div id="download-button" class="hidden md:block"></div>
+    <div class="w-full px-2 py-2 mb-8 text-blue-100 bg-blue-800 sm:py-4 sm:px-8">
+      <div class="flex items-center justify-center pb-2 sm:justify-between">
+        <div>
+          <h1 class="text-2xl font-bold text-white">Datatable experiment</h1>
+          <nav class="flex items-center h-8 space-x-2 text-sm sm:text-base">
+            <router-link to="/">Remote data</router-link> <span>|</span>
+            <router-link to="/local/">Local data</router-link>
+            <span class="hidden sm:block">|</span>
+            <router-link to="/unstyled/" class="hidden sm:block">No markup</router-link>
+          </nav>
         </div>
+        <div id="download-button" class="hidden md:block"></div>
       </div>
+    </div>
+    <div class="container pb-8 mx-auto">
       <div id="datatable-filters"></div>
-
       <router-view v-if="isMounted"></router-view>
     </div>
   </div>

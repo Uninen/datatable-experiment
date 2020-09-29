@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, provide, PropType, watchEffect, h, ref } from 'vue'
+import { defineComponent, provide, PropType, watchEffect, h, ref, watch, toRaw } from 'vue'
 
 import mitt from 'mitt'
 
@@ -53,8 +53,13 @@ export default defineComponent({
     const pagination = ref<PaginationObject>()
     const url = ref('')
     const searchTerm = ref('')
+    let usePagination = true
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
+
+    if (!slots.pagination && !props.itemsPerPage) {
+      usePagination = false
+    }
 
     if (props.itemsPerPage && props.itemsPerPage > 0) {
       perPage.value = props.itemsPerPage
@@ -85,8 +90,22 @@ export default defineComponent({
       }
     }
 
+    function prepDataForCurrentPage(): void {
+      if (usePagination) {
+        // @ts-ignore
+        data.value = props.data!.slice(pagination.value.startIndex, pagination.value.endIndex)
+      }
+    }
+
     function calculatePagination() {
-      pagination.value = paginate(dataCount.value, currentPage.value, perPage.value, maxPages.value)
+      if (usePagination) {
+        pagination.value = paginate(
+          dataCount.value,
+          currentPage.value,
+          perPage.value,
+          maxPages.value
+        )
+      }
     }
 
     function calculateApiUrl() {
@@ -105,15 +124,19 @@ export default defineComponent({
     }
 
     function initLocalData(): void {
+      console.log('initing local data')
       isFetchingData.value = true
       data.value = props.data!
       dataCount.value = props.data!.length
       calculatePagination()
+      prepDataForCurrentPage()
       isFetchingData.value = false
       initialLoadingDone.value = true
+      console.log('local data looks like this: ', toRaw(data))
     }
 
     function queryData(): void {
+      console.log('querying remote data')
       isFetchingData.value = true
 
       props.axiosInstance!.get(url.value).then((response) => {
@@ -137,12 +160,10 @@ export default defineComponent({
     function pageChange(value: number) {
       currentPage.value = value
     }
-    tableConf.bus.on(`pagechange-${tableConf.tableId}`, (value) => pageChange(value))
 
     function orderingChange(value: string) {
       currentOrdering.value = value
     }
-    tableConf.bus.on(`ordering-${tableConf.tableId}`, (value) => orderingChange(value))
 
     function searchChange(value: string) {
       searchTerm.value = value
@@ -153,6 +174,9 @@ export default defineComponent({
       }
       currentPage.value = 1
     }
+
+    tableConf.bus.on(`pagechange-${tableConf.tableId}`, (value) => pageChange(value))
+    tableConf.bus.on(`ordering-${tableConf.tableId}`, (value) => orderingChange(value))
     tableConf.bus.on(`search-${tableConf.tableId}`, (value) => searchChange(value))
 
     watchEffect(() => {
@@ -168,10 +192,11 @@ export default defineComponent({
       }
     })
 
-    watchEffect(() => {
+    watch(currentPage, () => {
       prepareData()
-      console.log('Watching effect of prepareData')
+      console.log('Watching currentPage')
     })
+    prepareData()
 
     provide('data', data)
     provide('tableConf', tableConf)
@@ -183,13 +208,16 @@ export default defineComponent({
     return () => {
       if (initialLoadingDone.value) {
         let slotContent: any = []
-        console.log('rendering slots: ', slots)
+
+        console.log('start SLOTS')
         for (const sl in slots) {
           console.log('slot: ', sl)
         }
+        console.log('end SLOTS')
 
         if (!slots.default) {
           slotContent = [h(TableRow)]
+          console.log('rendering w/ table row')
         } else {
           slotContent = [slots.default()]
         }
@@ -205,10 +233,15 @@ export default defineComponent({
           }
           return h('div', [h('table', { class: 'w-full' }, slotContent), paginationMarkup])
         } else {
+          console.log('rendering wo pagination')
           return h('div', [h('table', { class: 'w-full' }, slotContent)])
         }
       } else {
-        return h('div', slots.loader!())
+        if (slots.loader) {
+          return h('div', slots.loader!())
+        } else {
+          return h('div', 'Loading...')
+        }
       }
     }
   },

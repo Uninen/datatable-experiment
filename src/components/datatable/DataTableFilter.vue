@@ -1,6 +1,6 @@
 <template>
   <teleport to="#datatable-filters">
-    <div class="mb-6">
+    <div class="mx-4 mb-4 sm:mx-0 sm:mb-6">
       <label for="email" class="block text-sm font-bold leading-5 text-gray-600">Search</label>
       <div class="flex mt-1 rounded-md shadow-sm">
         <div class="relative flex-grow focus-within:z-10">

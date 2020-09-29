@@ -10,7 +10,7 @@ import DataTableFilter from './DataTableFilter.vue'
 import { useBreakpoint } from '../../utils/useTailwindBreakpoint'
 import { PaginationObject } from './types'
 import { AxiosInstance } from 'axios'
-import { paginate, generateID } from './utils'
+import { paginate, generateID, formatDate } from './utils'
 
 export default defineComponent({
   props: {
@@ -70,7 +70,13 @@ export default defineComponent({
     } else {
       tableId = generateID()
     }
-    console.log('Assigned ID to', tableId)
+    function dateFormatter(dateStr: string): string {
+      if (currentBreakpoint.value < 2) {
+        return formatDate(dateStr, 'YYYY-MM-DD')
+      } else {
+        return formatDate(dateStr, 'MMMM D, YYYY')
+      }
+    }
 
     function calculatePagination() {
       pagination.value = paginate(dataCount.value, currentPage.value, perPage.value, maxPages.value)
@@ -157,6 +163,7 @@ export default defineComponent({
       provide('data', data)
     }
     provide('bus', bus)
+    provide('dateFormatter', dateFormatter)
     provide('tableId', tableId)
     provide('pagination', pagination)
     provide('isFetchingData', isFetchingData)

@@ -1,7 +1,7 @@
 <template>
   <tbody>
     <tr v-for="(obj, index) in data" :key="index">
-      <slot v-bind:item="obj">
+      <slot v-bind:item="obj" v-bind:formatDate="dateFormatter">
         <template v-if="dataKeys">
           <td v-for="dk in dataKeys">
             {{ obj[dk] }}
@@ -25,6 +25,7 @@ export default defineComponent({
   setup() {
     let dataKeys: string[] = []
     let data = inject('data')
+    let dateFormatter = inject('dateFormatter')
 
     if (data[0]) {
       dataKeys = Object.keys(data[0])
@@ -42,6 +43,7 @@ export default defineComponent({
     return {
       data,
       dataKeys,
+      dateFormatter,
     }
   },
 })

@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 import { PaginationObject } from './types'
 
 // heavily inspired by paginate() by Jason Watmore
@@ -98,4 +100,8 @@ export function generateID(): string {
     d = Math.floor(d / 16)
     return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16)
   })
+}
+
+export function formatDate(dateStr: string, format: string = 'MMMM D, YYYY'): string {
+  return dayjs(dateStr).format(format)
 }

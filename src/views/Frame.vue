@@ -1,14 +1,18 @@
 <template>
   <div class="justify-center flex-1">
-    <div class="container pt-8 pb-8 mx-auto">
-      <div class="flex items-center justify-between w-full pb-2 mb-8 border-b border-gray-300">
-        <div class="flex items-center h-8 space-x-2">
+    <div class="container pt-2 pb-2 mx-auto sm:pt-8 sm:pb-8">
+      <div
+        class="flex items-center justify-center w-full px-2 pb-2 mb-8 border-b border-gray-300 sm:justify-between"
+      >
+        <div class="flex items-center h-8 space-x-2 text-sm sm:text-base">
           <router-link to="/">Remote</router-link> <span>|</span>
-          <router-link to="/local/">Local</router-link> <span>|</span>
-          <router-link to="/unstyled/">Unstyled</router-link>
+          <router-link to="/local/">Local</router-link> <span class="hidden sm:block">|</span>
+          <router-link to="/unstyled/" class="hidden sm:block">Unstyled</router-link>
         </div>
-        <div id="download-button"></div>
+        <div id="download-button" class="hidden md:block"></div>
       </div>
+      <div id="datatable-filters"></div>
+
       <router-view v-if="isMounted"></router-view>
     </div>
   </div>

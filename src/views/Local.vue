@@ -5,7 +5,7 @@
       :data="artistList"
       :items-per-page="15"
       id="artists-table"
-      class="overflow-hidden border-b border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
+      class="overflow-hidden border-b border-collapse border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
     >
       <template #filters></template>
       <template #loader>
@@ -13,7 +13,7 @@
       </template>
       <table-head class="rounded-t-md">
         <th-item
-          class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+          class="items-center px-1 py-3 pl-4 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
           order-key="name"
           id="sortby-name"
           >Name</th-item
@@ -24,11 +24,11 @@
           >Subscription</th-item
         >
         <th-item
-          class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+          class="items-center py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
           >VIP</th-item
         >
         <th-item
-          class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+          class="items-center py-3 pl-2 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
           order-key="created"
           id="sortby-created"
           >Created</th-item
@@ -40,11 +40,11 @@
       </table-head>
 
       <table-row
-        class="text-xs text-gray-700 divide-y divide-gray-200 sm:text-base"
-        v-slot="{ item }"
+        class="items-center text-sm text-gray-700 divide-y divide-gray-200 md:text-base"
+        v-slot="{ item, formatDate }"
       >
         <td-item class="py-1">
-          <div class="flex items-center sm:px-6">
+          <div class="flex items-center px-1 sm:px-3 md:px-6">
             <img class="w-10 h-10 rounded-full" :src="item.photo" alt="" />
             <div class="ml-2">
               <span class="block text-sm sm:text-base datatable-name">{{ item.name }}</span>
@@ -52,14 +52,16 @@
             </div>
           </div>
         </td-item>
-        <td-item :hidden-below="2" class="sm:px-6">
+        <td-item :hidden-below="2" class="sm:px-3 md:px-6">
           {{ item.subscriptionType }}
         </td-item>
-        <td-item class="sm:px-3 md:px-6">
-          <t-icon v-if="item.isVip" name="badge-check" class="w-5 h-5 text-indigo-600" />
+        <td-item class="px-0 sm:px-3 md:px-6">
+          <div class="sm:flex sm:items-center sm:justify-center sm:flex-1">
+            <t-icon v-if="item.isVip" name="badge-check" class="w-5 h-5 text-indigo-600" />
+          </div>
         </td-item>
-        <td-item class="px-6">{{ formatDate(item.created) }}</td-item>
-        <td-item class="px-6">
+        <td-item class="px-0 pl-2 sm:px-3 md:px-6">{{ formatDate(item.created) }}</td-item>
+        <td-item class="px-2 sm:px-6">
           <button class="flex items-center hidden leading-5 text-indigo-700 sm:block">Edit</button>
           <button class="flex items-center block leading-5 text-gray-400 sm:hidden">
             <svg

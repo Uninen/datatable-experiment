@@ -94,26 +94,26 @@
             currentPage,
           }"
           ><div
-            class="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6"
+            class="flex items-center justify-between px-4 py-3 border-t border-dark-400 bg-dark-700 sm:px-6"
           >
             <div class="flex justify-between flex-1 sm:hidden">
               <a
                 href="#"
-                class="relative inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700"
+                class="relative inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out border rounded-md border-dark-500 hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-dark-900 active:text-gray-700"
                 v-if="hasPreviousPage"
                 @click.prevent="changePageTo(previousPage)"
               >
                 Previous
               </a>
-              <div v-if="isFetchingData" class="inline-flex items-center text-sm text-gray-700">
+              <div v-if="isFetchingData" class="inline-flex items-center text-sm text-gray-500">
                 Loading...
               </div>
-              <div v-else class="inline-flex items-center text-sm text-gray-700">
+              <div v-else class="inline-flex items-center text-sm text-gray-500">
                 Page {{ pagination.currentPage }}/{{ pagination.totalPages }}
               </div>
               <a
                 href="#"
-                class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700"
+                class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out border rounded-md border-dark-500 hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-dark-900 active:text-gray-700"
                 v-if="hasNextPage"
                 @click.prevent="changePageTo(nextPage)"
               >
@@ -122,7 +122,7 @@
             </div>
             <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
               <div>
-                <div v-if="pagination.totalItems > 0" class="text-sm leading-5 text-gray-700">
+                <div v-if="pagination.totalItems > 0" class="text-sm leading-5 text-gray-300">
                   Showing
                   <span class="font-medium">{{ pagination.startIndex + 1 }}</span>
                   to
@@ -137,7 +137,7 @@
                 <nav class="relative z-0 inline-flex shadow-sm">
                   <a
                     href="#"
-                    class="relative inline-flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-l-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
+                    class="relative inline-flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out border border-dark-400 rounded-l-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-dark-900 active:text-gray-500"
                     aria-label="Previous"
                     v-if="hasPreviousPage"
                     @click.prevent="changePageTo(previousPage)"
@@ -153,12 +153,14 @@
                   </a>
                   <a
                     href="#"
-                    class="relative inline-flex items-center px-4 py-2 -ml-px text-sm leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700"
+                    class="relative inline-flex items-center px-4 py-2 -ml-px text-sm leading-5 transition duration-150 ease-in-out border border-dark-400 hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-800 active:bg-dark-900 active:text-gray-700"
                     v-for="page in shrunkPageList"
                     :key="page"
                     :class="{
                       'font-medium': page !== pagination.currentPage,
+                      'text-gray-400': page !== pagination.currentPage,
                       'font-bold': page === pagination.currentPage,
+                      'text-gray-300': page === pagination.currentPage,
                     }"
                     @click.prevent="changePageTo(page)"
                   >
@@ -189,7 +191,7 @@
 
                   <a
                     href="#"
-                    class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-r-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
+                    class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out border border-dark-400 rounded-r-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-dark-900 active:text-gray-500"
                     aria-label="Next"
                     v-if="hasNextPage"
                     @click.prevent="changePageTo(nextPage)"

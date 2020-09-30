@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, provide, PropType, watchEffect, h, ref, watch, toRaw } from 'vue'
+import { defineComponent, provide, PropType, watchEffect, h, ref, watch } from 'vue'
 
 import mitt from 'mitt'
 import MiniSearch from 'minisearch'

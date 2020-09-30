@@ -5,7 +5,9 @@
       'bg-dark-700': $route.path === '/local/',
     }"
   >
-    <div class="w-full px-2 py-2 mb-8 text-blue-100 bg-blue-800 sm:py-4 sm:px-8">
+    <div
+      class="w-full px-2 py-2 mb-8 text-blue-100 bg-gradient-to-b from-blue-600 via-blue-800 to-dark-800 sm:py-6 sm:px-8"
+    >
       <div class="flex items-center justify-center pb-2 sm:justify-between">
         <div>
           <h1 class="text-2xl font-bold text-white">Datatable experiment</h1>

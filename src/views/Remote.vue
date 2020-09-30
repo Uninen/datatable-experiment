@@ -11,7 +11,38 @@
       <template #loader>
         <div class="p-4 text-base bg-gray-200">Loading data...</div>
       </template>
-      <template #filters></template>
+      <template #filters>
+        <table-filter
+          v-slot="{
+            updateSearchTerm,
+            searchTerm,
+            search,
+          }"
+        >
+          <teleport to="#datatable-filters">
+            <div class="mx-4 mb-4 sm:mx-0 sm:mb-6">
+              <label for="email" class="block text-sm font-bold leading-5 text-gray-600"
+                >Search</label
+              >
+              <div class="flex mt-1 rounded-md shadow-sm">
+                <div class="relative flex-grow focus-within:z-10">
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <t-icon name="search" class="w-5 h-5 text-gray-400" />
+                  </div>
+                  <input
+                    id="search"
+                    name="datatable-search"
+                    :value="searchTerm"
+                    class="block w-full pl-10 transition duration-150 ease-in-out rounded-md form-input sm:text-sm sm:leading-5"
+                    @keydown="search"
+                    @input="updateSearchTerm"
+                  />
+                </div>
+              </div>
+            </div>
+          </teleport>
+        </table-filter>
+      </template>
       <table-head class="rounded-t-md">
         <th-item
           class="items-center px-1 py-3 pl-4 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
@@ -233,6 +264,7 @@ import DataTable from '../components/datatable/DataTable.vue'
 import TableHead from '../components/datatable/TableHead.vue'
 import TableRow from '../components/datatable/TableRow.vue'
 import TablePagination from '../components/datatable/TablePagination.vue'
+import TableFilter from '../components/datatable/TableFilter.vue'
 import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
 
@@ -248,6 +280,7 @@ export default defineComponent({
     TdItem,
     TableRow,
     TablePagination,
+    TableFilter,
   },
 
   setup() {

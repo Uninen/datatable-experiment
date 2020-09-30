@@ -6,7 +6,7 @@ import mitt from 'mitt'
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
-import DataTableFilter from './DataTableFilter.vue'
+import TableFilter from './TableFilter.vue'
 import { useBreakpoint } from '../../utils/useTailwindBreakpoint'
 import { PaginationObject, TableMode, TableConfig } from './types'
 import { AxiosInstance } from 'axios'
@@ -224,7 +224,7 @@ export default defineComponent({
         }
 
         if (slots.filters) {
-          slotContent.push(h(DataTableFilter))
+          slotContent.push(h(TableFilter, slots.filters))
         }
 
         if (props.itemsPerPage || slots.pagination) {

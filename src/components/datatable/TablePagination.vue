@@ -14,7 +14,7 @@
   ></slot>
 </template>
 <script lang="ts">
-import { defineComponent, computed, inject, Ref, ref, h } from 'vue'
+import { defineComponent, computed, inject, Ref, ref } from 'vue'
 import { TableConfig } from './types'
 import { PaginationObject } from './types'
 

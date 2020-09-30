@@ -28,7 +28,7 @@ export default defineComponent({
     let dataKeys: string[] = []
     let keysShifted = false
 
-    const data = inject('data') as Ref<object[]>
+    const data = inject('data') as Ref<any[]>
     const dateFormatter = inject('dateFormatter')
 
     function extractDataKeys() {

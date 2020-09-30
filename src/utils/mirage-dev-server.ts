@@ -1,7 +1,9 @@
-import { Server, Model, Factory, Collection, Request } from 'miragejs'
+import { Server, Model, Factory, Collection, Request, ModelInstance } from 'miragejs'
 import Schema from 'miragejs/orm/schema'
 import { AnyRegistry } from 'miragejs/-types'
+
 import faker from 'faker'
+import MiniSearch from 'minisearch'
 
 import artistsJson from './fixtures/artists.mirage.db.json'
 import { sortByKey } from '../components/datatable/utils'
@@ -49,6 +51,7 @@ function requestData(request: any): requestDataModel {
   }
 }
 
+// @ts-ignore
 function responseFromResults(rd: requestDataModel, results: Collection) {
   if (rd.ordering) {
     // console.log('sorting results by field: ', ordering)
@@ -72,24 +75,33 @@ function allData(schema: Schema<AnyRegistry>, model: string, request: Request): 
 function searchData(
   schema: Schema<AnyRegistry>,
   model: string,
-  properties: string[],
-  request: Request
+  request: Request,
+  searchInstance: MiniSearch
 ): allDataModel {
   const rd = requestData(request)
   const searchTerm: string | null = request.queryParams.search || null
+  let results: any[] = schema.all(model).models
 
-  let results = schema.where(model, (obj: any) => {
-    if (searchTerm !== null && searchTerm.length > 0) {
-      for (const property of properties) {
-        if (obj[property].toLowerCase().includes(searchTerm)) {
-          return true
-        }
+  if (searchInstance.documentCount === 0) {
+    searchInstance.addAll(results)
+  }
+
+  if (searchTerm !== null && searchTerm.length > 0) {
+    let searchResults = searchInstance.search(searchTerm)
+    let tmpResults: ModelInstance<{}>[] = []
+
+    if (searchResults.length > 0) {
+      for (const resultObj of searchResults) {
+        let res = schema.all(model).models.find((obj: any) => {
+          return obj.id === resultObj.id
+        }) as ModelInstance<{}>
+
+        tmpResults.push(res)
       }
+      results = tmpResults
     }
-    return false
-  }).models
+  }
   const count: number = results.length
-
   return {
     count,
     results: responseFromResults(rd, results),
@@ -97,12 +109,20 @@ function searchData(
 }
 
 export function makeDevServer(environment = 'test') {
+  const searchInstance = new MiniSearch({
+    fields: ['name', 'username'],
+    searchOptions: {
+      prefix: true,
+      fuzzy: 0.3,
+    },
+  })
+
   const server = new Server({
     routes() {
       this.get(
         '/api/search/artists',
         (schema, request) => {
-          const ad = searchData(schema, 'artist', ['name', 'username'], request)
+          const ad = searchData(schema, 'artist', request, searchInstance)
           return {
             count: ad.count,
             results: ad.results,

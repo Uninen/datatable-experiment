@@ -51,7 +51,6 @@ export default defineComponent({
     const url = ref('')
     const searchTerm = ref('')
     const searchInstance = ref<MiniSearch>()
-    const searchResults = ref<MiniSearch>()
     let usePagination = true
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
@@ -99,6 +98,7 @@ export default defineComponent({
     }
 
     function localSearch() {
+      console.log('local search for ', searchTerm.value)
       let newData: any = []
       const results = searchInstance.value!.search(searchTerm.value)
       if (props.data && results.length > 0) {
@@ -111,14 +111,17 @@ export default defineComponent({
         }
         data.value = newData
         dataCount.value = newData.length
+        console.log('search results: ', newData.length)
       } else {
         data.value = []
         dataCount.value = 0
       }
+      console.log('after search: ', data.value.length)
       calculatePagination()
     }
 
     function prepLocalDataForCurrentPage(): void {
+      let endIndex = 0
       if (searchTerm.value.length > 0) {
         localSearch()
       } else {
@@ -127,18 +130,43 @@ export default defineComponent({
 
       if (tableConf.mode == TableMode.LOCAL && pagination.value) {
         // @ts-ignore
-        data.value = data.value.slice(pagination.value.startIndex, pagination.value.endIndex + 1)
+        console.log('data.value.length before slice: ', data.value.length)
+        console.log(
+          'pagination start index end index before slice: ',
+          pagination.value.startIndex,
+          pagination.value.endIndex
+        )
+        if (data.value.length < perPage.value) {
+          endIndex = pagination.value.endIndex + 1
+        } else {
+          endIndex = pagination.value.endIndex
+        }
+        data.value = data.value.slice(pagination.value.startIndex, endIndex)
+        console.log('data.value.length after slice: ', data.value.length)
       }
     }
 
     function calculatePagination() {
       if (usePagination) {
+        console.log('calculating pagination w/')
+        console.log('dataCount.value: ', dataCount.value)
+        console.log('currentPage.value: ', currentPage.value)
+        console.log('perPage.value: ', perPage.value)
+        console.log('maxPages.value: ', maxPages.value)
         pagination.value = paginate(
           dataCount.value,
           currentPage.value,
           perPage.value,
           maxPages.value
         )
+        console.log('pagination.totalItems: ', pagination.value.totalItems)
+        console.log('pagination.totalPages: ', pagination.value.totalPages)
+        console.log('pagination.currentPage: ', pagination.value.currentPage)
+        console.log('pagination.startPage: ', pagination.value.startPage)
+        console.log('pagination.endPage: ', pagination.value.endPage)
+        console.log('pagination.startIndex: ', pagination.value.startIndex)
+        console.log('pagination.endIndex: ', pagination.value.endIndex)
+        console.log('pagination.pages: ', pagination.value.pages)
       }
     }
 

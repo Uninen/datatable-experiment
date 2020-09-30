@@ -8,17 +8,20 @@ Note: this is not intended as a final product but an experiment. Hence, the code
 
 ## Design goals
 
-- Fully responsive, mobile-first (ability to )
+- Fully responsive, mobile-first
 - Fully customizable markup
 - Work fluently for both client and backend data
 - Customizable filters
 - Customizable search
 - Easily humanizable (nice labels, etc)
 
-## Project Status
+## Current functionality
 
-- Started: Basic API design
-- Started: Basic base components
+- **100% control over markup and styling**; everything works via slots
+- Works with **both local and remote data** (using your own api function)
+- **Responsive**, can show different data for different breakpoints
+- Automatic and responsive **pagination** (configurable)
+- **Search** for both local and remote data (configurable)
 
 ## Project setup
 
@@ -32,6 +35,12 @@ Run development server:
 
 ```
 yarn dev
+```
+
+Run tests locally:
+
+```
+yarn test
 ```
 
 ## Design decisions

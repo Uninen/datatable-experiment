@@ -277,11 +277,40 @@ export default defineComponent({
 
   setup() {
     const artistList: any = artists.artists
-    console.log('artists: ', artists)
+    const filterOptions = {
+      searchOptions: {
+        // fields to index
+        fields: ['userName', 'eventName', 'artistName', 'email', 'extraSearchField'],
+        // fields to return with search results
+        storeFields: [
+          'userName',
+          'eventName',
+          'artistName',
+          'email',
+          'extraSearchField',
+          'model',
+          'photoUrl',
+          'meta',
+        ],
+        searchOptions: {
+          boost: { userName: 4, artistName: 4, eventName: 2 },
+          prefix: true,
+          fuzzy: 0.3,
+        },
+      },
+      filters: {
+        isVip: {
+          type: Boolean,
+          name: 'VIP',
+        },
+      },
+    }
 
+    console.log('artists: ', artists)
     return {
       artistList,
       formatDate,
+      filterOptions,
     }
   },
 })

@@ -26,7 +26,7 @@ export default defineComponent({
       }
     }
 
-    function updateSearchTerm(event) {
+    function updateSearchTerm(event: any) {
       searchTerm.value = event.target.value
     }
 

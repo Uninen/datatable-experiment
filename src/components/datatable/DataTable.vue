@@ -2,6 +2,7 @@
 import { defineComponent, provide, PropType, watchEffect, h, ref, watch, toRaw } from 'vue'
 
 import mitt from 'mitt'
+import MiniSearch from 'minisearch'
 
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
@@ -23,10 +24,6 @@ export default defineComponent({
       required: false,
     },
     dataModel: {
-      type: String,
-      required: false,
-    },
-    searchTerm: {
       type: String,
       required: false,
     },
@@ -53,6 +50,8 @@ export default defineComponent({
     const pagination = ref<PaginationObject>()
     const url = ref('')
     const searchTerm = ref('')
+    const searchInstance = ref<MiniSearch>()
+    const searchResults = ref<MiniSearch>()
     let usePagination = true
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
@@ -67,6 +66,15 @@ export default defineComponent({
 
     if (props.data) {
       mode = TableMode.LOCAL
+
+      searchInstance.value = new MiniSearch({
+        fields: ['name', 'username'],
+        searchOptions: {
+          prefix: true,
+          fuzzy: 0.3,
+        },
+      })
+      searchInstance.value.addAll(props.data)
     }
 
     // @ts-expect-error
@@ -90,11 +98,35 @@ export default defineComponent({
       }
     }
 
-    function prepDataForCurrentPage(): void {
-      if (usePagination) {
-        // @ts-ignore
-        data.value = props.data!.slice(pagination.value.startIndex, pagination.value.endIndex)
+    function localSearch() {
+      let newData: any = []
+      const results = searchInstance.value!.search(searchTerm.value)
+      if (props.data && results.length > 0) {
+        for (const resultObj of results) {
+          newData.push(
+            props.data.find((obj: any) => {
+              return obj.id === resultObj.id
+            })
+          )
+        }
+        data.value = newData
+        dataCount.value = newData.length
+      } else {
+        data.value = []
       }
+    }
+
+    function prepLocalDataForCurrentPage(): void {
+      if (searchTerm.value.length > 0) {
+        localSearch()
+      } else {
+        data.value = props.data!
+      }
+
+      // if (usePagination) {
+      //   // @ts-ignore
+      //   data.value = props.data!.slice(pagination.value.startIndex, pagination.value.endIndex)
+      // }
     }
 
     function calculatePagination() {
@@ -129,7 +161,7 @@ export default defineComponent({
       data.value = props.data!
       dataCount.value = props.data!.length
       calculatePagination()
-      prepDataForCurrentPage()
+      prepLocalDataForCurrentPage()
       isFetchingData.value = false
       initialLoadingDone.value = true
       console.log('local data looks like this: ', toRaw(data))

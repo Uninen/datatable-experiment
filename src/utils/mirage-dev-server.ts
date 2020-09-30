@@ -80,10 +80,10 @@ function searchData(
 ): allDataModel {
   const rd = requestData(request)
   const searchTerm: string | null = request.queryParams.search || null
-  let results: any[] = schema.all(model).models
+  let results: any[] = []
 
   if (searchInstance.documentCount === 0) {
-    searchInstance.addAll(results)
+    searchInstance.addAll(schema.all(model).models)
   }
 
   if (searchTerm !== null && searchTerm.length > 0) {

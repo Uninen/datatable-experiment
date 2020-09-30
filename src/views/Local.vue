@@ -23,7 +23,7 @@
               <label for="email" class="block text-sm font-bold leading-5 text-gray-600"
                 >Search</label
               >
-              <div class="flex mt-1 rounded-md shadow-sm">
+              <div class="flex mt-1 rounded-md">
                 <div class="relative flex-grow focus-within:z-10">
                   <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <t-icon name="search" class="w-5 h-5 text-gray-400" />
@@ -32,7 +32,7 @@
                     id="search"
                     name="datatable-search"
                     :value="searchTerm"
-                    class="block w-full pl-10 transition duration-150 ease-in-out rounded-md form-input sm:text-sm sm:leading-5"
+                    class="block w-full pl-10 text-gray-300 transition duration-150 ease-in-out rounded-md form-input sm:text-sm sm:leading-5 bg-dark-600 border-dark-400"
                     @keydown="search"
                     @input="updateSearchTerm"
                   />

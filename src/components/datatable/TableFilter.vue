@@ -19,9 +19,7 @@ export default defineComponent({
     const searchTerm = ref<string>('')
 
     function searchTermChange() {
-      console.log('searchterm changed to: ', searchTerm.value)
       if (searchTerm.value.length !== 1) {
-        console.log('emitting search')
         tableConf.bus.emit(`search-${tableConf.tableId}`, searchTerm.value)
       }
     }

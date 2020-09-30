@@ -32,16 +32,11 @@ export default defineComponent({
     const dateFormatter = inject('dateFormatter')
 
     function extractDataKeys() {
-      console.log('extract dataKeys')
       if (!keysShifted && data.value && data.value.length > 0) {
         dataKeys = Object.keys(data.value[0])
         dataKeys.reverse()
         data.value.unshift({})
-        console.log('dataKeys found!', dataKeys)
         keysShifted = true
-      } else {
-        console.log('no dataKeys found.')
-        console.log('data: ', data.value)
       }
     }
 

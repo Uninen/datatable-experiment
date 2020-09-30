@@ -113,7 +113,9 @@ export default defineComponent({
         dataCount.value = newData.length
       } else {
         data.value = []
+        dataCount.value = 0
       }
+      calculatePagination()
     }
 
     function prepLocalDataForCurrentPage(): void {
@@ -123,10 +125,10 @@ export default defineComponent({
         data.value = props.data!
       }
 
-      // if (usePagination) {
-      //   // @ts-ignore
-      //   data.value = props.data!.slice(pagination.value.startIndex, pagination.value.endIndex)
-      // }
+      if (tableConf.mode == TableMode.LOCAL && pagination.value) {
+        // @ts-ignore
+        data.value = data.value.slice(pagination.value.startIndex, pagination.value.endIndex + 1)
+      }
     }
 
     function calculatePagination() {
@@ -164,7 +166,7 @@ export default defineComponent({
       prepLocalDataForCurrentPage()
       isFetchingData.value = false
       initialLoadingDone.value = true
-      console.log('local data looks like this: ', toRaw(data))
+      // console.log('local data: ', toRaw(data))
     }
 
     function queryData(): void {
@@ -200,11 +202,11 @@ export default defineComponent({
 
     function searchChange(value: string) {
       searchTerm.value = value
-      if (searchTerm.value.length > 0) {
-        console.log(`search for "${value}"`)
-      } else {
-        console.log('clear search')
-      }
+      // if (searchTerm.value.length > 0) {
+      //   console.log(`search for "${value}"`)
+      // } else {
+      //   console.log('clear search')
+      // }
       currentPage.value = 1
     }
 
@@ -227,7 +229,7 @@ export default defineComponent({
 
     watch([currentPage, currentOrdering, searchTerm], () => {
       prepareData()
-      console.log('Watching [currentPage, currentOrdering, searchTerm]')
+      // console.log('Watching [currentPage, currentOrdering, searchTerm]')
     })
     prepareData()
 
@@ -242,15 +244,8 @@ export default defineComponent({
       if (initialLoadingDone.value) {
         let slotContent: any = []
 
-        console.log('start SLOTS')
-        for (const sl in slots) {
-          console.log('slot: ', sl)
-        }
-        console.log('end SLOTS')
-
         if (!slots.default) {
           slotContent = [h(TableRow)]
-          console.log('rendering w/ table row')
         } else {
           slotContent = [slots.default()]
         }

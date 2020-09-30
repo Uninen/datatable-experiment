@@ -94,10 +94,8 @@
           </td-item>
           <td-item class="px-0 pl-2 sm:px-3 md:px-6">{{ formatDate(item.created) }}</td-item>
           <td-item class="px-2 sm:px-6">
-            <button class="flex items-center hidden leading-5 text-indigo-700 sm:block">
-              Edit
-            </button>
-            <button class="flex items-center block leading-5 text-gray-400 sm:hidden">
+            <button class="items-center hidden leading-5 text-indigo-700 sm:block">Edit</button>
+            <button class="items-center block leading-5 text-gray-400 sm:hidden">
               <svg
                 class="w-4 h-4"
                 xmlns="http://www.w3.org/2000/svg"
@@ -156,9 +154,9 @@
                 Next
               </a>
             </div>
-            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div class="hidden text-gray-300 sm:flex-1 sm:flex sm:items-center sm:justify-between">
               <div>
-                <div v-if="pagination.totalItems > 0" class="text-sm leading-5 text-gray-300">
+                <div v-if="pagination.totalItems > 0" class="text-sm leading-5">
                   Showing
                   <span class="font-medium">{{ pagination.startIndex + 1 }}</span>
                   to

@@ -230,11 +230,10 @@ export default defineComponent({
         if (props.itemsPerPage || slots.pagination) {
           let paginationMarkup = h(TablePagination)
           if (slots.pagination) {
-            paginationMarkup = h(TablePagination, [slots.pagination!()])
+            paginationMarkup = h(TablePagination, slots.pagination)
           }
           return h('div', [h('table', { class: 'w-full' }, slotContent), paginationMarkup])
         } else {
-          console.log('rendering wo pagination')
           return h('div', [h('table', { class: 'w-full' }, slotContent)])
         }
       } else {

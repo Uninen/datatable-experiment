@@ -1,26 +1,26 @@
 <template>
   <slot
     v-bind="{
-      hasPreviousPage,
-      changePageTo,
-      previousPage,
-      isFetchingData,
       pagination,
-      hasNextPage,
+      previousPage,
       nextPage,
-      shrunkPageList,
+      hasPreviousPage,
+      hasNextPage,
+      changePageTo,
+      isFetchingData,
       currentPage,
+      shrunkPageList,
     }"
   ></slot>
 </template>
 <script lang="ts">
-import { defineComponent, computed, inject, Ref, ref } from 'vue'
+import { defineComponent, computed, inject, Ref, ref, h } from 'vue'
 import { TableConfig } from './types'
 import { PaginationObject } from './types'
 
 export default defineComponent({
   emits: ['pagechange'],
-  setup(_, { emit, attrs }) {
+  setup(_, { emit }) {
     const currentPage = ref(1)
     const pagination = inject('pagination') as Ref<PaginationObject>
     const isFetchingData = inject('isFetchingData') as Ref<boolean>
@@ -52,6 +52,22 @@ export default defineComponent({
       return pagination.value.pages
     })
 
+    // return () => {
+    //   if (slots.default) {
+    //     return slots.default({
+    //       pagination,
+    //       previousPage,
+    //       nextPage,
+    //       hasPreviousPage,
+    //       hasNextPage,
+    //       changePageTo,
+    //       isFetchingData,
+    //       currentPage,
+    //       shrunkPageList,
+    //     })
+    //   }
+    // }
+
     return {
       pagination,
       previousPage,
@@ -62,7 +78,6 @@ export default defineComponent({
       isFetchingData,
       currentPage,
       shrunkPageList,
-      attrs,
     }
   },
 })

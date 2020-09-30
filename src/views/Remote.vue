@@ -8,10 +8,10 @@
       id="artists-table"
       class="overflow-hidden border-b border-collapse border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
     >
-      <template #filters></template>
       <template #loader>
         <div class="p-4 text-base bg-gray-200">Loading data...</div>
       </template>
+      <template #filters></template>
       <table-head class="rounded-t-md">
         <th-item
           class="items-center px-1 py-3 pl-4 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"

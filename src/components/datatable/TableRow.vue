@@ -30,7 +30,7 @@ export default defineComponent({
     let keysShifted = false
     const state = inject('state') as TableState
 
-    const data = state.data.current
+    const data = state.data.current.value
     const dateFormatter = inject('dateFormatter')
 
     function extractDataKeys() {

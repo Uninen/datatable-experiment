@@ -47,35 +47,33 @@ export const enum TableMode {
 
 export interface TableState {
   mode: TableMode
-  isWorking: boolean
-  initialLoadingDone: boolean
-  currentBreakpoint: Breakpoint | Ref<Breakpoint>
+  isWorking: Ref<boolean>
+  initialLoadingDone: Ref<boolean>
+  currentBreakpoint: Ref<Breakpoint>
   data: {
-    original: any[]
-    current: any[]
-    totalCount: number
+    original: Ref<{}[]>
+    current: Ref<{}[]>
+    totalCount: Ref<number>
   }
   remote?: {
-    url: string
-    dataModel: string
-  }
-  current: {
-    page: number
+    url: Ref<string>
+    dataModel: Ref<string>
   }
   features: {
-    pagination: boolean
-    search: boolean
+    pagination: Ref<boolean>
+    search: Ref<boolean>
   }
   ordering: {
-    current: string
+    current: Ref<string>
   }
   pagination: {
-    perPage: number
-    maxPaginationPages: number
-    data?: PaginationObject
+    current: Ref<number>
+    perPage: Ref<number>
+    maxPaginationPages: Ref<number>
+    data?: Ref<PaginationObject>
   }
   search: {
-    query: string
+    query: Ref<string>
     instance?: MiniSearch
   }
 }

@@ -31,12 +31,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const state = inject('state') as TableState
     const currentOrdering = ref('')
-    const currentBreakpoint = state.currentBreakpoint
     const tableConf = inject('tableConf') as TableConfig
 
     const isVisible = computed(() => {
-      if (currentBreakpoint) {
-        return currentBreakpoint >= props.hiddenBelow
+      if (state.currentBreakpoint.value) {
+        return state.currentBreakpoint.value >= props.hiddenBelow
       } else {
         return true
       }

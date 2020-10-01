@@ -1,15 +1,5 @@
 <script lang="ts">
-import {
-  defineComponent,
-  provide,
-  PropType,
-  watchEffect,
-  h,
-  ref,
-  watch,
-  isReactive,
-  isRef,
-} from 'vue'
+import { defineComponent, provide, PropType, h, ref, isReactive, isRef } from 'vue'
 
 import mitt from 'mitt'
 
@@ -61,9 +51,9 @@ export default defineComponent({
 
     if (slots.pagination) {
       debug.log('Configuring pagination')
-      state.features.pagination = true
+      state.features.pagination.value = true
       if (props.config.itemsPerPage) {
-        state.pagination.perPage = props.config.itemsPerPage
+        state.pagination.perPage.value = props.config.itemsPerPage
       } else {
         warn('DataTable pagination set up but "config.itemsPerPage" is not set')
       }
@@ -74,13 +64,13 @@ export default defineComponent({
       debug.log('Table in LOCAL mode')
       mode = TableMode.LOCAL
 
-      state.data.original = props.config.data
-      state.data.totalCount = props.config.data.length
-      debug.log('Storing original data: ', state.data.original)
+      state.data.original.value = props.config.data
+      state.data.totalCount.value = props.config.data.length
+      debug.log('Storing original data: ', state.data.original.value)
 
       if (slots.search) {
         debug.log('Configuring search')
-        state.features.search = true
+        state.features.search.value = true
         if (props.config.searchFields) {
           state.search.instance = useLocalSearch(props.config.data, props.config.searchFields)
         } else {
@@ -115,8 +105,8 @@ export default defineComponent({
     refreshData()
 
     // console.log('TYPEOF state: ', typeof state)
-    console.log('state.currentPage: ', isReactive(state.current))
     console.log('state.pagination: ', isReactive(state.pagination))
+    console.log('state.pagination.current: ', isReactive(state.pagination.current))
     // console.log('state isRef: ', isRef(state))
 
     provide('state', state)
@@ -126,7 +116,7 @@ export default defineComponent({
     provide('changePage', changePage)
 
     return () => {
-      if (state.initialLoadingDone) {
+      if (state.initialLoadingDone.value) {
         let slotContent: any = []
 
         if (!slots.default) {

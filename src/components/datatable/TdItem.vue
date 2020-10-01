@@ -23,7 +23,7 @@ export default defineComponent({
   },
   setup(props) {
     const state = inject('state') as TableState
-    const currentBreakpoint = state.currentBreakpoint
+    const currentBreakpoint = state.currentBreakpoint.value
 
     const isVisible = computed(() => {
       if (currentBreakpoint) {

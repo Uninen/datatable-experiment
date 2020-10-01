@@ -24,8 +24,8 @@ export default defineComponent({
   setup(_, { emit }) {
     const currentPage = ref(1)
     const state = inject('state') as TableState
-    const pagination = state.pagination.data!
-    const isFetchingData = state.isWorking
+    const pagination = state.pagination.data!.value
+    const isFetchingData = state.isWorking.value
     const tableConf = inject('tableConf') as TableConfig
 
     const changePage = inject('changePage')
@@ -33,11 +33,12 @@ export default defineComponent({
     const { previousPage, nextPage, hasPreviousPage, hasNextPage, pageList } = inject('pagination')
 
     function changePageTo(page: number) {
+      debug.run('changePageTo', page)
       currentPage.value = page
+      changePage(page)
       // state.current.page = page
       // emit('pagechange', page)
       // tableConf.bus.emit(`pagechange-${tableConf.tableId}`, page)
-      changePage(page)
     }
 
     // watch(pagination, () => {

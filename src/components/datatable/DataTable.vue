@@ -64,9 +64,9 @@ export default defineComponent({
       debug.log('Table in LOCAL mode')
       mode = TableMode.LOCAL
 
-      state.data.original.value = props.config.data
+      state.data.original = props.config.data
       state.data.totalCount.value = props.config.data.length
-      debug.log('Storing original data: ', state.data.original.value)
+      debug.log('Storing original data: ', state.data.original)
 
       if (slots.search) {
         debug.log('Configuring search')
@@ -104,10 +104,7 @@ export default defineComponent({
 
     refreshData()
 
-    // console.log('TYPEOF state: ', typeof state)
-    console.log('state.pagination: ', isReactive(state.pagination))
-    console.log('state.pagination.current: ', isReactive(state.pagination.current))
-    // console.log('state isRef: ', isRef(state))
+    // debug.log('state: ', state)
 
     provide('state', state)
     provide('tableConf', tableConf)

@@ -13,8 +13,8 @@ export const createStore = () => {
     initialLoadingDone: ref(false),
     currentBreakpoint: ref(1),
     data: {
-      original: ref([]),
-      current: ref([]),
+      original: [],
+      current: [],
       totalCount: ref(0),
     },
     features: {
@@ -108,9 +108,8 @@ export const createStore = () => {
     if (state.search.query.value.length > 0) {
       localSearch()
     } else {
-      // @ts-ignore
-      state.data.current.value = clone(state.data.original.value)
-      state.data.totalCount.value = state.data.current.value.length
+      state.data.current = clone(state.data.original)
+      state.data.totalCount.value = state.data.current.length
     }
 
     if (state.features.pagination) {
@@ -121,14 +120,13 @@ export const createStore = () => {
       } else {
         endIndex = state.pagination.data!.value.endIndex
       }
-      debug.log('state.data.current.value: ', state.data.current.value)
-      debug.log('state.data.current: ', state.data.current)
-      debug.log('data.value.length before slice: ', state.data.current.value.length)
-      state.data.current.value = state.data.current.value.slice(
+      debug.log('state.data.current.value: ', state.data.current)
+      debug.log('data.value.length before slice: ', state.data.current.length)
+      state.data.current = state.data.current.slice(
         state.pagination.data!.value.startIndex,
         endIndex
       )
-      debug.log('data.value.length after slice: ', state.data.current.value.length)
+      debug.log('data.value.length after slice: ', state.data.current.length)
     }
   }
 

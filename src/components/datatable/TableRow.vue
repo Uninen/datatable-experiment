@@ -20,6 +20,7 @@
 import { defineComponent, inject, watchEffect } from 'vue'
 import TdItem from './TdItem.vue'
 import { TableState } from './types'
+import { debug } from './utils/dev'
 
 export default defineComponent({
   components: {
@@ -30,14 +31,14 @@ export default defineComponent({
     let keysShifted = false
     const state = inject('state') as TableState
 
-    const data = state.data.current.value
     const dateFormatter = inject('dateFormatter')
 
     function extractDataKeys() {
-      if (!keysShifted && data && data.length > 0) {
-        dataKeys = Object.keys(data[0])
+      if (!keysShifted && state.data.current && state.data.current.length > 0) {
+        debug.run('extractDataKeys')
+        dataKeys = Object.keys(state.data.current[0])
         dataKeys.reverse()
-        data.unshift({})
+        state.data.current.unshift({})
         keysShifted = true
       }
     }
@@ -49,7 +50,7 @@ export default defineComponent({
     }
 
     return {
-      data,
+      data: state.data.current,
       dataKeys,
       dateFormatter,
     }

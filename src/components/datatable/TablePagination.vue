@@ -35,6 +35,7 @@ export default defineComponent({
     function changePageTo(page: number) {
       debug.run('changePageTo', page)
       currentPage.value = page
+      state.pagination.current.value = page
       changePage(page)
       // state.current.page = page
       // emit('pagechange', page)

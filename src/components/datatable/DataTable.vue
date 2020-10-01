@@ -11,7 +11,7 @@ import { useBreakpoint } from './utils/useTailwindBreakpoint'
 import { TableMode, TableConfig, LocalTableProps, RemoteTableProps } from './types'
 
 import { state } from './store'
-import { paginate, generateID } from './utils'
+import { generateID } from './utils'
 import {
   isLocal,
   dateFormatter,
@@ -19,6 +19,11 @@ import {
   ConfigurationError,
   warn,
   debug,
+  buildPagination,
+  buildUrl,
+  changePage,
+  changeOrdering,
+  changeSearch,
 } from './utils/dataTable'
 
 export default defineComponent({
@@ -40,195 +45,156 @@ export default defineComponent({
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
 
+    if (attrs.id) {
+      tableId = attrs.id as string
+    } else {
+      tableId = generateID()
+    }
+    debug.log('tableId set to ', tableId)
+
     if (slots.pagination) {
+      debug.log('Configuring pagination')
       state.features.pagination = true
       if (props.config.itemsPerPage) {
         state.pagination.perPage = props.config.itemsPerPage
-        console.log('perPage', state.pagination.perPage)
       } else {
-        console.log('else')
         warn('DataTable pagination set up but "config.itemsPerPage" is not set')
       }
       debug.success('Pagination configured')
     }
 
     if (isLocal(props.config)) {
-      console.log('Configuring LOCAL table')
+      debug.log('Table in LOCAL mode')
       mode = TableMode.LOCAL
 
       if (slots.search) {
+        debug.log('Configuring search')
         state.features.search = true
         if (props.config.searchFields) {
           state.search.instance = useLocalSearch(props.config.data, props.config.searchFields)
         } else {
           throw new ConfigurationError('Property "searchFields" is missing from configuration')
         }
+        debug.success('Search configured')
       }
     } else {
-      console.log('is not local')
-    }
-
-    // @ts-expect-error
-    if (attrs.id && attrs.id.length > 0) {
-      tableId = attrs.id as string
-    } else {
-      tableId = generateID()
+      debug.log('Table in REMOTE mode')
+      mode = TableMode.REMOTE
     }
 
     const tableConf: TableConfig = {
       tableId: tableId,
       dataMode: mode,
       bus: mitt(),
+      state,
     }
 
-    function localSearch() {
-      console.log('local search for ', searchTerm.value)
-      let newData: any = []
-      const results = searchInstance.value!.search(searchTerm.value)
-      if (props.data && results.length > 0) {
-        for (const resultObj of results) {
-          newData.push(
-            props.data.find((obj: any) => {
-              return obj.id === resultObj.id
-            })
-          )
-        }
-        data.value = newData
-        dataCount.value = newData.length
-        console.log('search results: ', newData.length)
-      } else {
-        data.value = []
-        dataCount.value = 0
-      }
-      console.log('after search: ', data.value.length)
-      calculatePagination()
+    function localSearch(): void {
+      debug.run('local search for ', state.search.query)
+      // let newData: any = []
+      // const results = searchInstance.value!.search(searchTerm.value)
+      // if (props.data && results.length > 0) {
+      //   for (const resultObj of results) {
+      //     newData.push(
+      //       props.data.find((obj: any) => {
+      //         return obj.id === resultObj.id
+      //       })
+      //     )
+      //   }
+      //   data.value = newData
+      //   dataCount.value = newData.length
+      //   console.log('search results: ', newData.length)
+      // } else {
+      //   data.value = []
+      //   dataCount.value = 0
+      // }
+      // console.log('after search: ', data.value.length)
+      buildPagination()
     }
 
     function prepLocalDataForCurrentPage(): void {
-      let endIndex = 0
-      if (searchTerm.value.length > 0) {
-        localSearch()
-      } else {
-        data.value = props.data!
-      }
+      debug.run('prepLocalDataForCurrentPage')
+      // let endIndex = 0
+      // if (searchTerm.value.length > 0) {
+      //   localSearch()
+      // } else {
+      //   data.value = props.data!
+      // }
 
-      if (tableConf.mode == TableMode.LOCAL && pagination.value) {
-        // @ts-ignore
-        console.log('data.value.length before slice: ', data.value.length)
-        console.log(
-          'pagination start index end index before slice: ',
-          pagination.value.startIndex,
-          pagination.value.endIndex
-        )
-        if (data.value.length < perPage.value) {
-          endIndex = pagination.value.endIndex + 1
-        } else {
-          endIndex = pagination.value.endIndex
-        }
-        data.value = data.value.slice(pagination.value.startIndex, endIndex)
-        console.log('data.value.length after slice: ', data.value.length)
-      }
-    }
-
-    function calculatePagination() {
-      if (usePagination) {
-        pagination.value = paginate(
-          dataCount.value,
-          currentPage.value,
-          perPage.value,
-          maxPaginationPages.value
-        )
-      }
-    }
-
-    function calculateApiUrl() {
-      let prefix = ''
-      let suffix = ''
-      if (searchTerm.value.length > 0) {
-        prefix = '/search'
-        suffix = `&search=${searchTerm.value}`
-      }
-
-      url.value = `${prefix}/${props.dataModel}?page=${currentPage.value}&limit=${perPage.value}`
-      if (currentOrdering.value && currentOrdering.value.length > 0) {
-        url.value += `&ordering=${currentOrdering.value}`
-      }
-      url.value += suffix
+      // if (tableConf.mode == TableMode.LOCAL && pagination.value) {
+      //   // @ts-ignore
+      //   console.log('data.value.length before slice: ', data.value.length)
+      //   console.log(
+      //     'pagination start index end index before slice: ',
+      //     pagination.value.startIndex,
+      //     pagination.value.endIndex
+      //   )
+      //   if (data.value.length < perPage.value) {
+      //     endIndex = pagination.value.endIndex + 1
+      //   } else {
+      //     endIndex = pagination.value.endIndex
+      //   }
+      //   data.value = data.value.slice(pagination.value.startIndex, endIndex)
+      //   console.log('data.value.length after slice: ', data.value.length)
+      // }
     }
 
     function initLocalData(): void {
-      console.log('initing local data')
-      isFetchingData.value = true
-      data.value = props.data!
-      dataCount.value = props.data!.length
-      calculatePagination()
-      prepLocalDataForCurrentPage()
-      isFetchingData.value = false
-      initialLoadingDone.value = true
+      debug.run('initLocalData')
+      // isFetchingData.value = true
+      // data.value = props.data!
+      // dataCount.value = props.data!.length
+      // buildPagination()
+      // prepLocalDataForCurrentPage()
+      // isFetchingData.value = false
+      // initialLoadingDone.value = true
       // console.log('local data: ', toRaw(data))
     }
 
     function queryData(): void {
-      console.log('querying remote data')
-      isFetchingData.value = true
+      debug.run('queryData')
 
-      props.axiosInstance!.get(url.value).then((response) => {
-        data.value = response.data.results
-        dataCount.value = response.data.count
-        calculatePagination()
-        isFetchingData.value = false
-        initialLoadingDone.value = true
-      })
+      // isFetchingData.value = true
+
+      // props.axiosInstance!.get(url.value).then((response) => {
+      //   data.value = response.data.results
+      //   dataCount.value = response.data.count
+      //   buildPagination()
+      //   isFetchingData.value = false
+      //   initialLoadingDone.value = true
+      // })
     }
 
     function prepareData(): void {
-      if (tableConf.mode == TableMode.REMOTE) {
-        calculateApiUrl()
+      debug.run('prepareData')
+      if (isLocal(props.config)) {
+        buildUrl()
         queryData()
       } else {
         initLocalData()
       }
     }
 
-    function pageChange(value: number) {
-      currentPage.value = value
-    }
+    tableConf.bus.on(`pagechange-${tableConf.tableId}`, (value) => changePage(value))
+    tableConf.bus.on(`ordering-${tableConf.tableId}`, (value) => changeOrdering(value))
+    tableConf.bus.on(`search-${tableConf.tableId}`, (value) => changeSearch(value))
 
-    function orderingChange(value: string) {
-      currentOrdering.value = value
-      console.log('catch ordering change')
-    }
-
-    function searchChange(value: string) {
-      searchTerm.value = value
-      // if (searchTerm.value.length > 0) {
-      //   console.log(`search for "${value}"`)
-      // } else {
-      //   console.log('clear search')
-      // }
-      currentPage.value = 1
-    }
-
-    tableConf.bus.on(`pagechange-${tableConf.tableId}`, (value) => pageChange(value))
-    tableConf.bus.on(`ordering-${tableConf.tableId}`, (value) => orderingChange(value))
-    tableConf.bus.on(`search-${tableConf.tableId}`, (value) => searchChange(value))
-
-    watchEffect(() => {
-      if (currentBreakpoint.value > 3) {
-        maxPaginationPages.value = 11
-      } else if (currentBreakpoint.value > 2) {
-        maxPaginationPages.value = 7
-      } else {
-        maxPaginationPages.value = 5
-      }
-      if (initialLoadingDone.value && pagination.value) {
-        calculatePagination()
-      }
-    })
+    // watchEffect(() => {
+    //   if (currentBreakpoint.value > 3) {
+    //     maxPaginationPages.value = 11
+    //   } else if (currentBreakpoint.value > 2) {
+    //     maxPaginationPages.value = 7
+    //   } else {
+    //     maxPaginationPages.value = 5
+    //   }
+    //   if (initialLoadingDone.value && pagination.value) {
+    //     calculatePagination()
+    //   }
+    // })
 
     watch([currentPage, currentOrdering, searchTerm], () => {
       prepareData()
-      // console.log('Watching [currentPage, currentOrdering, searchTerm]')
+      debug.log('Watching [currentPage, currentOrdering, searchTerm]')
     })
     prepareData()
 

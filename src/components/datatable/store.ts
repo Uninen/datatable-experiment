@@ -23,6 +23,6 @@ export const state: TableState = reactive({
     currentPage: 1,
   },
   search: {
-    searchTerm: '',
+    query: '',
   },
 })

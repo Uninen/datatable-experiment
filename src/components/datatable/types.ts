@@ -67,7 +67,7 @@ export interface TableState {
     data?: PaginationObject
   }
   search: {
-    term: string
+    query: string
     instance?: MiniSearch
   }
 }

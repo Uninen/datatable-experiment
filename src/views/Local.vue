@@ -308,10 +308,9 @@ export default defineComponent({
       mode: 'local',
       data: artists.artists,
       itemsPerPage: 12,
-      // searchFields: ['name', 'username'],
+      searchFields: ['name', 'username'],
     }
 
-    console.log('artists: ', artists)
     return {
       localConfig,
     }

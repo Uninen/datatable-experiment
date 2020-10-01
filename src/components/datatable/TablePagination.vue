@@ -9,12 +9,13 @@
       changePageTo,
       isFetchingData,
       currentPage,
-      shrunkPageList,
+      pageList,
     }"
   ></slot>
 </template>
 <script lang="ts">
-import { defineComponent, computed, inject, ref } from 'vue'
+import { defineComponent, computed, inject, ref, watch, isReactive, isRef } from 'vue'
+import { debug } from './utils/dev'
 import { TableConfig } from './types'
 import { TableState } from './types'
 
@@ -27,31 +28,21 @@ export default defineComponent({
     const isFetchingData = state.isWorking
     const tableConf = inject('tableConf') as TableConfig
 
+    const changePage = inject('changePage')
+
+    const { previousPage, nextPage, hasPreviousPage, hasNextPage, pageList } = inject('pagination')
+
     function changePageTo(page: number) {
       currentPage.value = page
-      emit('pagechange', page)
-      tableConf.bus.emit(`pagechange-${tableConf.tableId}`, page)
+      // state.current.page = page
+      // emit('pagechange', page)
+      // tableConf.bus.emit(`pagechange-${tableConf.tableId}`, page)
+      changePage(page)
     }
 
-    const hasPreviousPage = computed(() => {
-      return pagination.currentPage > 1
-    })
-
-    const hasNextPage = computed(() => {
-      return pagination.currentPage < pagination.totalPages
-    })
-
-    const previousPage = computed(() => {
-      return pagination.currentPage - 1
-    })
-
-    const nextPage = computed(() => {
-      return pagination.currentPage + 1
-    })
-
-    const shrunkPageList = computed(() => {
-      return pagination.pages
-    })
+    // watch(pagination, () => {
+    //   debug.log('pagination changed in TablePagination', pagination)
+    // })
 
     // TODO: convert to proxyRefs
 
@@ -73,14 +64,14 @@ export default defineComponent({
 
     return {
       pagination,
+      changePageTo,
+      isFetchingData,
+      currentPage,
       previousPage,
       nextPage,
       hasPreviousPage,
       hasNextPage,
-      changePageTo,
-      isFetchingData,
-      currentPage,
-      shrunkPageList,
+      pageList,
     }
   },
 })

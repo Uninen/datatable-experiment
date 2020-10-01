@@ -46,6 +46,7 @@ export const enum TableMode {
 }
 
 export interface TableState {
+  mode: TableMode
   isWorking: boolean
   initialLoadingDone: boolean
   currentBreakpoint: Breakpoint | Ref<Breakpoint>
@@ -58,6 +59,9 @@ export interface TableState {
     url: string
     dataModel: string
   }
+  current: {
+    page: number
+  }
   features: {
     pagination: boolean
     search: boolean
@@ -68,7 +72,6 @@ export interface TableState {
   pagination: {
     perPage: number
     maxPaginationPages: number
-    currentPage: number
     data?: PaginationObject
   }
   search: {

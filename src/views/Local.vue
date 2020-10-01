@@ -123,7 +123,7 @@
             pagination,
             hasNextPage,
             nextPage,
-            shrunkPageList,
+            pageList,
             currentPage,
           }"
           ><div
@@ -187,7 +187,7 @@
                   <a
                     href="#"
                     class="relative inline-flex items-center px-4 py-2 -ml-px text-sm leading-5 transition duration-150 ease-in-out border border-dark-400 hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-800 active:bg-dark-900 active:text-gray-700"
-                    v-for="page in shrunkPageList"
+                    v-for="page in pageList"
                     :key="page"
                     :class="{
                       'font-medium': page !== pagination.currentPage,

@@ -1,5 +1,15 @@
 <script lang="ts">
-import { defineComponent, provide, PropType, watchEffect, h, ref, watch } from 'vue'
+import {
+  defineComponent,
+  provide,
+  PropType,
+  watchEffect,
+  h,
+  ref,
+  watch,
+  isReactive,
+  isRef,
+} from 'vue'
 
 import mitt from 'mitt'
 
@@ -28,7 +38,14 @@ export default defineComponent({
     TablePagination,
   },
   setup(props, { slots, attrs }) {
-    const { state, changePage, changeOrdering, changeSearch, refreshLocalData } = createStore()
+    const {
+      state,
+      changePage,
+      changeOrdering,
+      changeSearch,
+      refreshLocalData,
+      pagination,
+    } = createStore()
 
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
@@ -91,15 +108,22 @@ export default defineComponent({
       }
     }
 
-    tableConf.bus.on(`pagechange-${tableConf.tableId}`, (value) => changePage(value))
+    // tableConf.bus.on(`pagechange-${tableConf.tableId}`, (value) => changePage(value))
     tableConf.bus.on(`ordering-${tableConf.tableId}`, (value) => changeOrdering(value))
     tableConf.bus.on(`search-${tableConf.tableId}`, (value) => changeSearch(value))
 
     refreshData()
 
+    // console.log('TYPEOF state: ', typeof state)
+    console.log('state.currentPage: ', isReactive(state.current))
+    console.log('state.pagination: ', isReactive(state.pagination))
+    // console.log('state isRef: ', isRef(state))
+
     provide('state', state)
     provide('tableConf', tableConf)
     provide('dateFormatter', useDateFormat)
+    provide('pagination', pagination)
+    provide('changePage', changePage)
 
     return () => {
       if (state.initialLoadingDone) {

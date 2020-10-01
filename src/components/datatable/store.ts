@@ -1,13 +1,14 @@
-import { reactive, watchEffect, watch } from 'vue'
+import { reactive, watchEffect, watch, computed, ref } from 'vue'
 import { clone } from 'lodash-es'
 
 import { debug } from './utils/dev'
 import { paginate } from './utils'
 
-import { TableState } from './types'
+import { TableState, TableMode } from './types'
 
 export const createStore = () => {
   const state: TableState = reactive({
+    mode: TableMode.LOCAL,
     isWorking: true,
     initialLoadingDone: false,
     currentBreakpoint: 1,
@@ -21,13 +22,15 @@ export const createStore = () => {
       pagination: false,
       search: false,
     },
+    current: {
+      page: 1,
+    },
     ordering: {
       current: '',
     },
     pagination: {
       perPage: 25,
       maxPaginationPages: 7,
-      currentPage: 1,
     },
     search: {
       query: '',
@@ -35,25 +38,25 @@ export const createStore = () => {
   })
 
   const changePage = (value: number): void => {
-    debug.run('changePage')
-    state.pagination.currentPage = value
+    debug.run('changePage', value)
+    state.current.page = value
   }
 
   const changeOrdering = (value: string): void => {
-    debug.run('changeOrdering')
+    debug.run('changeOrdering', value)
     state.ordering.current = value
   }
 
   const changeSearch = (value: string): void => {
     state.search.query = value
-    state.pagination.currentPage = 1
+    state.current.page = 1
   }
 
   const buildPagination = (): void => {
     debug.run('buildPagination')
     state.pagination.data = paginate(
       state.data.totalCount,
-      state.pagination.currentPage,
+      state.current.page,
       state.pagination.perPage,
       state.pagination.maxPaginationPages
     )
@@ -68,9 +71,9 @@ export const createStore = () => {
       suffix = `&search=${state.search.query}`
     }
 
-    state.remote!.url = `${prefix}/${state.remote!.dataModel}?page=${
-      state.pagination.currentPage
-    }&limit=${state.pagination.perPage}`
+    state.remote!.url = `${prefix}/${state.remote!.dataModel}?page=${state.current.page}&limit=${
+      state.pagination.perPage
+    }`
     if (state.ordering.current.length > 0) {
       state.remote!.url += `&ordering=${state.ordering.current}`
     }
@@ -99,10 +102,7 @@ export const createStore = () => {
     // console.log('after search: ', data.value.length)
   }
 
-  const refreshLocalData = (): void => {
-    debug.run('refreshLocalData')
-    state.isWorking = true
-
+  const localPagination = (): void => {
     let endIndex = 0
 
     if (state.search.query.length > 0) {
@@ -124,6 +124,13 @@ export const createStore = () => {
       state.data.current = state.data.current.slice(state.pagination.data!.startIndex, endIndex)
       debug.log('data.value.length after slice: ', state.data.current.length)
     }
+  }
+
+  const refreshLocalData = (): void => {
+    debug.run('refreshLocalData')
+    state.isWorking = true
+
+    localPagination()
 
     state.isWorking = false
     state.initialLoadingDone = true
@@ -144,21 +151,55 @@ export const createStore = () => {
   //   }
   // })
 
-  // watch(
-  //   [() => state.pagination.currentPage, () => state.ordering.current, () => state.search.query],
-  //   () => {
-  //     debug.run('watch [currentPage, currentOrdering, searchTerm]')
-  //     refreshData()
-  //   }
-  // )
+  function doPagination() {
+    if (state.mode === TableMode.LOCAL) {
+      localPagination()
+    } else {
+      refreshLocalData()
+    }
+  }
 
-  // watch(
-  //   () => state.pagination.currentPage,
-  //   () => {
-  //     debug.run('watch currentPage')
-  //     refreshData()
-  //   }
-  // )
+  const hasPreviousPage = computed(() => {
+    return state.current.page > 1
+  })
+
+  const hasNextPage = computed(() => {
+    if (state.pagination.data) {
+      return state.current.page < state.pagination.data.totalPages
+    } else {
+      return false
+    }
+  })
+
+  const previousPageNum = computed(() => {
+    return state.current.page - 1
+  })
+
+  const nextPageNum = computed(() => {
+    return state.current.page + 1
+  })
+
+  const currentPage = computed(() => {
+    return state.current.page
+  })
+
+  const pageList = computed(() => {
+    if (state.pagination.data) {
+      return state.pagination.data.pages
+    } else {
+      return false
+    }
+  })
+
+  watch([() => state.ordering.current, () => state.search.query], () => {
+    debug.run('watch [currentPage, currentOrdering, searchTerm]')
+    refreshLocalData()
+  })
+
+  watch(state.current, () => {
+    debug.run('watch currentPage')
+    refreshLocalData()
+  })
 
   return {
     state,
@@ -168,5 +209,12 @@ export const createStore = () => {
     buildUrl,
     buildPagination,
     refreshLocalData,
+    pagination: {
+      hasPreviousPage,
+      hasNextPage,
+      previousPageNum,
+      nextPageNum,
+      pageList,
+    },
   }
 }

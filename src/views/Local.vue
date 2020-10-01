@@ -255,10 +255,11 @@ import DataTable from '../components/datatable/DataTable.vue'
 import TableHead from '../components/datatable/TableHead.vue'
 import TableRow from '../components/datatable/TableRow.vue'
 import TablePagination from '../components/datatable/TablePagination.vue'
-import TableFilter from '../components/datatable/TableFilter.vue'
+import TableSearch from '../components/datatable/TableSearch.vue'
 import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
 import { formatDate } from '../components/datatable/utils'
+import { LocalTableProps } from '../components/datatable/types'
 
 import artists from '../utils/fixtures/artists.mirage.db.json'
 
@@ -270,7 +271,7 @@ export default defineComponent({
     TdItem,
     TableRow,
     TablePagination,
-    TableFilter,
+    TableSearch,
   },
 
   setup() {
@@ -304,11 +305,15 @@ export default defineComponent({
       },
     }
 
+    const localConfiguration: LocalTableProps = {
+      data: artists.artists,
+      itemsPerPage: 12,
+      searchFields: ['name', 'username'],
+    }
+
     console.log('artists: ', artists)
     return {
-      artistList,
-      formatDate,
-      filterOptions,
+      localConfiguration,
     }
   },
 })

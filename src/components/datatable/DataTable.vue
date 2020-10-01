@@ -7,29 +7,24 @@ import MiniSearch from 'minisearch'
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
-import TableFilter from './TableFilter.vue'
+import TableSearch from './TableSearch.vue'
 import { useBreakpoint } from '../../utils/useTailwindBreakpoint'
-import { PaginationObject, TableMode, TableConfig } from './types'
-import { AxiosInstance } from 'axios'
+import {
+  PaginationObject,
+  TableMode,
+  TableConfig,
+  TableProps,
+  LocalTableProps,
+  RemoteTableProps,
+} from './types'
+
 import { paginate, generateID, formatDate } from './utils'
 
 export default defineComponent({
   props: {
-    data: {
-      type: Array,
-      required: false,
-    },
-    axiosInstance: {
-      type: Function as PropType<AxiosInstance>,
-      required: false,
-    },
-    dataModel: {
-      type: String,
-      required: false,
-    },
-    itemsPerPage: {
-      type: Number,
-      required: false,
+    configuration: {
+      type: Object as PropType<LocalTableProps | RemoteTableProps>,
+      required: true,
     },
   },
   components: {
@@ -38,15 +33,14 @@ export default defineComponent({
     TablePagination,
   },
   setup(props, { slots, attrs }) {
+    const { currentBreakpoint } = useBreakpoint()
     const initialLoadingDone = ref(false)
     const isFetchingData = ref(false)
     const currentPage = ref(1)
     const currentOrdering = ref('')
     const perPage = ref(25)
-    const { currentBreakpoint } = useBreakpoint()
-    const data = ref<unknown[]>([])
     const dataCount = ref(0)
-    const maxPages = ref(7)
+    const maxPaginationPages = ref(7)
     const pagination = ref<PaginationObject>()
     const url = ref('')
     const searchTerm = ref('')
@@ -54,6 +48,13 @@ export default defineComponent({
     let usePagination = true
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
+
+    console.log('config type: ', props.configuration)
+    console.log('config typeof: ', typeof props.configuration)
+    function isLocal(prop: LocalTableProps | RemoteTableProps): prop is LocalTableProps {
+      return prop.mode === 'local'
+    }
+    console.log('config isLocal: ', isLocal(props.configuration))
 
     if (!slots.pagination && !props.itemsPerPage) {
       usePagination = false
@@ -152,12 +153,12 @@ export default defineComponent({
         console.log('dataCount.value: ', dataCount.value)
         console.log('currentPage.value: ', currentPage.value)
         console.log('perPage.value: ', perPage.value)
-        console.log('maxPages.value: ', maxPages.value)
+        console.log('maxPaginationPages.value: ', maxPaginationPages.value)
         pagination.value = paginate(
           dataCount.value,
           currentPage.value,
           perPage.value,
-          maxPages.value
+          maxPaginationPages.value
         )
         console.log('pagination.totalItems: ', pagination.value.totalItems)
         console.log('pagination.totalPages: ', pagination.value.totalPages)
@@ -244,11 +245,11 @@ export default defineComponent({
 
     watchEffect(() => {
       if (currentBreakpoint.value > 3) {
-        maxPages.value = 11
+        maxPaginationPages.value = 11
       } else if (currentBreakpoint.value > 2) {
-        maxPages.value = 7
+        maxPaginationPages.value = 7
       } else {
-        maxPages.value = 5
+        maxPaginationPages.value = 5
       }
       if (initialLoadingDone.value && pagination.value) {
         calculatePagination()
@@ -278,8 +279,8 @@ export default defineComponent({
           slotContent = [slots.default()]
         }
 
-        if (slots.filters) {
-          slotContent.push(h(TableFilter, slots.filters))
+        if (slots.search) {
+          slotContent.push(h(TableSearch, slots.search))
         }
 
         if (props.itemsPerPage || slots.pagination) {

@@ -52,6 +52,8 @@ export default defineComponent({
       return pagination.value.pages
     })
 
+    // TODO: convert to proxyRefs
+
     // return () => {
     //   if (slots.default) {
     //     return slots.default({

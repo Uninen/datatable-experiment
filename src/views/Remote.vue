@@ -2,8 +2,7 @@
   <div>
     <data-table
       :axios-instance="api"
-      :filter-options="filterOptions"
-      :items-per-page="perPage"
+      :configuration="remoteConfiguration"
       data-model="artists"
       id="artists-table"
       class="overflow-hidden border-b border-collapse border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
@@ -11,8 +10,8 @@
       <template #loader>
         <div class="p-4 text-base bg-gray-200">Loading data...</div>
       </template>
-      <template #filters>
-        <table-filter
+      <template #search>
+        <table-search
           v-slot="{
             updateSearchTerm,
             searchTerm,
@@ -41,7 +40,7 @@
               </div>
             </div>
           </teleport>
-        </table-filter>
+        </table-search>
       </template>
       <table-head class="rounded-t-md">
         <th-item
@@ -256,7 +255,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 
 import axios from 'axios'
 
@@ -264,9 +263,10 @@ import DataTable from '../components/datatable/DataTable.vue'
 import TableHead from '../components/datatable/TableHead.vue'
 import TableRow from '../components/datatable/TableRow.vue'
 import TablePagination from '../components/datatable/TablePagination.vue'
-import TableFilter from '../components/datatable/TableFilter.vue'
+import TableSearch from '../components/datatable/TableSearch.vue'
 import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
+import { RemoteTableProps } from '../components/datatable/types'
 
 // import { formatDate } from '../components/datatable/utils'
 
@@ -280,48 +280,25 @@ export default defineComponent({
     TdItem,
     TableRow,
     TablePagination,
-    TableFilter,
+    TableSearch,
   },
 
   setup() {
-    const loadingDone = ref(true)
-    const isFetchingData = ref(true)
-    const artistList = ref([])
-    const perPage = ref(12)
-    const currentPage = ref(1)
-    const ordering = ref('')
-    const filterOptions = {
-      search: ['name', 'username'],
-      filters: {
-        isVip: {
-          type: Boolean,
-          name: 'VIP',
-        },
-      },
-    }
-
     const api = axios.create({
       baseURL: '/api',
     })
 
-    function changePage(value: number) {
-      currentPage.value = value
-    }
-
-    function changeOrdering(value: string) {
-      ordering.value = value
+    const remoteConfiguration: RemoteTableProps = {
+      axiosInstance: api,
+      dataModel: 'artists',
+      itemsPerPage: 12,
+      searchFields: ['name', 'username'],
     }
 
     return {
-      loadingDone,
-      changeOrdering,
-      changePage,
-      isFetchingData,
-      artistList,
       api,
       downloadMirageJson,
-      filterOptions,
-      perPage,
+      remoteConfiguration,
     }
   },
 })

@@ -1,4 +1,5 @@
 import { Emitter } from 'mitt'
+import { AxiosInstance } from 'axios'
 
 export const enum Breakpoint {
   MOBILE = 1,
@@ -46,4 +47,28 @@ export interface TableConfig {
   readonly mode: TableMode
   readonly tableId: string
   bus: Emitter
+}
+
+interface filterListItem {
+  type: Boolean | Date
+  key: string
+}
+
+export interface TableProps {
+  mode: string
+  itemsPerPage?: number
+  searchFields?: string[]
+  searchOptions?: object
+  filters?: filterListItem[]
+}
+
+export interface LocalTableProps extends TableProps {
+  mode: 'local'
+  data: any[]
+}
+
+export interface RemoteTableProps extends TableProps {
+  mode: 'remote'
+  axiosInstance: AxiosInstance
+  dataModel: string
 }

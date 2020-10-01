@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue'
 
 import DataTable from '../components/datatable/DataTable.vue'
-import artists from '../utils/fixtures/artists.mirage.db.json'
+import artists from '../mirage/fixtures/artists.mirage.db.json'
 
 export default defineComponent({
   components: {

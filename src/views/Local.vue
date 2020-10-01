@@ -1,17 +1,16 @@
 <template>
   <div>
     <data-table
-      v-if="artistList.length > 0"
-      :data="artistList"
-      :items-per-page="12"
+      v-if="localConfig.data.length > 0"
+      :config="localConfig"
       id="dark-artists-table"
       class="overflow-hidden border-b border-collapse border-gray-900 divide-y divide-gray-800 shadow-dark sm:rounded-lg"
     >
       <template #loader>
         <div class="p-4 text-base bg-gray-800">Loading data...</div>
       </template>
-      <template #filters>
-        <table-filter
+      <template #search>
+        <table-search
           v-slot="{
             updateSearchTerm,
             searchTerm,
@@ -40,7 +39,7 @@
               </div>
             </div>
           </teleport>
-        </table-filter>
+        </table-search>
       </template>
       <template #default>
         <table-head class="rounded-t-md">
@@ -261,7 +260,7 @@ import TdItem from '../components/datatable/TdItem.vue'
 import { formatDate } from '../components/datatable/utils'
 import { LocalTableProps } from '../components/datatable/types'
 
-import artists from '../utils/fixtures/artists.mirage.db.json'
+import artists from '../mirage/fixtures/artists.mirage.db.json'
 
 export default defineComponent({
   components: {
@@ -305,15 +304,16 @@ export default defineComponent({
       },
     }
 
-    const localConfiguration: LocalTableProps = {
+    const localConfig: LocalTableProps = {
+      mode: 'local',
       data: artists.artists,
       itemsPerPage: 12,
-      searchFields: ['name', 'username'],
+      // searchFields: ['name', 'username'],
     }
 
     console.log('artists: ', artists)
     return {
-      localConfiguration,
+      localConfig,
     }
   },
 })

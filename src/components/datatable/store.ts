@@ -10,6 +10,10 @@ export const state: TableState = reactive({
     url: '',
     totalCount: 0,
   },
+  features: {
+    pagination: false,
+    search: false,
+  },
   ordering: {
     current: '',
   },

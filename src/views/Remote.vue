@@ -2,8 +2,7 @@
   <div>
     <data-table
       :axios-instance="api"
-      :configuration="remoteConfiguration"
-      data-model="artists"
+      :config="remoteConfig"
       id="artists-table"
       class="overflow-hidden border-b border-collapse border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
     >
@@ -268,9 +267,7 @@ import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
 import { RemoteTableProps } from '../components/datatable/types'
 
-// import { formatDate } from '../components/datatable/utils'
-
-import { downloadMirageJson } from '../utils/mirage-dev-server'
+import { downloadMirageJson } from '../mirage/DevServer'
 
 export default defineComponent({
   components: {
@@ -288,7 +285,8 @@ export default defineComponent({
       baseURL: '/api',
     })
 
-    const remoteConfiguration: RemoteTableProps = {
+    const remoteConfig: RemoteTableProps = {
+      mode: 'remote',
       axiosInstance: api,
       dataModel: 'artists',
       itemsPerPage: 12,
@@ -298,7 +296,7 @@ export default defineComponent({
     return {
       api,
       downloadMirageJson,
-      remoteConfiguration,
+      remoteConfig,
     }
   },
 })

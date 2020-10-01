@@ -2,7 +2,6 @@
 import { defineComponent, provide, PropType, watchEffect, h, ref, watch } from 'vue'
 
 import mitt from 'mitt'
-import MiniSearch from 'minisearch'
 
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
@@ -13,11 +12,18 @@ import { TableMode, TableConfig, LocalTableProps, RemoteTableProps } from './typ
 
 import { state } from './store'
 import { paginate, generateID } from './utils'
-import { isLocal, dateFormatter } from './utils/dataTable'
+import {
+  isLocal,
+  dateFormatter,
+  useLocalSearch,
+  ConfigurationError,
+  warn,
+  debug,
+} from './utils/dataTable'
 
 export default defineComponent({
   props: {
-    configuration: {
+    config: {
       type: Object as PropType<LocalTableProps | RemoteTableProps>,
       required: true,
     },
@@ -34,27 +40,32 @@ export default defineComponent({
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
 
-    if (isLocal(props.configuration)) {
+    if (slots.pagination) {
+      state.features.pagination = true
+      if (props.config.itemsPerPage) {
+        state.pagination.perPage = props.config.itemsPerPage
+        console.log('perPage', state.pagination.perPage)
+      } else {
+        console.log('else')
+        warn('DataTable pagination set up but "config.itemsPerPage" is not set')
+      }
+      debug.success('Pagination configured')
+    }
+
+    if (isLocal(props.config)) {
+      console.log('Configuring LOCAL table')
       mode = TableMode.LOCAL
 
-      searchInstance.value = new MiniSearch({
-        fields: ['name', 'username'],
-        searchOptions: {
-          prefix: true,
-          fuzzy: 0.3,
-        },
-      })
-      searchInstance.value.addAll(props.configuration.data)
+      if (slots.search) {
+        state.features.search = true
+        if (props.config.searchFields) {
+          state.search.instance = useLocalSearch(props.config.data, props.config.searchFields)
+        } else {
+          throw new ConfigurationError('Property "searchFields" is missing from configuration')
+        }
+      }
     } else {
-      console.log('config type: ', props.configuration)
-    }
-
-    if (!slots.pagination && !props.itemsPerPage) {
-      usePagination = false
-    }
-
-    if (props.itemsPerPage && props.itemsPerPage > 0) {
-      perPage.value = props.itemsPerPage
+      console.log('is not local')
     }
 
     // @ts-expect-error

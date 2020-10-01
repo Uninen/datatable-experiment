@@ -1,6 +1,11 @@
 // https://docs.cypress.io/api/introduction/api.html
 import { makeDevServer } from '../../../src/mirage/devServer'
 
+Cypress.on('window:before:load', (win) => {
+  cy.spy(win.console, 'error')
+  cy.spy(win.console, 'warn')
+})
+
 describe('Test remote table', () => {
   let server: any
 
@@ -9,6 +14,11 @@ describe('Test remote table', () => {
   })
 
   afterEach(() => {
+    cy.window().then((win) => {
+      expect(win.console.error).to.have.callCount(0)
+      expect(win.console.warn).to.have.callCount(0)
+    })
+
     server.shutdown()
   })
 

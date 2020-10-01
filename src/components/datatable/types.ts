@@ -54,8 +54,8 @@ export interface TableState {
     totalCount: number
   }
   features: {
-    pagination: false
-    search: false
+    pagination: boolean
+    search: boolean
   }
   ordering: {
     current: string
@@ -67,8 +67,8 @@ export interface TableState {
     data?: PaginationObject
   }
   search: {
-    searchTerm: string
-    searchInstance?: MiniSearch
+    term: string
+    instance?: MiniSearch
   }
 }
 
@@ -77,6 +77,10 @@ export interface TableConfig {
   readonly dataMode: TableMode
   bus: Emitter
   state: TableState
+  search?: {
+    fields?: string[]
+    options?: object
+  }
 }
 
 interface filterListItem {

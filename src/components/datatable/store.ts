@@ -1,4 +1,6 @@
 import { reactive, watchEffect } from 'vue'
+import { clone } from 'lodash-es'
+
 import { debug } from './utils/dev'
 import { paginate } from './utils'
 
@@ -75,6 +77,59 @@ export const createStore = () => {
     state.remote!.url += suffix
   }
 
+  const localSearch = (): void => {
+    debug.run('local search for ', state.search.query)
+    // let newData: any = []
+    // const results = searchInstance.value!.search(searchTerm.value)
+    // if (props.data && results.length > 0) {
+    //   for (const resultObj of results) {
+    //     newData.push(
+    //       props.data.find((obj: any) => {
+    //         return obj.id === resultObj.id
+    //       })
+    //     )
+    //   }
+    //   data.value = newData
+    //   dataCount.value = newData.length
+    //   console.log('search results: ', newData.length)
+    // } else {
+    //   data.value = []
+    //   dataCount.value = 0
+    // }
+    // console.log('after search: ', data.value.length)
+  }
+
+  const refreshLocalData = (): void => {
+    debug.run('refreshLocalData')
+    state.isWorking = true
+
+    let endIndex = 0
+
+    if (state.search.query.length > 0) {
+      localSearch()
+    } else {
+      state.data.current = clone(state.data.original)
+      state.data.totalCount = state.data.current.length
+    }
+
+    if (state.features.pagination) {
+      buildPagination()
+
+      if (state.data.totalCount < state.pagination.perPage) {
+        endIndex = state.pagination.data!.endIndex + 1
+      } else {
+        endIndex = state.pagination.data!.endIndex
+      }
+      // debug.log('data.value.length before slice: ', state.data.current.length)
+      state.data.current = state.data.current.slice(state.pagination.data!.startIndex, endIndex)
+      debug.log('data.value.length after slice: ', state.data.current.length)
+    }
+
+    state.isWorking = false
+    state.initialLoadingDone = true
+    debug.success('refreshLocalData done')
+  }
+
   watchEffect(() => {
     debug.log('state.currentBreakpoint changed to ', state.currentBreakpoint)
     if (state.currentBreakpoint > 3) {
@@ -89,5 +144,13 @@ export const createStore = () => {
     }
   })
 
-  return { state, changePage, changeOrdering, changeSearch, buildUrl, buildPagination }
+  return {
+    state,
+    changePage,
+    changeOrdering,
+    changeSearch,
+    buildUrl,
+    buildPagination,
+    refreshLocalData,
+  }
 }

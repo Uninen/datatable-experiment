@@ -1,4 +1,4 @@
-import { isRef, unref } from 'vue'
+import { isRef, unref, isReactive, toRaw } from 'vue'
 
 export class ConfigurationError extends Error {
   constructor(message?: string) {
@@ -22,6 +22,9 @@ class DebugLogger {
         if (isRef(obj)) {
           message += ' (ref): '
           obj = unref(obj)
+        } else if (isReactive(obj)) {
+          message += ' (reactive): '
+          obj = toRaw(obj)
         }
         console.debug(message, obj)
       } else {

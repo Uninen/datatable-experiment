@@ -13,13 +13,7 @@ import { TableMode, TableConfig, LocalTableProps, RemoteTableProps } from './typ
 import { createStore } from './store'
 import { generateID } from './utils'
 import { ConfigurationError, warn, debug } from './utils/dev'
-import {
-  isLocal,
-  dateFormatter,
-  useLocalSearch,
-  refreshRemoteData,
-  refreshLocalData,
-} from './utils/dataTable'
+import { isLocal, useDateFormat, useLocalSearch, refreshRemoteData } from './utils/dataTable'
 
 export default defineComponent({
   props: {
@@ -35,7 +29,7 @@ export default defineComponent({
   },
   setup(props, { slots, attrs }) {
     const initialLoadingDone = ref(false)
-    const { state, changePage, changeOrdering, changeSearch } = createStore()
+    const { state, changePage, changeOrdering, changeSearch, refreshLocalData } = createStore()
 
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
@@ -64,6 +58,9 @@ export default defineComponent({
       debug.log('Table in LOCAL mode')
       mode = TableMode.LOCAL
 
+      state.data.original = props.config.data
+      state.data.totalCount = props.config.data.length
+
       if (slots.search) {
         debug.log('Configuring search')
         state.features.search = true
@@ -87,11 +84,10 @@ export default defineComponent({
     }
 
     function refreshData(): void {
-      debug.run('refreshData')
-      if (!isLocal(props.config)) {
-        refreshRemoteData()
-      } else {
+      if (isLocal(props.config)) {
         refreshLocalData()
+      } else {
+        refreshRemoteData()
       }
     }
 
@@ -108,12 +104,9 @@ export default defineComponent({
     )
     refreshData()
 
-    provide('data', state.data.current)
+    provide('state', state)
     provide('tableConf', tableConf)
-    provide('dateFormatter', dateFormatter)
-    provide('pagination', state.pagination.data)
-    provide('isFetchingData', state.isWorking)
-    provide('currentBreakpoint', state.currentBreakpoint)
+    provide('dateFormatter', useDateFormat)
 
     return () => {
       if (initialLoadingDone.value) {

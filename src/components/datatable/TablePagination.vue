@@ -14,16 +14,17 @@
   ></slot>
 </template>
 <script lang="ts">
-import { defineComponent, computed, inject, Ref, ref } from 'vue'
+import { defineComponent, computed, inject, ref } from 'vue'
 import { TableConfig } from './types'
-import { PaginationObject } from './types'
+import { TableState } from './types'
 
 export default defineComponent({
   emits: ['pagechange'],
   setup(_, { emit }) {
     const currentPage = ref(1)
-    const pagination = inject('pagination') as Ref<PaginationObject>
-    const isFetchingData = inject('isFetchingData') as Ref<boolean>
+    const state = inject('state') as TableState
+    const pagination = state.pagination.data!
+    const isFetchingData = state.isWorking
     const tableConf = inject('tableConf') as TableConfig
 
     function changePageTo(page: number) {
@@ -33,23 +34,23 @@ export default defineComponent({
     }
 
     const hasPreviousPage = computed(() => {
-      return pagination.value.currentPage > 1
+      return pagination.currentPage > 1
     })
 
     const hasNextPage = computed(() => {
-      return pagination.value.currentPage < pagination.value.totalPages
+      return pagination.currentPage < pagination.totalPages
     })
 
     const previousPage = computed(() => {
-      return pagination.value.currentPage - 1
+      return pagination.currentPage - 1
     })
 
     const nextPage = computed(() => {
-      return pagination.value.currentPage + 1
+      return pagination.currentPage + 1
     })
 
     const shrunkPageList = computed(() => {
-      return pagination.value.pages
+      return pagination.pages
     })
 
     // TODO: convert to proxyRefs

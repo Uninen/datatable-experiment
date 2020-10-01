@@ -1,5 +1,6 @@
 import { Emitter } from 'mitt'
 import { AxiosInstance } from 'axios'
+import MiniSearch from 'minisearch'
 
 export const enum Breakpoint {
   MOBILE = 1,
@@ -43,10 +44,39 @@ export const enum TableMode {
   REMOTE,
 }
 
+export interface TableState {
+  isWorking: boolean
+  currentBreakpoint: Breakpoint
+  data: {
+    original: any[]
+    current: any[]
+    url: string
+    totalCount: number
+  }
+  features: {
+    pagination: false
+    search: false
+  }
+  ordering: {
+    current: string
+  }
+  pagination: {
+    perPage: number
+    maxPaginationPages: number
+    currentPage: number
+    data?: PaginationObject
+  }
+  search: {
+    searchTerm: string
+    searchInstance?: MiniSearch
+  }
+}
+
 export interface TableConfig {
-  readonly mode: TableMode
   readonly tableId: string
+  readonly dataMode: TableMode
   bus: Emitter
+  state: TableState
 }
 
 interface filterListItem {
@@ -60,6 +90,10 @@ export interface TableProps {
   searchFields?: string[]
   searchOptions?: object
   filters?: filterListItem[]
+  dateFormats?: {
+    short?: string
+    long?: string
+  }
 }
 
 export interface LocalTableProps extends TableProps {

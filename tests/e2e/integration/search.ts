@@ -1,4 +1,4 @@
-import { makeDevServer } from '../../../src/utils/mirage-dev-server'
+import { makeDevServer } from '../../../src/mirage/devServer'
 
 describe('Test remote search', () => {
   let server: any

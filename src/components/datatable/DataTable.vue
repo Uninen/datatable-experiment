@@ -8,17 +8,12 @@ import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
 import TableSearch from './TableSearch.vue'
-import { useBreakpoint } from '../../utils/useTailwindBreakpoint'
-import {
-  PaginationObject,
-  TableMode,
-  TableConfig,
-  TableProps,
-  LocalTableProps,
-  RemoteTableProps,
-} from './types'
+import { useBreakpoint } from './utils/useTailwindBreakpoint'
+import { TableMode, TableConfig, LocalTableProps, RemoteTableProps } from './types'
 
-import { paginate, generateID, formatDate } from './utils'
+import { state } from './store'
+import { paginate, generateID } from './utils'
+import { isLocal, dateFormatter } from './utils/dataTable'
 
 export default defineComponent({
   props: {
@@ -33,38 +28,13 @@ export default defineComponent({
     TablePagination,
   },
   setup(props, { slots, attrs }) {
-    const { currentBreakpoint } = useBreakpoint()
+    state.currentBreakpoint = useBreakpoint()
     const initialLoadingDone = ref(false)
-    const isFetchingData = ref(false)
-    const currentPage = ref(1)
-    const currentOrdering = ref('')
-    const perPage = ref(25)
-    const dataCount = ref(0)
-    const maxPaginationPages = ref(7)
-    const pagination = ref<PaginationObject>()
-    const url = ref('')
-    const searchTerm = ref('')
-    const searchInstance = ref<MiniSearch>()
-    let usePagination = true
+
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
 
-    console.log('config type: ', props.configuration)
-    console.log('config typeof: ', typeof props.configuration)
-    function isLocal(prop: LocalTableProps | RemoteTableProps): prop is LocalTableProps {
-      return prop.mode === 'local'
-    }
-    console.log('config isLocal: ', isLocal(props.configuration))
-
-    if (!slots.pagination && !props.itemsPerPage) {
-      usePagination = false
-    }
-
-    if (props.itemsPerPage && props.itemsPerPage > 0) {
-      perPage.value = props.itemsPerPage
-    }
-
-    if (props.data) {
+    if (isLocal(props.configuration)) {
       mode = TableMode.LOCAL
 
       searchInstance.value = new MiniSearch({
@@ -74,7 +44,17 @@ export default defineComponent({
           fuzzy: 0.3,
         },
       })
-      searchInstance.value.addAll(props.data)
+      searchInstance.value.addAll(props.configuration.data)
+    } else {
+      console.log('config type: ', props.configuration)
+    }
+
+    if (!slots.pagination && !props.itemsPerPage) {
+      usePagination = false
+    }
+
+    if (props.itemsPerPage && props.itemsPerPage > 0) {
+      perPage.value = props.itemsPerPage
     }
 
     // @ts-expect-error
@@ -85,17 +65,9 @@ export default defineComponent({
     }
 
     const tableConf: TableConfig = {
-      mode: mode,
       tableId: tableId,
+      dataMode: mode,
       bus: mitt(),
-    }
-
-    function dateFormatter(dateStr: string): string {
-      if (currentBreakpoint.value < 2) {
-        return formatDate(dateStr, 'YYYY-MM-DD')
-      } else {
-        return formatDate(dateStr, 'MMMM D, YYYY')
-      }
     }
 
     function localSearch() {
@@ -149,25 +121,12 @@ export default defineComponent({
 
     function calculatePagination() {
       if (usePagination) {
-        console.log('calculating pagination w/')
-        console.log('dataCount.value: ', dataCount.value)
-        console.log('currentPage.value: ', currentPage.value)
-        console.log('perPage.value: ', perPage.value)
-        console.log('maxPaginationPages.value: ', maxPaginationPages.value)
         pagination.value = paginate(
           dataCount.value,
           currentPage.value,
           perPage.value,
           maxPaginationPages.value
         )
-        console.log('pagination.totalItems: ', pagination.value.totalItems)
-        console.log('pagination.totalPages: ', pagination.value.totalPages)
-        console.log('pagination.currentPage: ', pagination.value.currentPage)
-        console.log('pagination.startPage: ', pagination.value.startPage)
-        console.log('pagination.endPage: ', pagination.value.endPage)
-        console.log('pagination.startIndex: ', pagination.value.startIndex)
-        console.log('pagination.endIndex: ', pagination.value.endIndex)
-        console.log('pagination.pages: ', pagination.value.pages)
       }
     }
 

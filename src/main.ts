@@ -4,8 +4,8 @@ import './index.css'
 import router from './router'
 import TIcon from './components/datatable/TIcon.vue'
 
-import { makeDevServer } from './utils/mirage-dev-server'
-import { makeTestServer } from './utils/mirage-test-server'
+import { makeDevServer } from './mirage/devServer'
+import { makeTestServer } from './mirage/testServer'
 
 if (process.env.NODE_ENV === 'test') {
   // @ts-expect-error

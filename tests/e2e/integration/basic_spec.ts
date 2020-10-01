@@ -1,5 +1,5 @@
 // https://docs.cypress.io/api/introduction/api.html
-import { makeDevServer } from '../../../src/utils/mirage-dev-server'
+import { makeDevServer } from '../../../src/mirage/devServer'
 
 describe('Test remote table', () => {
   let server: any

@@ -12,18 +12,16 @@ import { TableMode, TableConfig, LocalTableProps, RemoteTableProps } from './typ
 
 import { state } from './store'
 import { generateID } from './utils'
+import { ConfigurationError, warn, debug } from './utils/dev'
 import {
   isLocal,
   dateFormatter,
   useLocalSearch,
-  ConfigurationError,
-  warn,
-  debug,
-  buildPagination,
-  buildUrl,
   changePage,
   changeOrdering,
   changeSearch,
+  refreshRemoteData,
+  refreshLocalData,
 } from './utils/dataTable'
 
 export default defineComponent({
@@ -89,89 +87,12 @@ export default defineComponent({
       state,
     }
 
-    function localSearch(): void {
-      debug.run('local search for ', state.search.query)
-      // let newData: any = []
-      // const results = searchInstance.value!.search(searchTerm.value)
-      // if (props.data && results.length > 0) {
-      //   for (const resultObj of results) {
-      //     newData.push(
-      //       props.data.find((obj: any) => {
-      //         return obj.id === resultObj.id
-      //       })
-      //     )
-      //   }
-      //   data.value = newData
-      //   dataCount.value = newData.length
-      //   console.log('search results: ', newData.length)
-      // } else {
-      //   data.value = []
-      //   dataCount.value = 0
-      // }
-      // console.log('after search: ', data.value.length)
-      buildPagination()
-    }
-
-    function prepLocalDataForCurrentPage(): void {
-      debug.run('prepLocalDataForCurrentPage')
-      // let endIndex = 0
-      // if (searchTerm.value.length > 0) {
-      //   localSearch()
-      // } else {
-      //   data.value = props.data!
-      // }
-
-      // if (tableConf.mode == TableMode.LOCAL && pagination.value) {
-      //   // @ts-ignore
-      //   console.log('data.value.length before slice: ', data.value.length)
-      //   console.log(
-      //     'pagination start index end index before slice: ',
-      //     pagination.value.startIndex,
-      //     pagination.value.endIndex
-      //   )
-      //   if (data.value.length < perPage.value) {
-      //     endIndex = pagination.value.endIndex + 1
-      //   } else {
-      //     endIndex = pagination.value.endIndex
-      //   }
-      //   data.value = data.value.slice(pagination.value.startIndex, endIndex)
-      //   console.log('data.value.length after slice: ', data.value.length)
-      // }
-    }
-
-    function initLocalData(): void {
-      debug.run('initLocalData')
-      // isFetchingData.value = true
-      // data.value = props.data!
-      // dataCount.value = props.data!.length
-      // buildPagination()
-      // prepLocalDataForCurrentPage()
-      // isFetchingData.value = false
-      // initialLoadingDone.value = true
-      // console.log('local data: ', toRaw(data))
-    }
-
-    function queryData(): void {
-      debug.run('queryData')
-
-      // isFetchingData.value = true
-
-      // props.axiosInstance!.get(url.value).then((response) => {
-      //   data.value = response.data.results
-      //   dataCount.value = response.data.count
-      //   buildPagination()
-      //   isFetchingData.value = false
-      //   initialLoadingDone.value = true
-      // })
-    }
-
-    function prepareData(): void {
-      debug.run('prepareData')
-      if (isLocal(props.config)) {
-        buildUrl()
-        queryData()
+    function refreshData(): void {
+      debug.run('refreshData')
+      if (!isLocal(props.config)) {
+        refreshRemoteData()
       } else {
-        initLocalData()
+        refreshLocalData()
       }
     }
 
@@ -192,18 +113,21 @@ export default defineComponent({
     //   }
     // })
 
-    watch([currentPage, currentOrdering, searchTerm], () => {
-      prepareData()
-      debug.log('Watching [currentPage, currentOrdering, searchTerm]')
-    })
-    prepareData()
+    watch(
+      [() => state.pagination.currentPage, () => state.ordering.current, () => state.search.query],
+      () => {
+        debug.run('watch [currentPage, currentOrdering, searchTerm]')
+        refreshData()
+      }
+    )
+    refreshData()
 
-    provide('data', data)
+    provide('data', state.data.current)
     provide('tableConf', tableConf)
     provide('dateFormatter', dateFormatter)
-    provide('pagination', pagination)
-    provide('isFetchingData', isFetchingData)
-    provide('currentBreakpoint', currentBreakpoint)
+    provide('pagination', state.pagination.data)
+    provide('isFetchingData', state.isWorking)
+    provide('currentBreakpoint', state.currentBreakpoint)
 
     return () => {
       if (initialLoadingDone.value) {
@@ -215,11 +139,11 @@ export default defineComponent({
           slotContent = [slots.default()]
         }
 
-        if (slots.search) {
+        if (state.features.search) {
           slotContent.push(h(TableSearch, slots.search))
         }
 
-        if (props.itemsPerPage || slots.pagination) {
+        if (state.features.pagination) {
           let paginationMarkup = h(TablePagination)
           if (slots.pagination) {
             paginationMarkup = h(TablePagination, slots.pagination)

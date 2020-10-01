@@ -7,6 +7,7 @@ import MiniSearch from 'minisearch'
 
 import artistsJson from './fixtures/artists.mirage.db.json'
 import { sortByKey } from '../components/datatable/utils'
+import { debug } from '../components/datatable/utils/dev'
 
 export function downloadMirageJson() {
   // @ts-ignore
@@ -186,10 +187,10 @@ export function makeDevServer(environment = 'test') {
     seeds(server) {
       // @ts-ignore
       if (environment === 'test') {
-        console.info('MirageJS: loading artists from JSON: ', artistsJson)
+        debug.log('MirageJS: loading artists from JSON')
         server.db.loadData(artistsJson)
       } else {
-        console.info('MirageJS: loading artists dynamically.', environment)
+        debug.log('MirageJS: loading artists dynamically')
         server.createList('artist', 500)
       }
     },

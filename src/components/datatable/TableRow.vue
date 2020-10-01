@@ -17,8 +17,9 @@
   </tbody>
 </template>
 <script lang="ts">
-import { defineComponent, inject, watchEffect, Ref } from 'vue'
+import { defineComponent, inject, watchEffect } from 'vue'
 import TdItem from './TdItem.vue'
+import { TableState } from './types'
 
 export default defineComponent({
   components: {
@@ -27,15 +28,16 @@ export default defineComponent({
   setup(_, { slots }) {
     let dataKeys: string[] = []
     let keysShifted = false
+    const state = inject('state') as TableState
 
-    const data = inject('data') as Ref<any[]>
+    const data = state.data.current
     const dateFormatter = inject('dateFormatter')
 
     function extractDataKeys() {
-      if (!keysShifted && data.value && data.value.length > 0) {
-        dataKeys = Object.keys(data.value[0])
+      if (!keysShifted && data && data.length > 0) {
+        dataKeys = Object.keys(data[0])
         dataKeys.reverse()
-        data.value.unshift({})
+        data.unshift({})
         keysShifted = true
       }
     }

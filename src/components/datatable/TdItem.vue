@@ -6,9 +6,9 @@
   </td>
 </template>
 <script lang="ts">
-import { defineComponent, computed, Ref, inject } from 'vue'
+import { defineComponent, computed, inject } from 'vue'
 
-import { Breakpoint } from './types'
+import { Breakpoint, TableState } from './types'
 
 export default defineComponent({
   props: {
@@ -22,11 +22,12 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const currentBreakpoint = inject<Ref<Breakpoint>>('currentBreakpoint')
+    const state = inject('state') as TableState
+    const currentBreakpoint = state.currentBreakpoint
 
     const isVisible = computed(() => {
-      if (currentBreakpoint?.value) {
-        return currentBreakpoint.value >= props.hiddenBelow
+      if (currentBreakpoint) {
+        return currentBreakpoint >= props.hiddenBelow
       } else {
         return true
       }

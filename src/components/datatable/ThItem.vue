@@ -11,10 +11,10 @@
   </th>
 </template>
 <script lang="ts">
-import { defineComponent, inject, ref, Ref, computed } from 'vue'
+import { defineComponent, inject, ref, computed } from 'vue'
 import { TableConfig } from './types'
 
-import { Breakpoint } from './types'
+import { Breakpoint, TableState } from './types'
 
 export default defineComponent({
   props: {
@@ -29,13 +29,14 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const state = inject('state') as TableState
     const currentOrdering = ref('')
-    const currentBreakpoint = inject<Ref<Breakpoint>>('currentBreakpoint')
+    const currentBreakpoint = state.currentBreakpoint
     const tableConf = inject('tableConf') as TableConfig
 
     const isVisible = computed(() => {
-      if (currentBreakpoint?.value) {
-        return currentBreakpoint.value >= props.hiddenBelow
+      if (currentBreakpoint) {
+        return currentBreakpoint >= props.hiddenBelow
       } else {
         return true
       }

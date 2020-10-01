@@ -28,7 +28,6 @@ export default defineComponent({
     TablePagination,
   },
   setup(props, { slots, attrs }) {
-    const initialLoadingDone = ref(false)
     const { state, changePage, changeOrdering, changeSearch, refreshLocalData } = createStore()
 
     let tableId: string
@@ -60,6 +59,7 @@ export default defineComponent({
 
       state.data.original = props.config.data
       state.data.totalCount = props.config.data.length
+      debug.log('Storing original data: ', state.data.original)
 
       if (slots.search) {
         debug.log('Configuring search')
@@ -95,13 +95,6 @@ export default defineComponent({
     tableConf.bus.on(`ordering-${tableConf.tableId}`, (value) => changeOrdering(value))
     tableConf.bus.on(`search-${tableConf.tableId}`, (value) => changeSearch(value))
 
-    watch(
-      [() => state.pagination.currentPage, () => state.ordering.current, () => state.search.query],
-      () => {
-        debug.run('watch [currentPage, currentOrdering, searchTerm]')
-        refreshData()
-      }
-    )
     refreshData()
 
     provide('state', state)
@@ -109,7 +102,7 @@ export default defineComponent({
     provide('dateFormatter', useDateFormat)
 
     return () => {
-      if (initialLoadingDone.value) {
+      if (state.initialLoadingDone) {
         let slotContent: any = []
 
         if (!slots.default) {

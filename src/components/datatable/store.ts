@@ -1,4 +1,4 @@
-import { reactive, watchEffect } from 'vue'
+import { reactive, watchEffect, watch } from 'vue'
 import { clone } from 'lodash-es'
 
 import { debug } from './utils/dev'
@@ -50,7 +50,7 @@ export const createStore = () => {
   }
 
   const buildPagination = (): void => {
-    debug.log('buildPagination')
+    debug.run('buildPagination')
     state.pagination.data = paginate(
       state.data.totalCount,
       state.pagination.currentPage,
@@ -130,19 +130,35 @@ export const createStore = () => {
     debug.success('refreshLocalData done')
   }
 
-  watchEffect(() => {
-    debug.log('state.currentBreakpoint changed to ', state.currentBreakpoint)
-    if (state.currentBreakpoint > 3) {
-      state.pagination.maxPaginationPages = 11
-    } else if (state.currentBreakpoint > 2) {
-      state.pagination.maxPaginationPages = 7
-    } else {
-      state.pagination.maxPaginationPages = 5
-    }
-    if (state.initialLoadingDone && state.pagination.data) {
-      buildPagination()
-    }
-  })
+  // watchEffect(() => {
+  //   if (state.currentBreakpoint > 3) {
+  //     state.pagination.maxPaginationPages = 11
+  //   } else if (state.currentBreakpoint > 2) {
+  //     state.pagination.maxPaginationPages = 7
+  //   } else {
+  //     state.pagination.maxPaginationPages = 5
+  //   }
+  //   if (state.initialLoadingDone && state.pagination.data) {
+  //     debug.log('state.currentBreakpoint changed to ', state.currentBreakpoint)
+  //     buildPagination()
+  //   }
+  // })
+
+  // watch(
+  //   [() => state.pagination.currentPage, () => state.ordering.current, () => state.search.query],
+  //   () => {
+  //     debug.run('watch [currentPage, currentOrdering, searchTerm]')
+  //     refreshData()
+  //   }
+  // )
+
+  // watch(
+  //   () => state.pagination.currentPage,
+  //   () => {
+  //     debug.run('watch currentPage')
+  //     refreshData()
+  //   }
+  // )
 
   return {
     state,

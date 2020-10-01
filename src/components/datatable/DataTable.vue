@@ -10,16 +10,13 @@ import TableSearch from './TableSearch.vue'
 import { useBreakpoint } from './utils/useTailwindBreakpoint'
 import { TableMode, TableConfig, LocalTableProps, RemoteTableProps } from './types'
 
-import { state } from './store'
+import { createStore } from './store'
 import { generateID } from './utils'
 import { ConfigurationError, warn, debug } from './utils/dev'
 import {
   isLocal,
   dateFormatter,
   useLocalSearch,
-  changePage,
-  changeOrdering,
-  changeSearch,
   refreshRemoteData,
   refreshLocalData,
 } from './utils/dataTable'
@@ -37,11 +34,13 @@ export default defineComponent({
     TablePagination,
   },
   setup(props, { slots, attrs }) {
-    state.currentBreakpoint = useBreakpoint()
     const initialLoadingDone = ref(false)
+    const { state, changePage, changeOrdering, changeSearch } = createStore()
 
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
+
+    state.currentBreakpoint = useBreakpoint()
 
     if (attrs.id) {
       tableId = attrs.id as string
@@ -99,19 +98,6 @@ export default defineComponent({
     tableConf.bus.on(`pagechange-${tableConf.tableId}`, (value) => changePage(value))
     tableConf.bus.on(`ordering-${tableConf.tableId}`, (value) => changeOrdering(value))
     tableConf.bus.on(`search-${tableConf.tableId}`, (value) => changeSearch(value))
-
-    // watchEffect(() => {
-    //   if (currentBreakpoint.value > 3) {
-    //     maxPaginationPages.value = 11
-    //   } else if (currentBreakpoint.value > 2) {
-    //     maxPaginationPages.value = 7
-    //   } else {
-    //     maxPaginationPages.value = 5
-    //   }
-    //   if (initialLoadingDone.value && pagination.value) {
-    //     calculatePagination()
-    //   }
-    // })
 
     watch(
       [() => state.pagination.currentPage, () => state.ordering.current, () => state.search.query],

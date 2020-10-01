@@ -1,10 +1,12 @@
 import MiniSearch from 'minisearch'
 
 import { TableProps, LocalTableProps } from '../types'
-import { formatDate, paginate } from './index'
+import { formatDate } from './index'
 import { debug } from './dev'
 
-import { state } from '../store'
+import { createStore } from '../store'
+
+const { state, buildPagination, buildUrl } = createStore()
 
 export function isLocal(prop: TableProps): prop is LocalTableProps {
   return prop.mode === 'local'
@@ -33,47 +35,6 @@ export function useLocalSearch(
   const instance = new MiniSearch(searchOptions)
   instance.addAll(data)
   return instance
-}
-
-export function buildPagination(): void {
-  debug.log('buildPagination')
-  state.pagination.data = paginate(
-    state.data.totalCount,
-    state.pagination.currentPage,
-    state.pagination.perPage,
-    state.pagination.maxPaginationPages
-  )
-}
-
-export function buildUrl(): void {
-  debug.run('buildUrl')
-  // let prefix = ''
-  // let suffix = ''
-  // if (searchTerm.value.length > 0) {
-  //   prefix = '/search'
-  //   suffix = `&search=${searchTerm.value}`
-  // }
-
-  // url.value = `${prefix}/${props.dataModel}?page=${currentPage.value}&limit=${perPage.value}`
-  // if (currentOrdering.value && currentOrdering.value.length > 0) {
-  //   url.value += `&ordering=${currentOrdering.value}`
-  // }
-  // url.value += suffix
-}
-
-export function changePage(value: number): void {
-  debug.run('changePage')
-  state.pagination.currentPage = value
-}
-
-export function changeOrdering(value: string): void {
-  debug.run('changeOrdering')
-  state.ordering.current = value
-}
-
-export function changeSearch(value: string): void {
-  state.search.query = value
-  state.pagination.currentPage = 1
 }
 
 export function localSearch(): void {

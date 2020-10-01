@@ -40,5 +40,5 @@ export function useBreakpoint(
     window.removeEventListener('resize', resizeFn)
   })
 
-  return unref(currentBreakpoint)
+  return currentBreakpoint
 }

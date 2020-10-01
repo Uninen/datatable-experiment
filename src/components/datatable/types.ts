@@ -1,3 +1,4 @@
+import { Ref } from 'vue'
 import { Emitter } from 'mitt'
 import { AxiosInstance } from 'axios'
 import MiniSearch from 'minisearch'
@@ -46,12 +47,16 @@ export const enum TableMode {
 
 export interface TableState {
   isWorking: boolean
-  currentBreakpoint: Breakpoint
+  initialLoadingDone: boolean
+  currentBreakpoint: Breakpoint | Ref<Breakpoint>
   data: {
     original: any[]
     current: any[]
-    url: string
     totalCount: number
+  }
+  remote?: {
+    url: string
+    dataModel: string
   }
   features: {
     pagination: boolean

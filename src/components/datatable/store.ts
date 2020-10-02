@@ -63,7 +63,6 @@ export const createStore = () => {
 
   const changeSearch = (value: string): void => {
     state.search.query.value = value
-    state.pagination.current.value = 1
   }
 
   const buildPagination = (): void => {
@@ -127,7 +126,7 @@ export const createStore = () => {
     debug.log('after search: ', state.data.current.value.length)
   }
 
-  const localPagination = (): void => {
+  const refreshLocalData = (): void => {
     let endIndex = 0
     debug.run('localPagination')
 
@@ -165,10 +164,8 @@ export const createStore = () => {
   }
 
   const refreshRemoteData = (): void => {
-    debug.run('queryData')
+    debug.run('refreshRemoteData')
     buildUrl()
-
-    // isFetchingData.value = true
 
     // props.axiosInstance!.get(url.value).then((response) => {
     //   data.value = response.data.results
@@ -183,7 +180,11 @@ export const createStore = () => {
     debug.run('refreshData')
     state.isWorking.value = true
 
-    localPagination()
+    if (state.mode === TableMode.LOCAL) {
+      refreshLocalData()
+    } else {
+      refreshRemoteData()
+    }
 
     state.isWorking.value = false
     state.initialLoadingDone.value = true
@@ -242,6 +243,7 @@ export const createStore = () => {
       state.data.current.value = state.data.original
       state.data.totalCount.value = state.data.current.value.length
     }
+    state.pagination.current.value = 1
     refreshData()
   })
 

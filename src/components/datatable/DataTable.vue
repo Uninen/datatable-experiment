@@ -27,14 +27,7 @@ export default defineComponent({
     TablePagination,
   },
   setup(props, { slots, attrs }) {
-    const {
-      state,
-      changePage,
-      changeSearch,
-      refreshData,
-      pagination,
-      dateFormatter,
-    } = createStore()
+    const { state, changePage, refreshData, pagination, dateFormatter } = createStore()
 
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
@@ -85,24 +78,18 @@ export default defineComponent({
       mode = TableMode.REMOTE
     }
 
-    const tableConf: TableConfig = {
-      tableId: tableId,
-      dataMode: mode,
-      bus: mitt(),
-      state,
-    }
-
-    // tableConf.bus.on(`pagechange-${tableConf.tableId}`, (value) => changePage(value))
-    // tableConf.bus.on(`ordering-${tableConf.tableId}`, (value) => changeOrdering(value))
-    tableConf.bus.on(`search-${tableConf.tableId}`, (value) => changeSearch(value))
+    // const tableConf: TableConfig = {
+    //   tableId: tableId,
+    //   dataMode: mode,
+    //   bus: mitt(),
+    //   state,
+    // }
 
     refreshData()
 
     provide('state', state)
-    provide('tableConf', tableConf)
     provide('dateFormatter', dateFormatter)
     provide('pagination', pagination)
-    provide('changePage', changePage)
 
     return () => {
       if (state.initialLoadingDone.value) {

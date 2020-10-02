@@ -9,18 +9,18 @@
 </template>
 <script lang="ts">
 import { defineComponent, inject, ref, watchEffect } from 'vue'
-import { TableConfig } from './types'
+import { TableState } from './types'
 import { debounce } from 'lodash-es'
 
 export default defineComponent({
   setup() {
-    const tableConf = inject('tableConf') as TableConfig
+    const state = inject('state') as TableState
 
     const searchTerm = ref<string>('')
 
     function searchTermChange() {
       if (searchTerm.value.length !== 1) {
-        tableConf.bus.emit(`search-${tableConf.tableId}`, searchTerm.value)
+        state.search.query.value = searchTerm.value
       }
     }
 

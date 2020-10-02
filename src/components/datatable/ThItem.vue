@@ -12,7 +12,6 @@
 </template>
 <script lang="ts">
 import { defineComponent, inject, ref, computed } from 'vue'
-import { TableConfig } from './types'
 
 import { Breakpoint, TableState } from './types'
 
@@ -31,7 +30,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const state = inject('state') as TableState
     const currentOrdering = ref('')
-    const tableConf = inject('tableConf') as TableConfig
 
     const isVisible = computed(() => {
       if (state.currentBreakpoint.value) {

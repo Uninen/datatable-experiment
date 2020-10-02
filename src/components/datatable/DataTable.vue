@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, provide, PropType, h, ref, isReactive, isRef } from 'vue'
+import { defineComponent, provide, PropType, h } from 'vue'
 
 import mitt from 'mitt'
 
@@ -11,9 +11,8 @@ import { useBreakpoint } from './utils/useTailwindBreakpoint'
 import { TableMode, TableConfig, LocalTableProps, RemoteTableProps } from './types'
 
 import { createStore } from './store'
-import { generateID } from './utils'
+import { generateID, useLocalSearch, isLocal, useDateFormat } from './utils'
 import { ConfigurationError, warn, debug } from './utils/dev'
-import { isLocal, useDateFormat, useLocalSearch } from './utils/dataTable'
 
 export default defineComponent({
   props: {
@@ -64,11 +63,10 @@ export default defineComponent({
       debug.log('Table in LOCAL mode')
       mode = TableMode.LOCAL
 
+      state.data.master = props.config.data
       state.data.original = props.config.data
-      state.data.totalCount.value = props.config.data.length
-
       state.data.current.value = props.config.data
-      state.data.totalCount.value = state.data.current.value.length
+      state.data.totalCount.value = props.config.data.length
 
       debug.log('Storing original data: ', state.data.original)
 
@@ -95,15 +93,10 @@ export default defineComponent({
     }
 
     // tableConf.bus.on(`pagechange-${tableConf.tableId}`, (value) => changePage(value))
-    tableConf.bus.on(`ordering-${tableConf.tableId}`, (value) => changeOrdering(value))
+    // tableConf.bus.on(`ordering-${tableConf.tableId}`, (value) => changeOrdering(value))
     tableConf.bus.on(`search-${tableConf.tableId}`, (value) => changeSearch(value))
 
     refreshData()
-
-    // debug.log('state.pagination.current: ', state.pagination.current.value)
-    // debug.log('state.pagination.current.value: ', state.pagination.current.value)
-    // debug.log('state.pagination.current is reactive: ', isReactive(state.pagination.current))
-    // debug.log('state.pagination.current is ref: ', isRef(state.pagination.current))
 
     provide('state', state)
     provide('tableConf', tableConf)

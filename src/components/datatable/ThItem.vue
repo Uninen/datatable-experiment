@@ -62,7 +62,7 @@ export default defineComponent({
           break
       }
       emit('ordering', currentOrdering.value)
-      tableConf.bus.emit(`ordering-${tableConf.tableId}`, currentOrdering.value)
+      state.ordering.current.value = currentOrdering.value
     }
 
     return {

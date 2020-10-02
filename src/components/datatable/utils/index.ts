@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
+import MiniSearch from 'minisearch'
 
-import { PaginationObject } from '../types'
+import { PaginationObject, TableProps, LocalTableProps, Breakpoint } from '../types'
 
 // heavily inspired by paginate() by Jason Watmore
 // https://jasonwatmore.com/post/2018/08/07/javascript-pure-pagination-logic-in-vanilla-js-typescript
@@ -104,4 +105,33 @@ export function generateID(): string {
 
 export function formatDate(dateStr: string, format: string = 'MMMM D, YYYY'): string {
   return dayjs(dateStr).format(format)
+}
+
+export function useLocalSearch(
+  data: any,
+  fields: string[],
+  options: any = {
+    prefix: true,
+    fuzzy: 0.3,
+  }
+) {
+  const searchOptions = {
+    fields,
+    searchOptions: options,
+  }
+  const instance = new MiniSearch(searchOptions)
+  instance.addAll(data)
+  return instance
+}
+
+export function isLocal(prop: TableProps): prop is LocalTableProps {
+  return prop.mode === 'local'
+}
+
+export function useDateFormat(breakpoint: Breakpoint, dateStr: string): string {
+  if (breakpoint < 2) {
+    return formatDate(dateStr, 'YYYY-MM-DD')
+  } else {
+    return formatDate(dateStr, 'MMMM D, YYYY')
+  }
 }

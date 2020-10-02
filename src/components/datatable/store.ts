@@ -1,4 +1,5 @@
 import { watch, computed, ref } from 'vue'
+import { clone } from 'lodash-es'
 
 import { debug } from './utils/dev'
 import { paginate, sortByKey } from './utils'
@@ -12,8 +13,10 @@ export const createStore = () => {
     initialLoadingDone: ref(false),
     currentBreakpoint: ref(1),
     data: {
+      master: [],
       original: [],
       current: ref([]),
+      search: ref([]),
       totalCount: ref(0),
     },
     features: {
@@ -27,9 +30,11 @@ export const createStore = () => {
       current: ref(1),
       perPage: ref(25),
       maxPaginationPages: ref(7),
+      // data: { PaginationObject }
     },
     search: {
       query: ref(''),
+      // instance: { MiniSearch }
     },
   }
 
@@ -40,7 +45,14 @@ export const createStore = () => {
 
   const applyLocalOrdering = (): void => {
     debug.run('applyLocalOrdering')
-    state.data.original.sort(sortByKey(state.ordering.current.value))
+    if (state.ordering.current.value === '') {
+      debug.log('resetting ordering')
+      state.data.original = clone(state.data.master)
+      state.data.current.value = clone(state.data.master)
+    } else {
+      state.data.original.sort(sortByKey(state.ordering.current.value))
+      state.data.search.value.sort(sortByKey(state.ordering.current.value))
+    }
   }
 
   const changeOrdering = (value: string): void => {
@@ -95,24 +107,24 @@ export const createStore = () => {
 
   const localSearch = (): void => {
     debug.run('local search for ', state.search.query.value)
-    // let newData: any = []
-    // const results = searchInstance.value!.search(searchTerm.value)
-    // if (props.data && results.length > 0) {
-    //   for (const resultObj of results) {
-    //     newData.push(
-    //       props.data.find((obj: any) => {
-    //         return obj.id === resultObj.id
-    //       })
-    //     )
-    //   }
-    //   data.value = newData
-    //   dataCount.value = newData.length
-    //   console.log('search results: ', newData.length)
-    // } else {
-    //   data.value = []
-    //   dataCount.value = 0
-    // }
-    // console.log('after search: ', data.value.length)
+    let newData: any = []
+    const results = state.search.instance!.search(state.search.query.value)
+    if (results.length > 0) {
+      for (const resultObj of results) {
+        newData.push(
+          state.data.original.find((obj: any) => {
+            return obj.id === resultObj.id
+          })
+        )
+      }
+      state.data.search.value = newData
+      state.data.totalCount.value = newData.length
+      debug.log('search results: ', newData.length)
+    } else {
+      state.data.search.value = []
+      state.data.totalCount.value = 0
+    }
+    debug.log('after search: ', state.data.current.value.length)
   }
 
   const localPagination = (): void => {
@@ -125,23 +137,46 @@ export const createStore = () => {
 
     if (state.features.pagination) {
       buildPagination()
+      applyLocalOrdering()
 
-      if (state.data.totalCount < state.pagination.perPage) {
+      if (state.data.totalCount.value < state.pagination.perPage.value) {
         endIndex = state.pagination.data!.value.endIndex + 1
       } else {
         endIndex = state.pagination.data!.value.endIndex
       }
-      // debug.log('state.pagination.data!.value: ', state.pagination.data!.value)
-      // debug.log('state.pagination.data!.value.endIndex: ', state.pagination.data!.value.endIndex)
-      // debug.log('state.data.current.value: ', state.data.current)
-      // debug.log('data.value.length before slice: ', state.data.current.length)
-      state.data.current.value = state.data.original.slice(
-        state.pagination.data!.value.startIndex,
-        endIndex
-      )
-      // debug.log('data.value.length after slice: ', state.data.current.length)
+
+      debug.log('data.value.length before slice: ', state.data.current.value.length)
+
+      if (state.search.query.value.length > 0) {
+        state.data.current.value = state.data.search.value.slice(
+          state.pagination.data!.value.startIndex,
+          endIndex
+        )
+      } else {
+        state.data.current.value = state.data.original.slice(
+          state.pagination.data!.value.startIndex,
+          endIndex
+        )
+      }
+
+      debug.log('data.value.length after slice: ', state.data.current.value.length)
       // debug.log('state.data.current.value: ', state.data.current)
     }
+  }
+
+  const refreshRemoteData = (): void => {
+    debug.run('queryData')
+    buildUrl()
+
+    // isFetchingData.value = true
+
+    // props.axiosInstance!.get(url.value).then((response) => {
+    //   data.value = response.data.results
+    //   dataCount.value = response.data.count
+    //   buildPagination()
+    //   isFetchingData.value = false
+    //   initialLoadingDone.value = true
+    // })
   }
 
   const refreshData = (): void => {
@@ -198,11 +233,17 @@ export const createStore = () => {
 
   watch(state.search.query, () => {
     debug.run('watch state.search.query')
+    if (state.search.query.value.length === 0) {
+      debug.log('Resetting data.')
+      state.data.current.value = state.data.original
+      state.data.totalCount.value = state.data.current.value.length
+    }
     refreshData()
   })
 
   watch(state.ordering.current, () => {
     debug.run('watch state.ordering.current')
+    applyLocalOrdering()
     refreshData()
   })
 

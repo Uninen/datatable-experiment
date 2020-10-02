@@ -47,6 +47,7 @@ yarn test
 
 - The component assumes a strict API that looks like `GET [base URL]/[data-model]` and `GET [base URL]/search/[data-model]`
 - Search fields need to be hard-coded separately on backend and frontend (and obviously to be kept in sync)
+- Current sorting functionality for local data is unoptimal for memory consumption and can be optimized a lot. In practise this only affects huge local tables (tens of thousands of rows) so at this point this is not a priority. With typical smaller datasets this is hardly noticeable.
 
 ## ToDo
 

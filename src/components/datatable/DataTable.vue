@@ -67,8 +67,8 @@ export default defineComponent({
       state.data.original = props.config.data
       state.data.totalCount.value = props.config.data.length
 
-      state.data.current = props.config.data
-      state.data.totalCount.value = state.data.current.length
+      state.data.current.value = props.config.data
+      state.data.totalCount.value = state.data.current.value.length
 
       debug.log('Storing original data: ', state.data.original)
 

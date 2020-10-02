@@ -52,7 +52,7 @@ export interface TableState {
   currentBreakpoint: Ref<Breakpoint>
   data: {
     original: any[]
-    current: any[]
+    current: Ref<any[]>
     totalCount: Ref<number>
   }
   remote?: {

@@ -14,7 +14,7 @@ export const createStore = () => {
     currentBreakpoint: ref(1),
     data: {
       original: [],
-      current: [],
+      current: ref([]),
       totalCount: ref(0),
     },
     features: {
@@ -130,7 +130,7 @@ export const createStore = () => {
       // debug.log('state.pagination.data!.value.endIndex: ', state.pagination.data!.value.endIndex)
       // debug.log('state.data.current.value: ', state.data.current)
       // debug.log('data.value.length before slice: ', state.data.current.length)
-      state.data.current = state.data.original.slice(
+      state.data.current.value = state.data.original.slice(
         state.pagination.data!.value.startIndex,
         endIndex
       )
@@ -164,14 +164,6 @@ export const createStore = () => {
   //   }
   // })
 
-  function doPagination() {
-    if (state.mode === TableMode.LOCAL) {
-      localPagination()
-    } else {
-      refreshLocalData()
-    }
-  }
-
   const hasPreviousPage = computed(() => {
     return state.pagination.current.value > 1
   })
@@ -190,10 +182,6 @@ export const createStore = () => {
 
   const nextPageNum = computed(() => {
     return state.pagination.current.value + 1
-  })
-
-  const currentPage = computed(() => {
-    return state.pagination.current.value
   })
 
   const pageList = computed(() => {

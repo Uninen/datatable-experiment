@@ -13,7 +13,7 @@ import { TableMode, TableConfig, LocalTableProps, RemoteTableProps } from './typ
 import { createStore } from './store'
 import { generateID } from './utils'
 import { ConfigurationError, warn, debug } from './utils/dev'
-import { isLocal, useDateFormat, useLocalSearch, refreshRemoteData } from './utils/dataTable'
+import { isLocal, useDateFormat, useLocalSearch } from './utils/dataTable'
 
 export default defineComponent({
   props: {
@@ -33,7 +33,7 @@ export default defineComponent({
       changePage,
       changeOrdering,
       changeSearch,
-      refreshLocalData,
+      refreshData,
       pagination,
     } = createStore()
 
@@ -92,14 +92,6 @@ export default defineComponent({
       dataMode: mode,
       bus: mitt(),
       state,
-    }
-
-    function refreshData(): void {
-      if (isLocal(props.config)) {
-        refreshLocalData()
-      } else {
-        refreshRemoteData()
-      }
     }
 
     // tableConf.bus.on(`pagechange-${tableConf.tableId}`, (value) => changePage(value))

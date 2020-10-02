@@ -1,8 +1,7 @@
-import { reactive, watchEffect, watch, computed, ref } from 'vue'
-import { clone } from 'lodash-es'
+import { watch, computed, ref } from 'vue'
 
 import { debug } from './utils/dev'
-import { paginate } from './utils'
+import { paginate, sortByKey } from './utils'
 
 import { TableState, TableMode } from './types'
 
@@ -39,9 +38,15 @@ export const createStore = () => {
     state.pagination.current.value = value
   }
 
+  const applyLocalOrdering = (): void => {
+    debug.run('applyLocalOrdering')
+    state.data.original.sort(sortByKey(state.ordering.current.value))
+  }
+
   const changeOrdering = (value: string): void => {
     debug.run('changeOrdering', value)
     state.ordering.current.value = value
+    applyLocalOrdering()
   }
 
   const changeSearch = (value: string): void => {
@@ -139,15 +144,14 @@ export const createStore = () => {
     }
   }
 
-  const refreshLocalData = (): void => {
-    debug.run('refreshLocalData')
+  const refreshData = (): void => {
+    debug.run('refreshData')
     state.isWorking.value = true
 
     localPagination()
 
     state.isWorking.value = false
     state.initialLoadingDone.value = true
-    debug.success('refreshLocalData done')
   }
 
   // watchEffect(() => {
@@ -192,14 +196,19 @@ export const createStore = () => {
     }
   })
 
-  watch([() => state.ordering.current.value, () => state.search.query.value], () => {
-    debug.run('watch [currentPage, currentOrdering, searchTerm]')
-    refreshLocalData()
+  watch(state.search.query, () => {
+    debug.run('watch state.search.query')
+    refreshData()
+  })
+
+  watch(state.ordering.current, () => {
+    debug.run('watch state.ordering.current')
+    refreshData()
   })
 
   watch(state.pagination.current, () => {
-    debug.run('watch currentPage')
-    refreshLocalData()
+    debug.run('watch state.pagination.current')
+    refreshData()
   })
 
   return {
@@ -209,7 +218,7 @@ export const createStore = () => {
     changeSearch,
     buildUrl,
     buildPagination,
-    refreshLocalData,
+    refreshData,
     pagination: {
       hasPreviousPage,
       hasNextPage,

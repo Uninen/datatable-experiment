@@ -3249,7 +3249,7 @@ minisearch@^3.0.0:
   resolved "https://registry.yarnpkg.com/minisearch/-/minisearch-3.0.0.tgz#a6f303d392993d595c260b26f14bac529a3bb347"
   integrity sha512-/XXUYKcwMhlO5ZD/XXae2xkMlKcM8RzPeFaIAt8FT2lHu9vpayDfLp7M8P3UP+tprLzilSen8FyuwnsmezBU1Q==
 
-miragejs@^0.1.41:
+miragejs@^0.1.40:
   version "0.1.41"
   resolved "https://registry.yarnpkg.com/miragejs/-/miragejs-0.1.41.tgz#1b06a2d2d9de65624f5bb1cee7ebb4a208f554d0"
   integrity sha512-ur8x7sBskgey64vdzKGVCVC3hgKXWl2Cg5lZbxd6OmKrhr9LCCP/Bv7qh4wsQxIMHZnENxybFATXnrQ+rzSOWQ==

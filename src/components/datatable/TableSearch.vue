@@ -32,7 +32,7 @@ export default defineComponent({
       function () {
         searchTermChange()
       },
-      300,
+      200,
       { maxWait: 500 }
     )
 

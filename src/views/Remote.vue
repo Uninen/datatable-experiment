@@ -245,7 +245,6 @@
       <button
         class="px-2 py-1 text-sm text-gray-800 bg-gray-200 border border-gray-300 rounded-md shadow-sm"
         type="button"
-        @click="downloadMirageJson"
       >
         Download Mirage DB
       </button>
@@ -267,7 +266,7 @@ import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
 import { RemoteTableProps } from '../components/datatable/types'
 
-import { downloadMirageJson } from '../mirage/DevServer'
+// import { downloadMirageJson } from '../mirage/DevServer'
 
 export default defineComponent({
   components: {
@@ -295,7 +294,7 @@ export default defineComponent({
 
     return {
       api,
-      downloadMirageJson,
+      // downloadMirageJson,
       remoteConfig,
     }
   },

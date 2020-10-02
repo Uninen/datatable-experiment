@@ -190,7 +190,6 @@ export const createStore = () => {
   }
 
   const refreshData = (): void => {
-    debug.run('refreshData')
     state.isWorking.value = true
 
     if (state.mode === TableMode.LOCAL) {

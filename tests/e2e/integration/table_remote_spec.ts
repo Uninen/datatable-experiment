@@ -16,7 +16,7 @@ describe('Test remote table', () => {
   afterEach(() => {
     cy.window().then((win) => {
       expect(win.console.error).to.have.callCount(0)
-      expect(win.console.warn).to.have.callCount(0)
+      expect(win.console.warn).to.have.callCount(1)
     })
 
     server.shutdown()

@@ -7,12 +7,10 @@ import TIcon from './components/datatable/TIcon.vue'
 import { makeDevServer } from './mirage/devServer'
 import { makeTestServer } from './mirage/testServer'
 
-if (process.env.NODE_ENV === 'test') {
-  // @ts-expect-error
-  if (window.Cypress) {
+if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'testci') {
+  if (process.env.NODE_ENV === 'testci') {
     makeTestServer()
   }
-  // We want to run MirageJS on Vercel as well
   makeDevServer()
 } else {
   // We want to run MirageJS on Vercel as well

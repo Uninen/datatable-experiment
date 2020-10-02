@@ -4,9 +4,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "yarn dev --mode test & wait-on http://localhost:3000",
+    "start": "yarn dev --mode testci & wait-on http://localhost:3000",
     "test": "concurrently \"yarn dev --mode test\" \"cypress open\" --kill-others",
-    "test:ci": "cypress run --headless"
+    "test:ci": "concurrently \"yarn dev --mode testci\" \"cypress run --headless\" --kill-others",
+    "test:ciold": "cypress run --headless"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.2.0",

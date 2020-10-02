@@ -9,6 +9,7 @@ import { TableState, TableMode } from './types'
 export const createStore = () => {
   const state: TableState = {
     mode: TableMode.LOCAL,
+    id: '',
     isWorking: ref(true),
     initialLoadingDone: ref(false),
     currentBreakpoint: ref(1),
@@ -18,6 +19,11 @@ export const createStore = () => {
       current: ref([]),
       search: ref([]),
       totalCount: ref(0),
+    },
+    remote: {
+      url: ref(''),
+      dataModel: '',
+      // axiosInstance: { AxiosInstance }
     },
     features: {
       pagination: ref(false),
@@ -67,41 +73,25 @@ export const createStore = () => {
 
   const buildPagination = (): void => {
     debug.run('buildPagination')
-    if (state.pagination.data) {
-      state.pagination.data.value = paginate(
-        state.data.totalCount.value,
-        state.pagination.current.value,
-        state.pagination.perPage.value,
-        state.pagination.maxPaginationPages.value
-      )
+    // debug.log('state.data.totalCount.value', state.data.totalCount.value)
+    // debug.log('state.pagination.current.value', state.pagination.current.value)
+    // debug.log('state.pagination.perPage.value', state.pagination.perPage.value)
+    // debug.log(
+    //   'state.pagination.maxPaginationPages.value',
+    //   state.pagination.maxPaginationPages.value
+    // )
+    let val = paginate(
+      state.data.totalCount.value,
+      state.pagination.current.value,
+      state.pagination.perPage.value,
+      state.pagination.maxPaginationPages.value
+    )
+    if (state.pagination.data && state.pagination.data.value) {
+      state.pagination.data.value = val
     } else {
-      state.pagination.data = ref(
-        paginate(
-          state.data.totalCount.value,
-          state.pagination.current.value,
-          state.pagination.perPage.value,
-          state.pagination.maxPaginationPages.value
-        )
-      )
+      state.pagination.data = ref(val)
     }
-  }
-
-  const buildUrl = (): void => {
-    debug.run('buildUrl')
-    let prefix = ''
-    let suffix = ''
-    if (state.search.query.value.length > 0) {
-      prefix = '/search'
-      suffix = `&search=${state.search.query}`
-    }
-
-    state.remote!.url.value = `${prefix}/${state.remote!.dataModel.value}?page=${
-      state.pagination.current.value
-    }&limit=${state.pagination.perPage}`
-    if (state.ordering.current.value.length > 0) {
-      state.remote!.url.value += `&ordering=${state.ordering.current.value}`
-    }
-    state.remote!.url.value += suffix
+    debug.log('state.pagination.data.value', state.pagination.data.value)
   }
 
   const localSearch = (): void => {
@@ -161,19 +151,42 @@ export const createStore = () => {
       debug.log('data.value.length after slice: ', state.data.current.value.length)
       // debug.log('state.data.current.value: ', state.data.current)
     }
+
+    state.isWorking.value = false
+    state.initialLoadingDone.value = true
+  }
+
+  const buildUrl = (): void => {
+    debug.run('buildUrl')
+    let prefix = ''
+    let suffix = ''
+    if (state.search.query.value.length > 0) {
+      prefix = '/search'
+      suffix = `&search=${state.search.query.value}`
+    }
+
+    state.remote!.url.value = `${prefix}/${state.remote.dataModel}?page=${state.pagination.current.value}&limit=${state.pagination.perPage.value}`
+    if (state.ordering.current.value.length > 0) {
+      state.remote.url.value += `&ordering=${state.ordering.current.value}`
+    }
+    state.remote.url.value += suffix
   }
 
   const refreshRemoteData = (): void => {
     debug.run('refreshRemoteData')
     buildUrl()
 
-    // props.axiosInstance!.get(url.value).then((response) => {
-    //   data.value = response.data.results
-    //   dataCount.value = response.data.count
-    //   buildPagination()
-    //   isFetchingData.value = false
-    //   initialLoadingDone.value = true
-    // })
+    state.remote.axiosInstance!.get(state.remote.url.value).then((response) => {
+      // state.data.original = response.data.results
+      state.data.current.value = response.data.results
+      state.data.totalCount.value = response.data.count
+
+      buildPagination()
+
+      state.isWorking.value = false
+      state.initialLoadingDone.value = true
+      debug.success('refreshData DONE')
+    })
   }
 
   const refreshData = (): void => {
@@ -185,9 +198,6 @@ export const createStore = () => {
     } else {
       refreshRemoteData()
     }
-
-    state.isWorking.value = false
-    state.initialLoadingDone.value = true
   }
 
   // watchEffect(() => {
@@ -249,7 +259,9 @@ export const createStore = () => {
 
   watch(state.ordering.current, () => {
     debug.run('watch state.ordering.current')
-    applyLocalOrdering()
+    if (state.mode === TableMode.LOCAL) {
+      applyLocalOrdering()
+    }
     refreshData()
   })
 

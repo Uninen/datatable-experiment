@@ -47,6 +47,7 @@ export const enum TableMode {
 
 export interface TableState {
   mode: TableMode
+  id: string
   isWorking: Ref<boolean>
   initialLoadingDone: Ref<boolean>
   currentBreakpoint: Ref<Breakpoint>
@@ -57,9 +58,10 @@ export interface TableState {
     search: Ref<any[]>
     totalCount: Ref<number>
   }
-  remote?: {
+  remote: {
     url: Ref<string>
-    dataModel: Ref<string>
+    dataModel: string
+    axiosInstance?: AxiosInstance
   }
   features: {
     pagination: Ref<boolean>

@@ -1,14 +1,12 @@
 <script lang="ts">
 import { defineComponent, provide, PropType, h } from 'vue'
 
-import mitt from 'mitt'
-
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
 import TableSearch from './TableSearch.vue'
 import { useBreakpoint } from './utils/useTailwindBreakpoint'
-import { TableMode, TableConfig, LocalTableProps, RemoteTableProps } from './types'
+import { TableMode, LocalTableProps, RemoteTableProps } from './types'
 
 import { createStore } from './store'
 import { generateID, useLocalSearch, isLocal } from './utils'
@@ -27,18 +25,17 @@ export default defineComponent({
     TablePagination,
   },
   setup(props, { slots, attrs }) {
-    const { state, changePage, refreshData, pagination, dateFormatter } = createStore()
+    const { state, refreshData, pagination, dateFormatter } = createStore()
 
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
-
-    state.currentBreakpoint = useBreakpoint()
 
     if (attrs.id) {
       tableId = attrs.id as string
     } else {
       tableId = generateID()
     }
+    state.id = tableId
     debug.log('tableId set to ', tableId)
 
     if (slots.pagination) {
@@ -49,11 +46,10 @@ export default defineComponent({
       } else {
         warn('DataTable pagination set up but "config.itemsPerPage" is not set')
       }
-      debug.success('Pagination configured')
     }
 
     if (isLocal(props.config)) {
-      debug.log('Table in LOCAL mode')
+      debug.log('Configuring table in LOCAL mode')
       mode = TableMode.LOCAL
 
       state.data.master = props.config.data
@@ -71,19 +67,26 @@ export default defineComponent({
         } else {
           throw new ConfigurationError('Property "searchFields" is missing from configuration')
         }
-        debug.success('Search configured')
       }
+      debug.success('Local table configured')
     } else {
-      debug.log('Table in REMOTE mode')
+      debug.log('Configuring table in REMOTE mode')
       mode = TableMode.REMOTE
-    }
 
-    // const tableConf: TableConfig = {
-    //   tableId: tableId,
-    //   dataMode: mode,
-    //   bus: mitt(),
-    //   state,
-    // }
+      if (props.config.dataModel) {
+        state.remote.dataModel = props.config.dataModel
+      } else {
+        throw new ConfigurationError('Property "dataModel" is missing from configuration')
+      }
+      if (props.config.axiosInstance) {
+        state.remote.axiosInstance = props.config.axiosInstance
+      } else {
+        throw new ConfigurationError('Property "axiosInstance" is missing from configuration')
+      }
+      debug.success('Remote table configured')
+    }
+    state.mode = mode
+    state.currentBreakpoint = useBreakpoint()
 
     refreshData()
 

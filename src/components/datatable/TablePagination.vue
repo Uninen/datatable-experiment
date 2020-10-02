@@ -23,7 +23,6 @@ export default defineComponent({
   setup() {
     const currentPage = ref(1)
     const state = inject('state') as TableState
-    const pagination = state.pagination.data!
     const isFetchingData = state.isWorking
 
     // @ts-ignore
@@ -54,7 +53,7 @@ export default defineComponent({
     // }
 
     return {
-      pagination,
+      pagination: state.pagination.data!,
       changePageTo,
       isFetchingData,
       currentPage,

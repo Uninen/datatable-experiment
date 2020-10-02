@@ -5,7 +5,6 @@ import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
 import TableSearch from './TableSearch.vue'
-import { useBreakpoint } from './utils/useTailwindBreakpoint'
 import { TableMode, LocalTableProps, RemoteTableProps } from './types'
 
 import { createStore } from './store'
@@ -86,7 +85,6 @@ export default defineComponent({
       debug.success('Remote table configured')
     }
     state.mode = mode
-    state.currentBreakpoint = useBreakpoint()
 
     refreshData()
 

@@ -3,6 +3,7 @@ import { clone } from 'lodash-es'
 
 import { debug } from './utils/dev'
 import { paginate, sortByKey, useDateFormat } from './utils'
+import { useBreakpoint } from './utils/useTailwindBreakpoint'
 
 import { TableState, TableMode } from './types'
 
@@ -12,7 +13,7 @@ export const createStore = () => {
     id: '',
     isWorking: ref(true),
     initialLoadingDone: ref(false),
-    currentBreakpoint: ref(1),
+    currentBreakpoint: useBreakpoint(),
     data: {
       master: [],
       original: [],
@@ -35,7 +36,7 @@ export const createStore = () => {
     pagination: {
       current: ref(1),
       perPage: ref(25),
-      maxPaginationPages: ref(7),
+      maxPaginationPages: ref(5),
       // data: { PaginationObject }
     },
     search: {
@@ -199,20 +200,6 @@ export const createStore = () => {
     }
   }
 
-  // watchEffect(() => {
-  //   if (state.currentBreakpoint > 3) {
-  //     state.pagination.maxPaginationPages = 11
-  //   } else if (state.currentBreakpoint > 2) {
-  //     state.pagination.maxPaginationPages = 7
-  //   } else {
-  //     state.pagination.maxPaginationPages = 5
-  //   }
-  //   if (state.initialLoadingDone && state.pagination.data) {
-  //     debug.log('state.currentBreakpoint changed to ', state.currentBreakpoint)
-  //     buildPagination()
-  //   }
-  // })
-
   const hasPreviousPage = computed(() => {
     return state.pagination.current.value > 1
   })
@@ -265,8 +252,20 @@ export const createStore = () => {
   })
 
   watch(state.pagination.current, () => {
-    debug.run('watch state.pagination.current')
+    debug.run('watch state.pagination.current', state.pagination.current.value)
     refreshData()
+  })
+
+  watch(state.currentBreakpoint, () => {
+    debug.run('watch state.currentBreakpoint', state.currentBreakpoint.value)
+    if (state.currentBreakpoint.value > 3) {
+      state.pagination.maxPaginationPages.value = 11
+    } else if (state.currentBreakpoint.value > 2) {
+      state.pagination.maxPaginationPages.value = 7
+    } else {
+      state.pagination.maxPaginationPages.value = 5
+    }
+    buildPagination()
   })
 
   return {

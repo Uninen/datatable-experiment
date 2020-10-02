@@ -6,7 +6,7 @@ Cypress.on('window:before:load', (win) => {
   cy.spy(win.console, 'warn')
 })
 
-describe('Test remote table', () => {
+describe('Test local table', () => {
   let server: any
 
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe('Test remote table', () => {
   afterEach(() => {
     cy.window().then((win) => {
       expect(win.console.error).to.have.callCount(0)
-      expect(win.console.warn).to.have.callCount(0)
+      expect(win.console.warn).to.have.callCount(1)
     })
 
     server.shutdown()
@@ -49,41 +49,5 @@ describe('Test remote table', () => {
     cy.get('#sortby-created').click()
     cy.wait(300)
     cy.get('.datatable-name').first().should('contain', 'Brad Olson')
-  })
-})
-
-describe('Test local table', () => {
-  let server: any
-
-  beforeEach(() => {
-    server = makeDevServer()
-  })
-
-  afterEach(() => {
-    server.shutdown()
-  })
-
-  it('First artist name is visible on the page', () => {
-    cy.visit('/local/')
-
-    cy.contains('td', 'Johnnie Batz')
-  })
-})
-
-describe('Test unstyled table', () => {
-  let server: any
-
-  beforeEach(() => {
-    server = makeDevServer()
-  })
-
-  afterEach(() => {
-    server.shutdown()
-  })
-
-  it('First artist name is visible on the page', () => {
-    cy.visit('/unstyled/')
-
-    cy.contains('td', 'Johnnie Batz')
   })
 })

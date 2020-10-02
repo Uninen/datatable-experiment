@@ -1,6 +1,6 @@
 <template>
   <div>
-    <data-table v-if="unstyledArtistList.length > 0" :data="unstyledArtistList"></data-table>
+    <data-table :config="localConfig"></data-table>
   </div>
 </template>
 
@@ -16,11 +16,13 @@ export default defineComponent({
   },
 
   setup() {
-    const unstyledArtistList: any = JSON.parse(JSON.stringify(artists.artists))
-    console.log('Loading unstyled artists: ', unstyledArtistList)
+    const localConfig = {
+      mode: 'local',
+      data: JSON.parse(JSON.stringify(artists.artists)),
+    }
 
     return {
-      unstyledArtistList,
+      localConfig,
     }
   },
 })

@@ -51,39 +51,3 @@ describe('Test remote table', () => {
     cy.get('.datatable-name').first().should('contain', 'Brad Olson')
   })
 })
-
-describe('Test local table', () => {
-  let server: any
-
-  beforeEach(() => {
-    server = makeDevServer()
-  })
-
-  afterEach(() => {
-    server.shutdown()
-  })
-
-  it('First artist name is visible on the page', () => {
-    cy.visit('/local/')
-
-    cy.contains('td', 'Johnnie Batz')
-  })
-})
-
-describe('Test unstyled table', () => {
-  let server: any
-
-  beforeEach(() => {
-    server = makeDevServer()
-  })
-
-  afterEach(() => {
-    server.shutdown()
-  })
-
-  it('First artist name is visible on the page', () => {
-    cy.visit('/unstyled/')
-
-    cy.contains('td', 'Johnnie Batz')
-  })
-})

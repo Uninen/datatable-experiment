@@ -30,8 +30,7 @@ export default defineComponent({
     let dataKeys: string[] = []
     let keysShifted = false
     const state = inject('state') as TableState
-
-    const dateFormatter = inject('dateFormatter')
+    const dateFormatter = inject('dateFormatter') as Function
 
     function extractDataKeys() {
       if (!keysShifted && state.data.current && state.data.current.value.length > 0) {

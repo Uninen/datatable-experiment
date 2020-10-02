@@ -11,7 +11,7 @@ import { useBreakpoint } from './utils/useTailwindBreakpoint'
 import { TableMode, TableConfig, LocalTableProps, RemoteTableProps } from './types'
 
 import { createStore } from './store'
-import { generateID, useLocalSearch, isLocal, useDateFormat } from './utils'
+import { generateID, useLocalSearch, isLocal } from './utils'
 import { ConfigurationError, warn, debug } from './utils/dev'
 
 export default defineComponent({
@@ -30,10 +30,10 @@ export default defineComponent({
     const {
       state,
       changePage,
-      changeOrdering,
       changeSearch,
       refreshData,
       pagination,
+      dateFormatter,
     } = createStore()
 
     let tableId: string
@@ -100,7 +100,7 @@ export default defineComponent({
 
     provide('state', state)
     provide('tableConf', tableConf)
-    provide('dateFormatter', useDateFormat)
+    provide('dateFormatter', dateFormatter)
     provide('pagination', pagination)
     provide('changePage', changePage)
 

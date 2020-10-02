@@ -257,7 +257,6 @@ import TablePagination from '../components/datatable/TablePagination.vue'
 import TableSearch from '../components/datatable/TableSearch.vue'
 import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
-import { formatDate } from '../components/datatable/utils'
 import { LocalTableProps } from '../components/datatable/types'
 
 import artists from '../mirage/fixtures/artists.mirage.db.json'
@@ -274,36 +273,6 @@ export default defineComponent({
   },
 
   setup() {
-    const artistList: any = artists.artists
-    const filterOptions = {
-      searchOptions: {
-        // fields to index
-        fields: ['userName', 'eventName', 'artistName', 'email', 'extraSearchField'],
-        // fields to return with search results
-        storeFields: [
-          'userName',
-          'eventName',
-          'artistName',
-          'email',
-          'extraSearchField',
-          'model',
-          'photoUrl',
-          'meta',
-        ],
-        searchOptions: {
-          boost: { userName: 4, artistName: 4, eventName: 2 },
-          prefix: true,
-          fuzzy: 0.3,
-        },
-      },
-      filters: {
-        isVip: {
-          type: Boolean,
-          name: 'VIP',
-        },
-      },
-    }
-
     const localConfig: LocalTableProps = {
       mode: 'local',
       data: artists.artists,

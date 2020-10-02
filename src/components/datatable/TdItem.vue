@@ -23,11 +23,10 @@ export default defineComponent({
   },
   setup(props) {
     const state = inject('state') as TableState
-    const currentBreakpoint = state.currentBreakpoint.value
 
     const isVisible = computed(() => {
-      if (currentBreakpoint) {
-        return currentBreakpoint >= props.hiddenBelow
+      if (state.currentBreakpoint.value) {
+        return state.currentBreakpoint.value >= props.hiddenBelow
       } else {
         return true
       }

@@ -16,7 +16,7 @@
     "faker": "^5.1.0",
     "lodash-es": "^4.17.15",
     "minisearch": "^3.0.0",
-    "miragejs": "^0.1.40",
+    "miragejs": "^0.1.41",
     "mitt": "^2.1.0",
     "tailwindcss": "^1.8.10",
     "vue": "^3.0.0",

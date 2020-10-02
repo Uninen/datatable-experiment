@@ -241,7 +241,7 @@
       </template>
     </data-table>
 
-    <teleport to="#download-button">
+    <teleport v-if="false" to="#download-button">
       <button
         class="px-2 py-1 text-sm text-gray-800 bg-gray-200 border border-gray-300 rounded-md shadow-sm"
         type="button"

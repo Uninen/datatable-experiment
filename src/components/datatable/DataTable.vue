@@ -66,6 +66,10 @@ export default defineComponent({
 
       state.data.original = props.config.data
       state.data.totalCount.value = props.config.data.length
+
+      state.data.current = props.config.data
+      state.data.totalCount.value = state.data.current.length
+
       debug.log('Storing original data: ', state.data.original)
 
       if (slots.search) {
@@ -104,7 +108,10 @@ export default defineComponent({
 
     refreshData()
 
-    // debug.log('state: ', state)
+    // debug.log('state.pagination.current: ', state.pagination.current.value)
+    // debug.log('state.pagination.current.value: ', state.pagination.current.value)
+    // debug.log('state.pagination.current is reactive: ', isReactive(state.pagination.current))
+    // debug.log('state.pagination.current is ref: ', isRef(state.pagination.current))
 
     provide('state', state)
     provide('tableConf', tableConf)

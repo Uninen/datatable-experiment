@@ -51,14 +51,23 @@ export const createStore = () => {
 
   const buildPagination = (): void => {
     debug.run('buildPagination')
-    state.pagination.data = ref(
-      paginate(
+    if (state.pagination.data) {
+      state.pagination.data.value = paginate(
         state.data.totalCount.value,
         state.pagination.current.value,
         state.pagination.perPage.value,
         state.pagination.maxPaginationPages.value
       )
-    )
+    } else {
+      state.pagination.data = ref(
+        paginate(
+          state.data.totalCount.value,
+          state.pagination.current.value,
+          state.pagination.perPage.value,
+          state.pagination.maxPaginationPages.value
+        )
+      )
+    }
   }
 
   const buildUrl = (): void => {
@@ -107,9 +116,6 @@ export const createStore = () => {
 
     if (state.search.query.value.length > 0) {
       localSearch()
-    } else {
-      state.data.current = clone(state.data.original)
-      state.data.totalCount.value = state.data.current.length
     }
 
     if (state.features.pagination) {
@@ -120,13 +126,16 @@ export const createStore = () => {
       } else {
         endIndex = state.pagination.data!.value.endIndex
       }
-      debug.log('state.data.current.value: ', state.data.current)
-      debug.log('data.value.length before slice: ', state.data.current.length)
-      state.data.current = state.data.current.slice(
+      // debug.log('state.pagination.data!.value: ', state.pagination.data!.value)
+      // debug.log('state.pagination.data!.value.endIndex: ', state.pagination.data!.value.endIndex)
+      // debug.log('state.data.current.value: ', state.data.current)
+      // debug.log('data.value.length before slice: ', state.data.current.length)
+      state.data.current = state.data.original.slice(
         state.pagination.data!.value.startIndex,
         endIndex
       )
-      debug.log('data.value.length after slice: ', state.data.current.length)
+      // debug.log('data.value.length after slice: ', state.data.current.length)
+      // debug.log('state.data.current.value: ', state.data.current)
     }
   }
 

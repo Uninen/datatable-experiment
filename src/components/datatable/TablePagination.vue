@@ -14,37 +14,26 @@
   ></slot>
 </template>
 <script lang="ts">
-import { defineComponent, computed, inject, ref, watch, isReactive, isRef } from 'vue'
+import { defineComponent, inject, ref } from 'vue'
 import { debug } from './utils/dev'
-import { TableConfig } from './types'
 import { TableState } from './types'
 
 export default defineComponent({
   emits: ['pagechange'],
-  setup(_, { emit }) {
+  setup() {
     const currentPage = ref(1)
     const state = inject('state') as TableState
-    const pagination = state.pagination.data!.value
-    const isFetchingData = state.isWorking.value
-    const tableConf = inject('tableConf') as TableConfig
+    const pagination = state.pagination.data!
+    const isFetchingData = state.isWorking
 
-    const changePage = inject('changePage')
-
+    // @ts-ignore
     const { previousPage, nextPage, hasPreviousPage, hasNextPage, pageList } = inject('pagination')
 
     function changePageTo(page: number) {
       debug.run('changePageTo', page)
       currentPage.value = page
       state.pagination.current.value = page
-      changePage(page)
-      // state.current.page = page
-      // emit('pagechange', page)
-      // tableConf.bus.emit(`pagechange-${tableConf.tableId}`, page)
     }
-
-    // watch(pagination, () => {
-    //   debug.log('pagination changed in TablePagination', pagination)
-    // })
 
     // TODO: convert to proxyRefs
 

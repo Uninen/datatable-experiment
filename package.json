@@ -6,8 +6,7 @@
     "build": "vite build",
     "start": "yarn dev --mode test & wait-on http://localhost:3000",
     "test": "concurrently \"yarn dev --mode test\" \"cypress open\" --kill-others",
-    "test:ci": "concurrently \"yarn dev --mode test\" \"cypress run --headless\" --kill-others",
-    "test:ci:old": "cypress run --headless"
+    "test:ci": "cypress run --headless"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.2.0",

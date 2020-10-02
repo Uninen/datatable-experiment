@@ -69,7 +69,7 @@ jobs:
 
       ## Test
       - name: Start devserver
-        run: yarn dev --mode test & wait-on http://localhost:3000
+        run: yarn start
 
       - name: Run tests
         run: yarn test:ci

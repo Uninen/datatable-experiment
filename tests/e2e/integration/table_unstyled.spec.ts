@@ -3,7 +3,6 @@ import { makeDevServer } from '../../../src/mirage/devServer'
 
 Cypress.on('window:before:load', (win) => {
   cy.spy(win.console, 'error')
-  cy.spy(win.console, 'warn')
 })
 
 describe('Test unstyled table', () => {
@@ -14,12 +13,15 @@ describe('Test unstyled table', () => {
   })
 
   afterEach(() => {
+    cy.window().then((win) => {
+      expect(win.console.error).to.have.callCount(0)
+    })
     server.shutdown()
   })
 
   it('First artist name is visible on the page', () => {
     cy.visit('/unstyled/')
 
-    cy.contains('td', 'Johnnie Batz')
+    cy.contains('td', 'Jonathon McDermott')
   })
 })

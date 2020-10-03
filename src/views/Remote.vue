@@ -245,6 +245,7 @@
       <button
         class="px-2 py-1 text-sm text-gray-800 bg-gray-200 border border-gray-300 rounded-md shadow-sm"
         type="button"
+        @click.prevent="downloadMirageJson"
       >
         Download Mirage DB
       </button>
@@ -266,6 +267,7 @@ import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
 import { RemoteTableProps } from '../components/datatable/types'
 
+// For some reason this breaks in CI and Vercel -- possibly a circular import or smt?
 // import { downloadMirageJson } from '../mirage/DevServer'
 
 export default defineComponent({

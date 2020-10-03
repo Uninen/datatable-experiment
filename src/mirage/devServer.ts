@@ -9,6 +9,8 @@ import artistsJson from './fixtures/artists.mirage.db.json'
 import { sortByKey } from '../components/datatable/utils'
 import { debug } from '../components/datatable/utils/dev'
 
+faker.seed(2020)
+
 export function downloadMirageJson() {
   // @ts-ignore
   const data = JSON.stringify(window.mirageServer.db.dump())
@@ -180,6 +182,10 @@ export function makeDevServer(environment = 'test') {
 
         created() {
           return faker.date.past()
+        },
+
+        boringField() {
+          return faker.random.number(5)
         },
       }),
     },

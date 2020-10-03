@@ -3,7 +3,6 @@ import { makeDevServer } from '../../../src/mirage/devServer'
 
 Cypress.on('window:before:load', (win) => {
   cy.spy(win.console, 'error')
-  cy.spy(win.console, 'warn')
 })
 
 describe('Test local table', () => {
@@ -16,7 +15,6 @@ describe('Test local table', () => {
   afterEach(() => {
     cy.window().then((win) => {
       expect(win.console.error).to.have.callCount(0)
-      expect(win.console.warn).to.have.callCount(1)
     })
 
     server.shutdown()
@@ -25,8 +23,8 @@ describe('Test local table', () => {
   it('Show correct artist names', () => {
     cy.visit('/local/')
 
-    cy.get('.datatable-name').first().should('contain', 'Johnnie Batz')
-    cy.contains('div', 'Showing 1 to 12 of 180 results')
+    cy.get('.datatable-name').first().should('contain', 'Jonathon McDermott')
+    cy.contains('div', 'Showing 1 to 12 of 500 results')
   })
 
   it('Sort the table by name', () => {
@@ -34,20 +32,14 @@ describe('Test local table', () => {
 
     // Sort by name
     cy.get('#sortby-name').click()
-    cy.wait(300)
-    cy.get('.datatable-name').first().should('contain', 'Al Bahringer')
-
+    cy.get('.datatable-name').first().should('contain', 'Abraham Schultz')
     cy.get('#sortby-name').click()
-    cy.wait(300)
-    cy.get('.datatable-name').first().should('contain', 'Winston Bartell')
-
+    cy.get('.datatable-name').first().should('contain', 'Yvette Altenwerth')
     cy.get('#sortby-name').click()
-    cy.wait(300)
-    cy.get('.datatable-name').first().should('contain', 'Johnnie Batz')
+    cy.get('.datatable-name').first().should('contain', 'Jonathon McDermott')
 
     // Sort by date
     cy.get('#sortby-created').click()
-    cy.wait(300)
-    cy.get('.datatable-name').first().should('contain', 'Brad Olson')
+    cy.get('.datatable-name').first().should('contain', 'Melissa Hagenes')
   })
 })

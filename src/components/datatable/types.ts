@@ -1,5 +1,4 @@
 import { Ref } from 'vue'
-import { Emitter } from 'mitt'
 import { AxiosInstance } from 'axios'
 import MiniSearch from 'minisearch'
 
@@ -79,17 +78,6 @@ export interface TableState {
   search: {
     query: Ref<string>
     instance?: MiniSearch
-  }
-}
-
-export interface TableConfig {
-  readonly tableId: string
-  readonly dataMode: TableMode
-  bus: Emitter
-  state: TableState
-  search?: {
-    fields?: string[]
-    options?: object
   }
 }
 

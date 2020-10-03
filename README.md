@@ -59,6 +59,10 @@ yarn test
 - Search fields need to be hard-coded separately on backend and frontend (and obviously to be kept in sync)
 - Current sorting functionality for local data is unoptimal for memory consumption and can be optimized a lot. In practise this only affects huge local tables (tens of thousands of rows) so at this point this is not a priority. With typical smaller datasets this is hardly noticeable.
 
+## Known issues
+
+- Ordering fails if trying to order another column when one column has been ordered. (Workaround: reset ordering before ordering by another column.)
+
 ## ToDo
 
 - [ ] Filtering based on boolean

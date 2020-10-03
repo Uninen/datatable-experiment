@@ -17,11 +17,12 @@ Note: this is not intended as a final product but an experiment. Hence, the code
 
 ## Current functionality
 
+- Accepts **any json array** of objects as data, display only the fields you need
 - **100% control over markup and styling**; everything works via slots
 - Works with **both local and remote data** (using your own api function)
-- **Responsive**, can show different data for different breakpoints
-- Automatic and responsive **pagination** (configurable)
-- **Search** for both local and remote data (configurable)
+- **Responsive**, remove less important data columns for small breakpoints
+- Automatic and responsive **pagination**
+- **Search** for both local and remote data
 
 ## Project setup
 
@@ -44,6 +45,12 @@ yarn test
 ```
 
 ## Design decisions
+
+- While keeping unnecessary dependencies as few as possible, there's no point of keep reinventing the wheel. Current dependencies include
+
+  - [minisearch](https://github.com/lucaong/minisearch) (6k) for local search
+  - [dayjs](https://github.com/iamkun/dayjs) (3k) for date filter
+  - [lodash-es](https://github.com/lodash/lodash) (~5k) for a few utilities like `clone`
 
 - The component assumes a strict API that looks like `GET [base URL]/[data-model]` and `GET [base URL]/search/[data-model]`
 - Search fields need to be hard-coded separately on backend and frontend (and obviously to be kept in sync)

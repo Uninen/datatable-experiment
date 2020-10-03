@@ -46,8 +46,12 @@
           class="items-center px-1 py-3 pl-4 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
           order-key="name"
           id="sortby-name"
-          >Name</th-item
         >
+          <div class="flex items-center justify-between">
+            <span>Name</span>
+            <th-ordering-icon class="text-gray-400" />
+          </div>
+        </th-item>
         <th-item
           class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
           :hidden-below="2"
@@ -61,8 +65,12 @@
           class="items-center py-3 pl-2 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
           order-key="created"
           id="sortby-created"
-          >Created</th-item
         >
+          <div class="flex items-center justify-between">
+            <span>Created</span>
+            <th-ordering-icon class="text-gray-400" />
+          </div>
+        </th-item>
         <th-item
           class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
           >&nbsp;</th-item
@@ -245,7 +253,6 @@
       <button
         class="px-2 py-1 text-sm text-gray-800 bg-gray-200 border border-gray-300 rounded-md shadow-sm"
         type="button"
-        @click.prevent="downloadMirageJson"
       >
         Download Mirage DB
       </button>
@@ -265,6 +272,7 @@ import TablePagination from '../components/datatable/TablePagination.vue'
 import TableSearch from '../components/datatable/TableSearch.vue'
 import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
+import ThOrderingIcon from '../components/datatable/ThOrderingIcon.vue'
 import { RemoteTableProps } from '../components/datatable/types'
 
 // For some reason this breaks in CI and Vercel -- possibly a circular import or smt?
@@ -279,6 +287,7 @@ export default defineComponent({
     TableRow,
     TablePagination,
     TableSearch,
+    ThOrderingIcon,
   },
 
   setup() {

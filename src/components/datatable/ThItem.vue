@@ -1,17 +1,10 @@
 <template>
   <th v-if="isVisible" :class="{ 'cursor-pointer': orderKey }" @click="toggleOrdering">
-    <div class="flex items-center">
-      <slot />
-      <t-icon
-        v-if="currentOrdering.length > 0"
-        :name="iconName"
-        class="inline-block w-4 h-4 ml-2"
-      />
-    </div>
+    <slot />
   </th>
 </template>
 <script lang="ts">
-import { defineComponent, inject, ref, computed } from 'vue'
+import { defineComponent, inject, computed, provide, ref } from 'vue'
 
 import { Breakpoint, TableState } from './types'
 
@@ -27,9 +20,9 @@ export default defineComponent({
       default: '',
     },
   },
-  setup(props, { emit }) {
+  setup(props) {
     const state = inject('state') as TableState
-    const currentOrdering = ref('')
+    const icon = ref('switch-vertical')
 
     const isVisible = computed(() => {
       if (state.currentBreakpoint.value) {
@@ -40,32 +33,37 @@ export default defineComponent({
     })
 
     const iconName = computed(() => {
-      if (currentOrdering.value.startsWith('-')) {
+      if (state.ordering.current.value.startsWith('-')) {
         return 'arrow-down'
+      } else if (state.ordering.current.value === '') {
+        return 'switch-vertical'
       } else {
         return 'arrow-up'
       }
     })
 
     function toggleOrdering() {
-      switch (currentOrdering.value) {
+      switch (state.ordering.current.value) {
         case '':
-          currentOrdering.value = props.orderKey
+          state.ordering.current.value = props.orderKey
+          icon.value = 'arrow-up'
           break
         case props.orderKey:
-          currentOrdering.value = '-' + props.orderKey
+          state.ordering.current.value = '-' + props.orderKey
+          icon.value = 'arrow-down'
           break
         case '-' + props.orderKey:
-          currentOrdering.value = ''
+          state.ordering.current.value = ''
+          icon.value = 'switch-vertical'
           break
       }
-      emit('ordering', currentOrdering.value)
-      state.ordering.current.value = currentOrdering.value
     }
+
+    provide('iconName', icon)
 
     return {
       iconName,
-      currentOrdering,
+      currentOrdering: state.ordering.current,
       toggleOrdering,
       isVisible,
     }

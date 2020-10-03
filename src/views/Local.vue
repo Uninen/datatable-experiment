@@ -47,8 +47,12 @@
             class="items-center px-1 py-3 pl-4 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
             order-key="name"
             id="sortby-name"
-            >Name</th-item
           >
+            <div class="flex items-center justify-between">
+              <span>Name</span>
+              <th-ordering-icon class="text-gray-500" />
+            </div>
+          </th-item>
           <th-item
             class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
             :hidden-below="2"
@@ -62,8 +66,12 @@
             class="items-center py-3 pl-2 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
             order-key="created"
             id="sortby-created"
-            >Created</th-item
           >
+            <div class="flex items-center justify-between">
+              <span>Created</span>
+              <th-ordering-icon class="text-gray-500" />
+            </div>
+          </th-item>
           <th-item
             class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
             >&nbsp;</th-item
@@ -257,6 +265,7 @@ import TablePagination from '../components/datatable/TablePagination.vue'
 import TableSearch from '../components/datatable/TableSearch.vue'
 import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
+import ThOrderingIcon from '../components/datatable/ThOrderingIcon.vue'
 import { LocalTableProps } from '../components/datatable/types'
 
 import artists from '../mirage/fixtures/artists.mirage.db.json'
@@ -270,6 +279,7 @@ export default defineComponent({
     TableRow,
     TablePagination,
     TableSearch,
+    ThOrderingIcon,
   },
 
   setup() {

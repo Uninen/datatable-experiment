@@ -92,7 +92,7 @@ export const createStore = () => {
     } else {
       state.pagination.data = ref(val)
     }
-    debug.log('state.pagination.data.value', state.pagination.data.value)
+    // debug.log('state.pagination.data.value', state.pagination.data.value)
   }
 
   const localSearch = (): void => {
@@ -135,7 +135,7 @@ export const createStore = () => {
         endIndex = state.pagination.data!.value.endIndex
       }
 
-      debug.log('data.value.length before slice: ', state.data.current.value.length)
+      // debug.log('data.value.length before slice: ', state.data.current.value.length)
 
       if (state.search.query.value.length > 0) {
         state.data.current.value = state.data.search.value.slice(
@@ -149,7 +149,7 @@ export const createStore = () => {
         )
       }
 
-      debug.log('data.value.length after slice: ', state.data.current.value.length)
+      // debug.log('data.value.length after slice: ', state.data.current.value.length)
       // debug.log('state.data.current.value: ', state.data.current)
     }
 

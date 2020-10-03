@@ -34,7 +34,7 @@ export default defineComponent({
       state.pagination.current.value = page
     }
 
-    debug.log('pageList', pageList.value)
+    // debug.log('pageList', pageList.value)
 
     // TODO: convert to proxyRefs
 

@@ -32,8 +32,7 @@
                     name="datatable-search"
                     :value="searchTerm"
                     class="block w-full pl-10 text-gray-300 transition duration-150 ease-in-out rounded-md form-input sm:text-sm sm:leading-5 bg-dark-600 border-dark-400"
-                    @keydown="search"
-                    @input="updateSearchTerm"
+                    @keyup="search"
                   />
                 </div>
               </div>

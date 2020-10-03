@@ -1,3 +1,5 @@
+![CI](https://github.com/Uninen/datatable-experiment/workflows/CI/badge.svg)
+
 # Datatable experiment
 
 Experimenting w/ highly opionated datatable design.
@@ -5,15 +7,6 @@ Experimenting w/ highly opionated datatable design.
 The basic idea is to provide feature-complete and super flexible set of primitive components that allow you to easily put together a fully customised datatable componen that you can very easily reuse and modify within your project.
 
 Note: this is not intended as a final product but an experiment. Hence, the code and organisation is geared towards practicality, not purity.
-
-## Design goals
-
-- Fully responsive, mobile-first
-- Fully customizable markup
-- Work fluently for both client and backend data
-- Customizable filters
-- Customizable search
-- Easily humanizable (nice labels, etc)
 
 ## Current functionality
 
@@ -23,6 +16,16 @@ Note: this is not intended as a final product but an experiment. Hence, the code
 - **Responsive**, remove less important data columns for small breakpoints
 - Automatic and responsive **pagination**
 - **Search** for both local and remote data
+- Written in TypeScript, tested with Cypress.io
+
+## Design goals
+
+- Fully responsive, mobile-first
+- Fully customizable markup
+- Work fluently for both client and backend data
+- Customizable filters
+- Customizable search
+- Easily humanizable (nice labels, etc)
 
 ## Project setup
 

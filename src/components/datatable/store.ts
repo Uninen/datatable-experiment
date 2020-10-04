@@ -44,7 +44,12 @@ export const createStore = () => {
       query: ref(''),
       // instance: { MiniSearch }
     },
-    filters: [],
+    filters: ref([]),
+  }
+
+  const resetLocalData = (): void => {
+    state.data.original = clone(state.data.master)
+    state.data.current.value = clone(state.data.master)
   }
 
   const changePage = (value: number): void => {
@@ -57,10 +62,9 @@ export const createStore = () => {
     if (state.ordering.current.value === '') {
       debug.log('Resetting ordering')
       state.data.original = clone(state.data.master)
-      state.data.current.value = clone(state.data.master)
     } else {
       state.data.original.sort(sortByKey(state.ordering.current.value))
-      state.data.search.value.sort(sortByKey(state.ordering.current.value))
+      state.data.current.value.sort(sortByKey(state.ordering.current.value))
     }
   }
 
@@ -97,8 +101,22 @@ export const createStore = () => {
     // debug.log('state.pagination.data.value', state.pagination.data.value)
   }
 
+  const filterLocalData = (): void => {
+    if (activeFilters.value.length > 0) {
+      debug.log('ACTIVE FILTERS PRESENT!', activeFilters.value)
+
+      debug.log('state.data.current.value.length before', state.data.current.value.length)
+
+      state.data.current.value = state.data.current.value.filter((item) => item.isVip === true)
+      state.data.totalCount.value = state.data.current.value.length
+
+      debug.log('state.data.current.value.length after', state.data.current.value.length)
+    }
+  }
+
   const localSearch = (): void => {
     debug.run('local search for ', state.search.query.value)
+    debug.log('state.data.current.value.length BEFORE search: ', state.data.current.value.length)
     let newData: any = []
     const results = state.search.instance!.search(state.search.query.value)
     if (results.length > 0) {
@@ -109,27 +127,29 @@ export const createStore = () => {
           })
         )
       }
-      state.data.search.value = newData
+      state.data.current.value = newData
       state.data.totalCount.value = newData.length
       debug.log('search results: ', newData.length)
     } else {
-      state.data.search.value = []
+      state.data.current.value = []
       state.data.totalCount.value = 0
     }
-    debug.log('after search: ', state.data.current.value.length)
+    debug.log('state.data.current.value.length AFTER search: ', state.data.current.value.length)
   }
 
   const refreshLocalData = (): void => {
     let endIndex = 0
     debug.run('localPagination')
+    resetLocalData()
 
     if (state.search.query.value.length > 0) {
       localSearch()
     }
 
     if (state.features.pagination) {
-      buildPagination()
       applyLocalOrdering()
+      filterLocalData()
+      buildPagination()
 
       if (state.data.totalCount.value < state.pagination.perPage.value) {
         endIndex = state.pagination.data!.value.endIndex + 1
@@ -139,20 +159,16 @@ export const createStore = () => {
 
       // debug.log('data.value.length before slice: ', state.data.current.value.length)
 
-      if (state.search.query.value.length > 0) {
-        state.data.current.value = state.data.search.value.slice(
-          state.pagination.data!.value.startIndex,
-          endIndex
-        )
-      } else {
-        state.data.current.value = state.data.original.slice(
-          state.pagination.data!.value.startIndex,
-          endIndex
-        )
-      }
+      state.data.current.value = state.data.current.value.slice(
+        state.pagination.data!.value.startIndex,
+        endIndex
+      )
 
       // debug.log('data.value.length after slice: ', state.data.current.value.length)
       // debug.log('state.data.current.value: ', state.data.current)
+    } else {
+      applyLocalOrdering()
+      filterLocalData()
     }
 
     state.isWorking.value = false
@@ -230,6 +246,8 @@ export const createStore = () => {
     }
   })
 
+  const activeFilters = computed(() => state.filters.value.filter((item) => item.isActive !== null))
+
   watch(state.search.query, () => {
     debug.run('watch state.search.query')
     if (state.search.query.value.length === 0) {
@@ -251,6 +269,11 @@ export const createStore = () => {
 
   watch(state.pagination.current, () => {
     debug.run('watch state.pagination.current', state.pagination.current.value)
+    refreshData()
+  })
+
+  watch(activeFilters, (value) => {
+    debug.run(`watch activeFilters`, value)
     refreshData()
   })
 

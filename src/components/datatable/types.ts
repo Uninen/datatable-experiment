@@ -80,7 +80,7 @@ export interface TableState {
     query: Ref<string>
     instance?: MiniSearch
   }
-  filters: FilterStateListItem[]
+  filters: Ref<FilterStateListItem[]>
 }
 
 interface FilterListItem {
@@ -91,7 +91,7 @@ interface FilterListItem {
 interface FilterStateListItem {
   property: string
   type: 'boolean' | 'date'
-  isActive: Ref<boolean | null>
+  isActive: boolean | null
 }
 
 export interface TableProps {

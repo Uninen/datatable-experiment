@@ -33,10 +33,10 @@ export default defineComponent({
       { label: 'No', value: false },
     ]
 
-    const filter = state.filters.find((item) => {
-      return item.property == props.property
+    const filter = state.filters.value.find((item) => {
+      return item.property === props.property
     })
-    const filterIndex = findIndex(state.filters, { property: props.property })
+    const filterIndex = findIndex(state.filters.value, { property: props.property })
 
     if (filter) {
       if (filter.type === 'boolean') {
@@ -48,19 +48,20 @@ export default defineComponent({
 
     const changeFn = (event: any) => {
       if (event.target.value === 'true') {
-        state.filters[filterIndex].isActive.value = true
+        state.filters.value[filterIndex].isActive = true
       } else if (event.target.value === 'false') {
-        state.filters[filterIndex].isActive.value = false
+        state.filters.value[filterIndex].isActive = false
       } else {
-        state.filters[filterIndex].isActive.value = null
+        state.filters.value[filterIndex].isActive = null
       }
-      debug.log(`Filter "${props.property}" change to ${state.filters[filterIndex].isActive.value}`)
+      console.log('filter index:', filterIndex)
+      debug.log(`Filter "${props.property}" change to ${state.filters.value[filterIndex].isActive}`)
     }
 
     return {
       filter,
       statusChoices,
-      currentVal: state.filters[filterIndex].isActive,
+      currentVal: state.filters.value[filterIndex].isActive,
       changeFn,
     }
   },

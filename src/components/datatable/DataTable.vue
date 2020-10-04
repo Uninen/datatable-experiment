@@ -68,13 +68,13 @@ export default defineComponent({
         state.features.filters.value = true
 
         for (const item of props.config.filters) {
-          state.filters.push({
+          state.filters.value.push({
             ...item,
-            isActive: ref(null),
+            isActive: null,
           })
         }
 
-        debug.log('state.filters', state.filters)
+        debug.log('state.filters', state.filters.value)
       }
 
       debug.success('Local table configured')

@@ -48,21 +48,19 @@ export default defineComponent({
 
     const changeFn = (event: any) => {
       if (event.target.value === 'true') {
-        state.filters.value[filterIndex].isActive = true
+        state.filters.value[filterIndex].value = true
       } else if (event.target.value === 'false') {
-        state.filters.value[filterIndex].isActive = false
+        state.filters.value[filterIndex].value = false
       } else {
-        state.filters.value[filterIndex].isActive = null
+        state.filters.value[filterIndex].value = null
       }
-      debug.log(
-        `Filter "${props.property}" changed to ${state.filters.value[filterIndex].isActive}`
-      )
+      debug.log(`Filter "${props.property}" changed to ${state.filters.value[filterIndex].value}`)
     }
 
     return {
       filter,
       statusChoices,
-      currentVal: state.filters.value[filterIndex].isActive,
+      currentVal: state.filters.value[filterIndex].value,
       changeFn,
     }
   },

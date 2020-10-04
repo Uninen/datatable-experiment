@@ -18,7 +18,7 @@
             search,
           }"
         >
-          <teleport to="#datatable-filtersleft">
+          <teleport to="#datatable-filters-left">
             <div class="mx-4 mb-4 sm:mx-0 sm:mb-6">
               <label for="email" class="block text-sm font-bold leading-5 text-gray-600"
                 >Search</label
@@ -45,16 +45,16 @@
         <table-filter property="isVip" v-slot="{ filter, statusChoices, currentVal, changeFn }">
           <teleport to="#datatable-filters-right">
             <div class="ml-6">
-              <h3 class="block text-sm font-bold leading-5 text-gray-500">VIP Status</h3>
+              <h3 class="block text-sm font-bold leading-5 text-gray-600">VIP Status</h3>
 
-              <div class="text-gray-400">
+              <div class="text-gray-600">
                 <div class="flex items-center justify-star">
                   <div class="mr-4" v-for="(choice, index) in statusChoices" :key="index">
                     <div>
-                      <label class="inline-flex items-center">
+                      <label class="inline-flex items-center text-gray-600">
                         <input
                           type="radio"
-                          class="text-indigo-600 cursor-pointer bg-dark-600 border-dark-400 form-radio"
+                          class="text-indigo-600 cursor-pointer form-radio"
                           name="radio"
                           :value="choice.value"
                           @change="changeFn($event)"

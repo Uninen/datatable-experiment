@@ -109,7 +109,7 @@ export const createStore = () => {
         // debug.log('state.data.current.value.length before', state.data.current.value.length)
 
         state.data.current.value = state.data.current.value.filter(
-          (item) => item[filterObj.property] === filterObj.isActive
+          (item) => item[filterObj.property] === filterObj.value
         )
 
         state.data.totalCount.value = state.data.current.value.length
@@ -183,9 +183,18 @@ export const createStore = () => {
     debug.run('buildUrl')
     let prefix = ''
     let suffix = ''
+
     if (state.search.query.value.length > 0) {
       prefix = '/search'
       suffix = `&search=${state.search.query.value}`
+    }
+
+    if (activeFilters.value.length > 0) {
+      for (const filterObj of activeFilters.value) {
+        debug.run('build remote filter', filterObj)
+        suffix += `&${filterObj.property}=${filterObj.value}`
+        // debug.log('state.data.current.value.length before', state.data.current.value.length)
+      }
     }
 
     state.remote!.url.value = `${prefix}/${state.remote.dataModel}?page=${state.pagination.current.value}&limit=${state.pagination.perPage.value}`
@@ -250,7 +259,7 @@ export const createStore = () => {
     }
   })
 
-  const activeFilters = computed(() => state.filters.value.filter((item) => item.isActive !== null))
+  const activeFilters = computed(() => state.filters.value.filter((item) => item.value !== null))
 
   watch(state.search.query, () => {
     debug.run('watch state.search.query')

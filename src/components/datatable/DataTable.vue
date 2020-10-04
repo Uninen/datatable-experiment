@@ -45,6 +45,22 @@ export default defineComponent({
         warn('DataTable pagination set up but "config.itemsPerPage" is not set')
       }
     }
+    if (props.config.filters) {
+      debug.log('Configuring filters')
+      state.features.filters.value = true
+
+      for (const item of props.config.filters) {
+        state.filters.value.push({
+          ...item,
+          value: null,
+        })
+      }
+
+      // debug.log('Done. Filters after configuring:')
+      // for (const filter of state.filters.value) {
+      //   debug.log('filter: ', filter)
+      // }
+    }
 
     if (isLocal(props.config)) {
       debug.log('Configuring table in LOCAL mode')
@@ -61,23 +77,6 @@ export default defineComponent({
         debug.log('Configuring search')
         state.features.search.value = true
         state.search.instance = useLocalSearch(props.config.data, props.config.searchFields)
-      }
-
-      if (props.config.filters) {
-        debug.log('Configuring filters')
-        state.features.filters.value = true
-
-        for (const item of props.config.filters) {
-          state.filters.value.push({
-            ...item,
-            isActive: null,
-          })
-        }
-
-        // debug.log('Done. Filters after configuring:')
-        // for (const filter of state.filters.value) {
-        //   debug.log('filter: ', filter)
-        // }
       }
 
       debug.success('Local table configured')

@@ -11,6 +11,18 @@
       </template>
 
       <template #default>
+        <table-export v-slot="{ data }">
+          <teleport to="#data-export">
+            <div class="mt-6">
+              <h3 class="text-2xl font-bold">Data Export</h3>
+
+              <textarea class="w-full form-input" name="export" id="exportarea" cols="30" rows="10">
+              {{ exportFn(data) }}
+              </textarea>
+            </div>
+          </teleport>
+        </table-export>
+
         <table-search
           v-slot="{
             updateSearchTerm,
@@ -91,6 +103,11 @@
             >VIP</th-item
           >
           <th-item
+            class="items-center py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
+            :hidden-below="4"
+            >Email</th-item
+          >
+          <th-item
             class="items-center py-3 pl-2 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
             order-key="created"
             id="sortby-created"
@@ -126,6 +143,9 @@
             <div class="sm:flex sm:items-center sm:flex-1">
               <t-icon v-if="item.isVip" name="badge-check" class="w-5 h-5 text-indigo-600" />
             </div>
+          </td-item>
+          <td-item :hidden-below="4" class="sm:px-3 md:px-6">
+            {{ item.email }}
           </td-item>
           <td-item class="px-0 pl-2 sm:px-3 md:px-6">{{
             responsiveDate(breakpoint, item.created)
@@ -307,6 +327,7 @@ import TableRow from '../components/datatable/TableRow.vue'
 import TablePagination from '../components/datatable/TablePagination.vue'
 import TableSearch from '../components/datatable/TableSearch.vue'
 import TableFilter from '../components/datatable/TableFilter.vue'
+import TableExport from '../components/datatable/TableExport.vue'
 import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
 import ThOrderingIcon from '../components/datatable/ThOrderingIcon.vue'
@@ -329,6 +350,7 @@ export default defineComponent({
     TableSearch,
     ThOrderingIcon,
     TableFilter,
+    TableExport,
   },
 
   setup() {
@@ -350,11 +372,20 @@ export default defineComponent({
       ],
     }
 
+    const exportFn = (data: any[]): string => {
+      let output = ''
+      for (const obj of data) {
+        output += obj.email + ', '
+      }
+      return output
+    }
+
     return {
       api,
       // downloadMirageJson,
       remoteConfig,
       responsiveDate,
+      exportFn,
     }
   },
 })

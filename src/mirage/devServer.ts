@@ -199,6 +199,10 @@ export function makeDevServer(environment = 'test') {
           return faker.internet.userName()
         },
 
+        email() {
+          return faker.internet.exampleEmail()
+        },
+
         photo() {
           return faker.image.avatar()
         },

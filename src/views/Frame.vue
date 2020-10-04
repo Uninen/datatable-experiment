@@ -22,11 +22,14 @@
       </div>
     </div>
     <div class="container pb-8 mx-auto">
-      <div class="flex flex-row items-start">
+      <div class="flex flex-col items-start sm:flex-row">
         <div class="flex-1" id="datatable-filters-left"></div>
         <div class="flex-1" id="datatable-filters-right"></div>
       </div>
       <router-view v-if="isMounted"></router-view>
+      <div>
+        <div id="data-export"></div>
+      </div>
     </div>
   </div>
 </template>

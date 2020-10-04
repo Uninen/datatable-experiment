@@ -108,3 +108,8 @@ export interface RemoteTableProps extends TableProps {
   axiosInstance: AxiosInstance
   dataModel: string
 }
+
+export interface DateFormatOptions {
+  long: string
+  short: string
+}

@@ -4,7 +4,6 @@ import { defineComponent, provide, PropType, h } from 'vue'
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
 import TablePagination from './TablePagination.vue'
-import TableSearch from './TableSearch.vue'
 import { TableMode, LocalTableProps, RemoteTableProps } from './types'
 
 import { createStore } from './store'
@@ -24,7 +23,7 @@ export default defineComponent({
     TablePagination,
   },
   setup(props, { slots, attrs }) {
-    const { state, refreshData, pagination, dateFormatter } = createStore()
+    const { state, refreshData, pagination } = createStore()
 
     let tableId: string
     let mode: TableMode = TableMode.REMOTE
@@ -58,14 +57,10 @@ export default defineComponent({
 
       debug.log('Storing original data: ', state.data.original)
 
-      if (slots.search) {
+      if (props.config.searchFields) {
         debug.log('Configuring search')
         state.features.search.value = true
-        if (props.config.searchFields) {
-          state.search.instance = useLocalSearch(props.config.data, props.config.searchFields)
-        } else {
-          throw new ConfigurationError('Property "searchFields" is missing from configuration')
-        }
+        state.search.instance = useLocalSearch(props.config.data, props.config.searchFields)
       }
       debug.success('Local table configured')
     } else {
@@ -89,7 +84,6 @@ export default defineComponent({
     refreshData()
 
     provide('state', state)
-    provide('dateFormatter', dateFormatter)
     provide('pagination', pagination)
 
     return () => {
@@ -100,10 +94,6 @@ export default defineComponent({
           slotContent = [h(TableRow)]
         } else {
           slotContent = [slots.default()]
-        }
-
-        if (state.features.search) {
-          slotContent.push(h(TableSearch, slots.search))
         }
 
         if (state.features.pagination) {

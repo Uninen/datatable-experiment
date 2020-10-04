@@ -2,7 +2,7 @@ import { watch, computed, ref } from 'vue'
 import { clone } from 'lodash-es'
 
 import { debug } from './utils/dev'
-import { paginate, sortByKey, useDateFormat } from './utils'
+import { paginate, sortByKey } from './utils'
 import { useBreakpoint } from './utils/useTailwindBreakpoint'
 
 import { TableState, TableMode } from './types'
@@ -228,10 +228,6 @@ export const createStore = () => {
     }
   })
 
-  const dateFormatter = (dateStr: string) => {
-    return useDateFormat(state.currentBreakpoint.value, dateStr)
-  }
-
   watch(state.search.query, () => {
     debug.run('watch state.search.query')
     if (state.search.query.value.length === 0) {
@@ -276,7 +272,6 @@ export const createStore = () => {
     buildUrl,
     buildPagination,
     refreshData,
-    dateFormatter,
     pagination: {
       hasPreviousPage,
       hasNextPage,

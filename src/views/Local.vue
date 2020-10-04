@@ -9,7 +9,8 @@
       <template #loader>
         <div class="p-4 text-base bg-gray-800">Loading data...</div>
       </template>
-      <template #search>
+
+      <template #default>
         <table-search
           v-slot="{
             updateSearchTerm,
@@ -39,8 +40,7 @@
             </div>
           </teleport>
         </table-search>
-      </template>
-      <template #default>
+
         <table-head class="rounded-t-md">
           <th-item
             class="items-center px-1 py-3 pl-4 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
@@ -79,7 +79,7 @@
 
         <table-row
           class="items-center text-sm text-gray-400 divide-y divide-dark-400 md:text-base"
-          v-slot="{ item, formatDate }"
+          v-slot="{ item, breakpoint }"
         >
           <td-item class="py-1">
             <div class="flex items-center px-1 sm:px-3 md:px-6">
@@ -98,10 +98,12 @@
               <t-icon v-if="item.isVip" name="badge-check" class="w-5 h-5 text-indigo-600" />
             </div>
           </td-item>
-          <td-item class="px-0 pl-2 sm:px-3 md:px-6">{{ formatDate(item.created) }}</td-item>
+          <td-item class="px-0 pl-2 sm:px-3 md:px-6">{{
+            responsiveDate(breakpoint, item.created)
+          }}</td-item>
           <td-item class="px-2 sm:px-6">
-            <button class="items-center hidden leading-5 text-indigo-700 sm:block">Edit</button>
-            <button class="items-center block leading-5 text-gray-400 sm:hidden">
+            <button class="items-center hidden leading-5 text-indigo-700 sm:flex">Edit</button>
+            <button class="flex items-center leading-5 text-gray-400 sm:hidden">
               <svg
                 class="w-4 h-4"
                 xmlns="http://www.w3.org/2000/svg"
@@ -120,6 +122,7 @@
           </td-item>
         </table-row>
       </template>
+
       <template #pagination>
         <table-pagination
           v-slot="{
@@ -266,6 +269,7 @@ import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
 import ThOrderingIcon from '../components/datatable/ThOrderingIcon.vue'
 import { LocalTableProps } from '../components/datatable/types'
+import { responsiveDate } from '../components/datatable/contrib'
 
 import artists from '../mirage/fixtures/artists.mirage.db.json'
 
@@ -291,6 +295,7 @@ export default defineComponent({
 
     return {
       localConfig,
+      responsiveDate,
     }
   },
 })

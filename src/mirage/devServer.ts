@@ -116,7 +116,7 @@ export function makeDevServer(environment = 'test') {
     fields: ['name', 'username'],
     searchOptions: {
       prefix: true,
-      fuzzy: 0.3,
+      fuzzy: 0.2,
     },
   })
 

@@ -1,7 +1,7 @@
 <template>
   <tbody>
     <tr v-for="(obj, index) in data" :key="index">
-      <slot v-bind:item="obj" v-bind:formatDate="dateFormatter">
+      <slot v-bind:item="obj" v-bind:breakpoint="breakpoint">
         <template v-if="dataKeys && index === 0">
           <th v-for="dk in dataKeys" class="datatable">
             {{ dk }}
@@ -30,7 +30,6 @@ export default defineComponent({
     let dataKeys: string[] = []
     let keysShifted = false
     const state = inject('state') as TableState
-    const dateFormatter = inject('dateFormatter') as Function
 
     function extractDataKeys() {
       if (!keysShifted && state.data.current && state.data.current.value.length > 0) {
@@ -50,8 +49,8 @@ export default defineComponent({
 
     return {
       data: state.data.current,
+      breakpoint: state.currentBreakpoint,
       dataKeys,
-      dateFormatter,
     }
   },
 })

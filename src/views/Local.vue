@@ -18,9 +18,9 @@
             search,
           }"
         >
-          <teleport to="#datatable-filters">
+          <teleport to="#datatable-filters-left">
             <div class="mx-4 mb-4 sm:mx-0 sm:mb-6">
-              <label for="email" class="block text-sm font-bold leading-5 text-gray-600"
+              <label for="email" class="block text-sm font-bold leading-5 text-gray-500"
                 >Search</label
               >
               <div class="flex mt-1 rounded-md">
@@ -40,6 +40,34 @@
             </div>
           </teleport>
         </table-search>
+
+        <table-filter property="isVip" v-slot="{ filter, statusChoices, currentVal, changeFn }">
+          <teleport to="#datatable-filters-right">
+            <div class="ml-6">
+              <h3 class="block text-sm font-bold leading-5 text-gray-500">VIP Status</h3>
+
+              <div class="text-gray-400">
+                <div class="flex items-center justify-star">
+                  <div class="mr-4" v-for="(choice, index) in statusChoices" :key="index">
+                    <div>
+                      <label class="inline-flex items-center">
+                        <input
+                          type="radio"
+                          class="text-indigo-600 cursor-pointer bg-dark-600 border-dark-400 form-radio localradio"
+                          name="localradio"
+                          :value="choice.value"
+                          @change="changeFn($event)"
+                          :checked="currentVal === choice.value"
+                        />
+                        <span class="ml-2 cursor-pointer">{{ choice.label }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </teleport>
+        </table-filter>
 
         <table-head class="rounded-t-md">
           <th-item
@@ -265,6 +293,7 @@ import TableHead from '../components/datatable/TableHead.vue'
 import TableRow from '../components/datatable/TableRow.vue'
 import TablePagination from '../components/datatable/TablePagination.vue'
 import TableSearch from '../components/datatable/TableSearch.vue'
+import TableFilter from '../components/datatable/TableFilter.vue'
 import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
 import ThOrderingIcon from '../components/datatable/ThOrderingIcon.vue'
@@ -282,6 +311,7 @@ export default defineComponent({
     TableRow,
     TablePagination,
     TableSearch,
+    TableFilter,
     ThOrderingIcon,
   },
 
@@ -291,6 +321,12 @@ export default defineComponent({
       data: artists.artists,
       itemsPerPage: 12,
       searchFields: ['name', 'username'],
+      filters: [
+        {
+          property: 'isVip',
+          type: 'boolean',
+        },
+      ],
     }
 
     return {

@@ -16,6 +16,7 @@ Note: this is not intended as a final product but an experiment. Hence, the code
 - **Responsive**, remove less important data columns for small breakpoints
 - Automatic and responsive **pagination**
 - **Search** for both local and remote data
+- Simple **filtering** for both local and remote boolean values
 - Written in TypeScript, tested with Cypress.io
 
 ## Design goals
@@ -65,12 +66,12 @@ yarn test
 
 ## ToDo
 
-- [ ] Filtering based on boolean
 - [ ] Filtering based on string (equal)
 - [ ] Filtering based on enum (equal)
 - [ ] Filtering based on date (equal, smaller, greater)
 - [ ] Filtering based on number (equal, smaller, greater)
 - [ ] Sorting by comparator fn
+- [x] Filtering based on boolean
 - [x] Sorting by date
 - [x] Search
 - [x] Add window resize observer that watches Tailwind breakpoints and stores current breakpoint in state. (We can then use it for programatically reshape the table based on user configuration.)

@@ -45,6 +45,22 @@ export default defineComponent({
         warn('DataTable pagination set up but "config.itemsPerPage" is not set')
       }
     }
+    if (props.config.filters) {
+      debug.log('Configuring filters')
+      state.features.filters.value = true
+
+      for (const item of props.config.filters) {
+        state.filters.value.push({
+          ...item,
+          value: null,
+        })
+      }
+
+      // debug.log('Done. Filters after configuring:')
+      // for (const filter of state.filters.value) {
+      //   debug.log('filter: ', filter)
+      // }
+    }
 
     if (isLocal(props.config)) {
       debug.log('Configuring table in LOCAL mode')
@@ -55,13 +71,14 @@ export default defineComponent({
       state.data.current.value = props.config.data
       state.data.totalCount.value = props.config.data.length
 
-      debug.log('Storing original data: ', state.data.original)
+      // debug.log('Storing original data: ', state.data.original)
 
       if (props.config.searchFields) {
         debug.log('Configuring search')
         state.features.search.value = true
         state.search.instance = useLocalSearch(props.config.data, props.config.searchFields)
       }
+
       debug.success('Local table configured')
     } else {
       debug.log('Configuring table in REMOTE mode')

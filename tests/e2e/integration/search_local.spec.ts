@@ -11,7 +11,7 @@ describe('Test local search', () => {
     server.shutdown()
   })
 
-  it('Search filter should work correctly with local data', () => {
+  it('Search should work correctly with local data', () => {
     cy.visit('/local/')
 
     cy.get('.datatable-name').first().should('contain', 'Jonathon McDermott')

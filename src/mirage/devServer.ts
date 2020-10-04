@@ -36,6 +36,7 @@ interface requestDataModel {
   ordering: string | null
   end: number
   start: number
+  filters: any[]
 }
 
 function requestData(request: any): requestDataModel {
@@ -44,6 +45,28 @@ function requestData(request: any): requestDataModel {
   const ordering = request.queryParams.ordering || null
   const end = perPage * page
   const start = end - perPage
+  let filters: any[] = []
+
+  delete request.queryParams.page
+  delete request.queryParams.limit
+  delete request.queryParams.ordering
+
+  // console.log('MIRAGE *** REQUEST *** ', request.queryParams)
+  for (let [key, value] of Object.entries(request.queryParams)) {
+    if (key !== 'search') {
+      console.log('adding filter for', key)
+      if (value === 'true') {
+        value = true
+      }
+      if (value === 'false') {
+        value = false
+      }
+      filters.push({
+        property: key,
+        value: value,
+      })
+    }
+  }
 
   return {
     page,
@@ -51,6 +74,7 @@ function requestData(request: any): requestDataModel {
     ordering,
     end,
     start,
+    filters,
   }
 }
 
@@ -66,8 +90,13 @@ function responseFromResults(rd: requestDataModel, results: Collection) {
 function allData(schema: Schema<AnyRegistry>, model: string, request: Request): allDataModel {
   const rd = requestData(request)
 
-  const count: number = schema.all(model).models.length
   let results = schema.all(model).models
+  if (rd.filters.length > 0) {
+    for (const filterObj of rd.filters) {
+      results = results.filter((item: any) => item[filterObj.property] === filterObj.value)
+    }
+  }
+  const count: number = results.length
 
   return {
     count,
@@ -104,6 +133,13 @@ function searchData(
       results = tmpResults
     }
   }
+
+  if (rd.filters.length > 0) {
+    for (const filterObj of rd.filters) {
+      results = results.filter((item: any) => item[filterObj.property] === filterObj.value)
+    }
+  }
+
   const count: number = results.length
   return {
     count,

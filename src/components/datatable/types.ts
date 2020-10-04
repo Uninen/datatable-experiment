@@ -65,6 +65,7 @@ export interface TableState {
   features: {
     pagination: Ref<boolean>
     search: Ref<boolean>
+    filters: Ref<boolean>
   }
   ordering: {
     current: Ref<string>
@@ -79,11 +80,18 @@ export interface TableState {
     query: Ref<string>
     instance?: MiniSearch
   }
+  filters: Ref<FilterStateListItem[]>
 }
 
-interface filterListItem {
-  type: Boolean | Date
-  key: string
+interface FilterListItem {
+  property: string
+  type: 'boolean' | 'date'
+}
+
+interface FilterStateListItem {
+  type: 'boolean' | 'date'
+  property: string
+  value: boolean | null
 }
 
 export interface TableProps {
@@ -91,7 +99,7 @@ export interface TableProps {
   itemsPerPage?: number
   searchFields?: string[]
   searchOptions?: object
-  filters?: filterListItem[]
+  filters?: FilterListItem[]
   dateFormats?: {
     short?: string
     long?: string

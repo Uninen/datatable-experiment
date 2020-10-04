@@ -54,8 +54,9 @@ export default defineComponent({
       } else {
         state.filters.value[filterIndex].isActive = null
       }
-      console.log('filter index:', filterIndex)
-      debug.log(`Filter "${props.property}" change to ${state.filters.value[filterIndex].isActive}`)
+      debug.log(
+        `Filter "${props.property}" changed to ${state.filters.value[filterIndex].isActive}`
+      )
     }
 
     return {

@@ -74,7 +74,10 @@ export default defineComponent({
           })
         }
 
-        debug.log('state.filters', state.filters.value)
+        debug.log('Done. Filters after configuring:')
+        for (const filter of state.filters.value) {
+          debug.log('filter: ', filter)
+        }
       }
 
       debug.success('Local table configured')

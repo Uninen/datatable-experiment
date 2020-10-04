@@ -50,6 +50,7 @@ export const createStore = () => {
   const resetLocalData = (): void => {
     state.data.original = clone(state.data.master)
     state.data.current.value = clone(state.data.master)
+    state.data.totalCount.value = state.data.current.value.length
   }
 
   const changePage = (value: number): void => {
@@ -103,20 +104,23 @@ export const createStore = () => {
 
   const filterLocalData = (): void => {
     if (activeFilters.value.length > 0) {
-      debug.log('ACTIVE FILTERS PRESENT!', activeFilters.value)
+      for (const filterObj of activeFilters.value) {
+        debug.run('filterLocalData', filterObj)
+        // debug.log('state.data.current.value.length before', state.data.current.value.length)
 
-      debug.log('state.data.current.value.length before', state.data.current.value.length)
+        state.data.current.value = state.data.current.value.filter(
+          (item) => item[filterObj.property] === filterObj.isActive
+        )
 
-      state.data.current.value = state.data.current.value.filter((item) => item.isVip === true)
-      state.data.totalCount.value = state.data.current.value.length
-
-      debug.log('state.data.current.value.length after', state.data.current.value.length)
+        state.data.totalCount.value = state.data.current.value.length
+        // debug.log('state.data.current.value.length after', state.data.current.value.length)
+      }
     }
   }
 
   const localSearch = (): void => {
     debug.run('local search for ', state.search.query.value)
-    debug.log('state.data.current.value.length BEFORE search: ', state.data.current.value.length)
+    // debug.log('state.data.current.value.length BEFORE search: ', state.data.current.value.length)
     let newData: any = []
     const results = state.search.instance!.search(state.search.query.value)
     if (results.length > 0) {
@@ -129,17 +133,17 @@ export const createStore = () => {
       }
       state.data.current.value = newData
       state.data.totalCount.value = newData.length
-      debug.log('search results: ', newData.length)
+      // debug.log('search results: ', newData.length)
     } else {
       state.data.current.value = []
       state.data.totalCount.value = 0
     }
-    debug.log('state.data.current.value.length AFTER search: ', state.data.current.value.length)
+    // debug.log('state.data.current.value.length AFTER search: ', state.data.current.value.length)
   }
 
   const refreshLocalData = (): void => {
     let endIndex = 0
-    debug.run('localPagination')
+    debug.run('refreshLocalData')
     resetLocalData()
 
     if (state.search.query.value.length > 0) {
@@ -252,8 +256,7 @@ export const createStore = () => {
     debug.run('watch state.search.query')
     if (state.search.query.value.length === 0) {
       debug.log('Resetting data.')
-      state.data.current.value = state.data.original
-      state.data.totalCount.value = state.data.current.value.length
+      resetLocalData()
     }
     state.pagination.current.value = 1
     refreshData()
@@ -261,9 +264,9 @@ export const createStore = () => {
 
   watch(state.ordering.current, () => {
     debug.run('watch state.ordering.current')
-    if (state.mode === TableMode.LOCAL) {
-      applyLocalOrdering()
-    }
+    // if (state.mode === TableMode.LOCAL) {
+    //   applyLocalOrdering()
+    // }
     refreshData()
   })
 
@@ -272,9 +275,20 @@ export const createStore = () => {
     refreshData()
   })
 
+  watch(state.initialLoadingDone, (value) => {
+    if (value) {
+      debug.success('Initial loading done.')
+    }
+  })
+
   watch(activeFilters, (value) => {
-    debug.run(`watch activeFilters`, value)
-    refreshData()
+    if (state.initialLoadingDone.value) {
+      debug.run(`watch activeFilters (${value.length})`)
+      if (value.length === 0) {
+        resetLocalData()
+      }
+      refreshData()
+    }
   })
 
   watch(state.currentBreakpoint, () => {

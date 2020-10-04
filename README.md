@@ -17,6 +17,7 @@ Note: this is not intended as a final product but an experiment. Hence, the code
 - Automatic and responsive **pagination**
 - **Search** for both local and remote data
 - Simple **filtering** for both local and remote boolean values
+- Simple and powerful way to **export data** using your own export function
 - Written in TypeScript, tested with Cypress.io
 
 ## Design goals

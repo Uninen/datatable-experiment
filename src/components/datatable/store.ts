@@ -29,6 +29,7 @@ export const createStore = () => {
     features: {
       pagination: ref(false),
       search: ref(false),
+      filters: ref(false),
     },
     ordering: {
       current: ref(''),
@@ -43,6 +44,7 @@ export const createStore = () => {
       query: ref(''),
       // instance: { MiniSearch }
     },
+    filters: [],
   }
 
   const changePage = (value: number): void => {

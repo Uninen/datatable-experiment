@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, provide, PropType, h } from 'vue'
+import { defineComponent, provide, PropType, h, ref } from 'vue'
 
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'
@@ -62,6 +62,21 @@ export default defineComponent({
         state.features.search.value = true
         state.search.instance = useLocalSearch(props.config.data, props.config.searchFields)
       }
+
+      if (props.config.filters) {
+        debug.log('Configuring filters')
+        state.features.filters.value = true
+
+        for (const item of props.config.filters) {
+          state.filters.push({
+            ...item,
+            isActive: ref(false),
+          })
+        }
+
+        debug.log('state.filters', state.filters)
+      }
+
       debug.success('Local table configured')
     } else {
       debug.log('Configuring table in REMOTE mode')

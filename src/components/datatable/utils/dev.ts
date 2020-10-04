@@ -10,7 +10,7 @@ export class ConfigurationError extends Error {
 
 export function warn(message: string) {
   if (process.env.NODE_ENV !== 'production') {
-    console.warn(message + ". This warning doesn't show in production.")
+    console.warn('[DataTable] ' + message + ". This warning doesn't show in production.")
   }
 }
 

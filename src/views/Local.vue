@@ -41,6 +41,58 @@
           </teleport>
         </table-search>
 
+        <teleport to="#datatable-filters">
+          <table-filter property="isVip" v-slot="{ filter }">
+            <div>
+              <h3>Filter: isVip</h3>
+
+              <div class="text-gray-500">
+                <div class="block">
+                  <span class="text-gray-700">Radio Buttons</span>
+                  <div class="mt-2">
+                    <div>
+                      <label class="inline-flex items-center">
+                        <input
+                          type="radio"
+                          class="cursor-pointer form-radio"
+                          name="radio"
+                          value="1"
+                          checked
+                        />
+                        <span class="ml-2 cursor-pointer">Option 1</span>
+                      </label>
+                    </div>
+                    <div>
+                      <label class="inline-flex items-center cursor-pointer">
+                        <input
+                          type="radio"
+                          class="cursor-pointer form-radio"
+                          name="radio"
+                          value="2"
+                        />
+                        <span class="ml-2 cursor-pointer">Option 2</span>
+                      </label>
+                    </div>
+                    <div>
+                      <label class="inline-flex items-center cursor-pointer">
+                        <input
+                          type="radio"
+                          class="cursor-pointer form-radio"
+                          name="radio"
+                          value="3"
+                        />
+                        <span class="ml-2 cursor-pointer">Option 3</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {{ filter }}
+              </div>
+            </div>
+          </table-filter>
+        </teleport>
+
         <table-head class="rounded-t-md">
           <th-item
             class="items-center px-1 py-3 pl-4 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
@@ -265,6 +317,7 @@ import TableHead from '../components/datatable/TableHead.vue'
 import TableRow from '../components/datatable/TableRow.vue'
 import TablePagination from '../components/datatable/TablePagination.vue'
 import TableSearch from '../components/datatable/TableSearch.vue'
+import TableFilter from '../components/datatable/TableFilter.vue'
 import ThItem from '../components/datatable/ThItem.vue'
 import TdItem from '../components/datatable/TdItem.vue'
 import ThOrderingIcon from '../components/datatable/ThOrderingIcon.vue'
@@ -282,6 +335,7 @@ export default defineComponent({
     TableRow,
     TablePagination,
     TableSearch,
+    TableFilter,
     ThOrderingIcon,
   },
 
@@ -291,6 +345,12 @@ export default defineComponent({
       data: artists.artists,
       itemsPerPage: 12,
       searchFields: ['name', 'username'],
+      filters: [
+        {
+          property: 'isVip',
+          type: 'boolean',
+        },
+      ],
     }
 
     return {

@@ -55,7 +55,7 @@ export default defineComponent({
       state.data.current.value = props.config.data
       state.data.totalCount.value = props.config.data.length
 
-      debug.log('Storing original data: ', state.data.original)
+      // debug.log('Storing original data: ', state.data.original)
 
       if (props.config.searchFields) {
         debug.log('Configuring search')
@@ -74,10 +74,10 @@ export default defineComponent({
           })
         }
 
-        debug.log('Done. Filters after configuring:')
-        for (const filter of state.filters.value) {
-          debug.log('filter: ', filter)
-        }
+        // debug.log('Done. Filters after configuring:')
+        // for (const filter of state.filters.value) {
+        //   debug.log('filter: ', filter)
+        // }
       }
 
       debug.success('Local table configured')

@@ -1,4 +1,4 @@
-import { ref, onBeforeMount, onBeforeUnmount, unref } from 'vue'
+import { ref, onBeforeMount, onBeforeUnmount } from 'vue'
 import { Breakpoint, BreakpointMinWidths, BreakpointObject } from '../types'
 
 export function useBreakpoint(

@@ -54,7 +54,7 @@
                       <label class="inline-flex items-center text-gray-600">
                         <input
                           type="radio"
-                          class="text-indigo-600 cursor-pointer form-radio"
+                          class="text-indigo-600 cursor-pointer form-radio remoteradio"
                           name="radio"
                           :value="choice.value"
                           @change="changeFn($event)"

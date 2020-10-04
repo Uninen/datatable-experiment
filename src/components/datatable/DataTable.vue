@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, provide, PropType, h, ref } from 'vue'
+import { defineComponent, provide, PropType, h } from 'vue'
 
 import TableHead from './TableHead.vue'
 import TableRow from './TableRow.vue'

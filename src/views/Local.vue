@@ -41,8 +41,8 @@
           </teleport>
         </table-search>
 
-        <teleport to="#datatable-filters-right">
-          <table-filter property="isVip" v-slot="{ filter, statusChoices, currentVal, changeFn }">
+        <table-filter property="isVip" v-slot="{ filter, statusChoices, currentVal, changeFn }">
+          <teleport to="#datatable-filters-right">
             <div class="ml-6">
               <h3 class="block text-sm font-bold leading-5 text-gray-500">VIP Status</h3>
 
@@ -53,8 +53,8 @@
                       <label class="inline-flex items-center">
                         <input
                           type="radio"
-                          class="text-indigo-600 cursor-pointer bg-dark-600 border-dark-400 form-radio"
-                          name="radio"
+                          class="text-indigo-600 cursor-pointer bg-dark-600 border-dark-400 form-radio localradio"
+                          name="localradio"
                           :value="choice.value"
                           @change="changeFn($event)"
                           :checked="currentVal === choice.value"
@@ -66,8 +66,8 @@
                 </div>
               </div>
             </div>
-          </table-filter>
-        </teleport>
+          </teleport>
+        </table-filter>
 
         <table-head class="rounded-t-md">
           <th-item

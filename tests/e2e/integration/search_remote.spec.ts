@@ -11,7 +11,7 @@ describe('Test remote search', () => {
     server.shutdown()
   })
 
-  it('Search filter should work correctly with remote data', () => {
+  it('Search should work correctly with remote data', () => {
     cy.visit('/')
 
     cy.get('.datatable-name').first().should('contain', 'Jonathon McDermott')

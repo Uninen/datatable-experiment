@@ -18,9 +18,9 @@
             search,
           }"
         >
-          <teleport to="#datatable-filters">
+          <teleport to="#datatable-filters-left">
             <div class="mx-4 mb-4 sm:mx-0 sm:mb-6">
-              <label for="email" class="block text-sm font-bold leading-5 text-gray-600"
+              <label for="email" class="block text-sm font-bold leading-5 text-gray-500"
                 >Search</label
               >
               <div class="flex mt-1 rounded-md">
@@ -41,53 +41,29 @@
           </teleport>
         </table-search>
 
-        <teleport to="#datatable-filters">
-          <table-filter property="isVip" v-slot="{ filter }">
-            <div>
-              <h3>Filter: isVip</h3>
+        <teleport to="#datatable-filters-right">
+          <table-filter property="isVip" v-slot="{ filter, statusChoices, currentVal, changeFn }">
+            <div class="ml-6">
+              <h3 class="block text-sm font-bold leading-5 text-gray-500">VIP Status</h3>
 
-              <div class="text-gray-500">
-                <div class="block">
-                  <span class="text-gray-700">Radio Buttons</span>
-                  <div class="mt-2">
+              <div class="text-gray-400">
+                <div class="flex items-center justify-star">
+                  <div class="mr-4" v-for="(choice, index) in statusChoices" :key="index">
                     <div>
                       <label class="inline-flex items-center">
                         <input
                           type="radio"
-                          class="cursor-pointer form-radio"
+                          class="text-indigo-600 cursor-pointer bg-dark-600 border-dark-400 form-radio"
                           name="radio"
-                          value="1"
-                          checked
+                          :value="choice.value"
+                          @change="changeFn($event)"
+                          :checked="currentVal === choice.value"
                         />
-                        <span class="ml-2 cursor-pointer">Option 1</span>
-                      </label>
-                    </div>
-                    <div>
-                      <label class="inline-flex items-center cursor-pointer">
-                        <input
-                          type="radio"
-                          class="cursor-pointer form-radio"
-                          name="radio"
-                          value="2"
-                        />
-                        <span class="ml-2 cursor-pointer">Option 2</span>
-                      </label>
-                    </div>
-                    <div>
-                      <label class="inline-flex items-center cursor-pointer">
-                        <input
-                          type="radio"
-                          class="cursor-pointer form-radio"
-                          name="radio"
-                          value="3"
-                        />
-                        <span class="ml-2 cursor-pointer">Option 3</span>
+                        <span class="ml-2 cursor-pointer">{{ choice.label }}</span>
                       </label>
                     </div>
                   </div>
                 </div>
-
-                {{ filter }}
               </div>
             </div>
           </table-filter>

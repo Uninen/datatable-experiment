@@ -91,7 +91,7 @@ interface FilterListItem {
 interface FilterStateListItem {
   property: string
   type: 'boolean' | 'date'
-  isActive: Ref<boolean>
+  isActive: Ref<boolean | null>
 }
 
 export interface TableProps {

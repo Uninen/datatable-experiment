@@ -70,7 +70,7 @@ export default defineComponent({
         for (const item of props.config.filters) {
           state.filters.push({
             ...item,
-            isActive: ref(false),
+            isActive: ref(null),
           })
         }
 

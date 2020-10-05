@@ -2,7 +2,7 @@
   <div
     class="justify-center flex-1 overflow-y-scroll"
     :class="{
-      'bg-dark-700': $route.path === '/local/',
+      'bg-dark-700': $route.path === '/',
     }"
   >
     <div
@@ -12,8 +12,8 @@
         <div>
           <h1 class="text-2xl font-bold text-white">Datatable experiment</h1>
           <nav class="flex items-center h-8 space-x-2 text-sm sm:text-base">
-            <router-link to="/">Remote data</router-link> <span>|</span>
-            <router-link to="/local/">Local data</router-link>
+            <router-link to="/">Local data</router-link> <span>|</span>
+            <router-link to="/remote/">Remote data</router-link>
             <span class="hidden sm:block">|</span>
             <router-link to="/unstyled/" class="hidden sm:block">No markup</router-link>
           </nav>

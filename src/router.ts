@@ -17,13 +17,13 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'Remote',
-          component: Remote,
-        },
-        {
-          path: '/local/',
           name: 'Local',
           component: Local,
+        },
+        {
+          path: '/remote/',
+          name: 'Remote',
+          component: Remote,
         },
         {
           path: '/unstyled/',

@@ -2,7 +2,7 @@
   <div
     class="justify-center flex-1 overflow-y-scroll"
     :class="{
-      'bg-dark-700': $route.path === '/',
+      'bg-dark-700': $route.path === '/remote/',
     }"
   >
     <div

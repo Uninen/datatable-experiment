@@ -4,10 +4,10 @@
       v-if="localConfig.data.length > 0"
       :config="localConfig"
       id="dark-artists-table"
-      class="overflow-hidden border-b border-collapse border-gray-900 divide-y divide-gray-800 shadow-dark sm:rounded-lg"
+      class="overflow-hidden border-b border-collapse border-gray-200 divide-y divide-gray-200 shadow sm:rounded-lg"
     >
       <template #loader>
-        <div class="p-4 text-base bg-gray-800">Loading data...</div>
+        <div class="p-4 text-base bg-gray-200">Loading data...</div>
       </template>
 
       <template #default>
@@ -20,7 +20,7 @@
         >
           <teleport to="#datatable-filters-left">
             <div class="mx-4 mb-4 sm:mx-0 sm:mb-6">
-              <label for="email" class="block text-sm font-bold leading-5 text-gray-500"
+              <label for="email" class="block text-sm font-bold leading-5 text-gray-600"
                 >Search</label
               >
               <div class="flex mt-1 rounded-md">
@@ -32,7 +32,7 @@
                     id="search"
                     name="datatable-search"
                     :value="searchTerm"
-                    class="block w-full pl-10 text-gray-300 transition duration-150 ease-in-out rounded-md form-input sm:text-sm sm:leading-5 bg-dark-600 border-dark-400"
+                    class="block w-full pl-10 transition duration-150 ease-in-out rounded-md form-input sm:text-sm sm:leading-5"
                     @keyup="search"
                   />
                 </div>
@@ -44,16 +44,16 @@
         <table-filter property="isVip" v-slot="{ filter, statusChoices, currentVal, changeFn }">
           <teleport to="#datatable-filters-right">
             <div class="ml-6">
-              <h3 class="block text-sm font-bold leading-5 text-gray-500">VIP Status</h3>
+              <h3 class="block text-sm font-bold leading-5 text-gray-600">VIP Status</h3>
 
-              <div class="text-gray-400">
+              <div class="text-gray-600">
                 <div class="flex items-center justify-star">
                   <div class="mr-4" v-for="(choice, index) in statusChoices" :key="index">
                     <div>
                       <label class="inline-flex items-center">
                         <input
                           type="radio"
-                          class="text-indigo-600 cursor-pointer bg-dark-600 border-dark-400 form-radio localradio"
+                          class="text-indigo-600 cursor-pointer form-radio localradio"
                           name="localradio"
                           :value="choice.value"
                           @change="changeFn($event)"
@@ -71,26 +71,26 @@
 
         <table-head class="rounded-t-md">
           <th-item
-            class="items-center px-1 py-3 pl-4 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
+            class="items-center px-1 py-3 pl-4 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
             order-key="name"
             id="sortby-name"
           >
             <div class="flex items-center justify-between">
               <span>Name</span>
-              <th-ordering-icon class="text-gray-500" />
+              <th-ordering-icon class="text-gray-400" />
             </div>
           </th-item>
           <th-item
-            class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
+            class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
             :hidden-below="2"
             >Subscription</th-item
           >
           <th-item
-            class="items-center py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
+            class="items-center py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
             >VIP</th-item
           >
           <th-item
-            class="items-center py-3 pl-2 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
+            class="items-center py-3 pl-2 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
             order-key="created"
             id="sortby-created"
           >
@@ -100,13 +100,13 @@
             </div>
           </th-item>
           <th-item
-            class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-400 uppercase select-none bg-dark-400 sm:px-3 md:px-6"
+            class="items-center px-1 py-3 text-sm font-medium leading-4 tracking-wider text-left text-gray-700 uppercase bg-gray-200 select-none sm:px-3 md:px-6"
             >&nbsp;</th-item
           >
         </table-head>
 
         <table-row
-          class="items-center text-sm text-gray-400 divide-y divide-dark-400 md:text-base"
+          class="items-center text-sm text-gray-700 divide-y divide-gray-200 md:text-base"
           v-slot="{ item, breakpoint }"
         >
           <td-item class="py-1">
@@ -165,33 +165,33 @@
             currentPage,
           }"
           ><div
-            class="flex items-center justify-between px-4 py-3 border-t border-dark-400 bg-dark-700 sm:px-6"
+            class="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6"
           >
             <div class="flex justify-between flex-1 sm:hidden">
               <a
                 href="#"
-                class="relative inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out border rounded-md border-dark-500 hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-dark-900 active:text-gray-700"
+                class="relative inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700"
                 v-if="hasPreviousPage"
                 @click.prevent="changePageTo(previousPage)"
               >
                 Previous
               </a>
-              <div v-if="isFetchingData" class="inline-flex items-center text-sm text-gray-500">
+              <div v-if="isFetchingData" class="inline-flex items-center text-sm text-gray-700">
                 Loading...
               </div>
-              <div v-else class="inline-flex items-center text-sm text-gray-500">
+              <div v-else class="inline-flex items-center text-sm text-gray-700">
                 Page {{ pagination.currentPage }}/{{ pagination.totalPages }}
               </div>
               <a
                 href="#"
-                class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out border rounded-md border-dark-500 hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-dark-900 active:text-gray-700"
+                class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700"
                 v-if="hasNextPage"
                 @click.prevent="changePageTo(nextPage)"
               >
                 Next
               </a>
             </div>
-            <div class="hidden text-gray-300 sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
               <div>
                 <div v-if="pagination.totalItems > 0" class="text-sm leading-5">
                   Showing
@@ -208,7 +208,7 @@
                 <nav class="relative z-0 inline-flex shadow-sm">
                   <a
                     href="#"
-                    class="relative inline-flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out border border-dark-400 rounded-l-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-dark-900 active:text-gray-500"
+                    class="relative inline-flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-l-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
                     aria-label="Previous"
                     v-if="hasPreviousPage"
                     @click.prevent="changePageTo(previousPage)"
@@ -224,14 +224,12 @@
                   </a>
                   <a
                     href="#"
-                    class="relative inline-flex items-center px-4 py-2 -ml-px text-sm leading-5 transition duration-150 ease-in-out border border-dark-400 hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-800 active:bg-dark-900 active:text-gray-700"
+                    class="relative inline-flex items-center px-4 py-2 -ml-px text-sm leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 hover:text-gray-500 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700"
                     v-for="page in pageList"
                     :key="page"
                     :class="{
                       'font-medium': page !== pagination.currentPage,
-                      'text-gray-400': page !== pagination.currentPage,
                       'font-bold': page === pagination.currentPage,
-                      'text-gray-300': page === pagination.currentPage,
                     }"
                     @click.prevent="changePageTo(page)"
                   >
@@ -262,7 +260,7 @@
 
                   <a
                     href="#"
-                    class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out border border-dark-400 rounded-r-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-dark-900 active:text-gray-500"
+                    class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-r-md hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500"
                     aria-label="Next"
                     v-if="hasNextPage"
                     @click.prevent="changePageTo(nextPage)"

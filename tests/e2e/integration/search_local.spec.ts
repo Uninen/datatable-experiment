@@ -12,7 +12,7 @@ describe('Test local search', () => {
   })
 
   it('Search should work correctly with local data', () => {
-    cy.visit('/local/')
+    cy.visit('/')
 
     cy.get('.datatable-name').first().should('contain', 'Jonathon McDermott')
     cy.get('#search').type('eva')
@@ -21,14 +21,14 @@ describe('Test local search', () => {
   })
 
   it('Search with no results should say so with local data', () => {
-    cy.visit('/local/')
+    cy.visit('/')
 
     cy.get('#search').type('batmannn')
     cy.contains('div', 'No results found.')
   })
 
   it('Searching local data should return correct number of results', () => {
-    cy.visit('/local/')
+    cy.visit('/')
 
     cy.get('#search').type('ba')
     cy.contains('div', 'Showing 1 to 12 of 27 results')

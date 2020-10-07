@@ -12,7 +12,7 @@ describe('Test remote search', () => {
   })
 
   it('Search should work correctly with remote data', () => {
-    cy.visit('/')
+    cy.visit('/remote/')
 
     cy.get('.datatable-name').first().should('contain', 'Jonathon McDermott')
     cy.get('#search').type('eva')
@@ -21,14 +21,14 @@ describe('Test remote search', () => {
   })
 
   it('Search with no results should say so with remote data', () => {
-    cy.visit('/')
+    cy.visit('/remote/')
 
     cy.get('#search').type('batmannn')
     cy.contains('div', 'No results found.')
   })
 
   it('Searching remote data should return correct number of results', () => {
-    cy.visit('/')
+    cy.visit('/remote/')
 
     cy.get('#search').type('ba')
     cy.contains('div', 'Showing 1 to 12 of 27 results')

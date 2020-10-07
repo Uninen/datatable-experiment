@@ -21,14 +21,14 @@ describe('Test remote table', () => {
   })
 
   it('Show correct artist names', () => {
-    cy.visit('/')
+    cy.visit('/remote/')
 
     cy.get('.datatable-name').first().should('contain', 'Jonathon McDermott')
     cy.contains('div', 'Showing 1 to 12 of 500 results')
   })
 
   it('Sort the table by name', () => {
-    cy.visit('/')
+    cy.visit('/remote/')
 
     // Sort by name
     cy.get('#sortby-name').click()

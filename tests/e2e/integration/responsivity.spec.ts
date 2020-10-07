@@ -14,13 +14,13 @@ describe('Test responsivity', () => {
 
   it('Show columns marked w/ hidden-below on large screens', () => {
     cy.viewport('macbook-13')
-    cy.visit('/local/')
+    cy.visit('/')
     cy.get('th').eq(1).should('contain', 'Subscription')
   })
 
   it('Hide columns marked w/ hidden-below on small screens', () => {
     cy.viewport('iphone-6')
-    cy.visit('/local/')
+    cy.visit('/')
     cy.get('th').eq(1).should('contain', 'VIP')
   })
 })

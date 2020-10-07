@@ -12,7 +12,7 @@ describe('Test local filters', () => {
   })
 
   it('Boolean filter should work correctly with local data', () => {
-    cy.visit('/local/')
+    cy.visit('/')
 
     cy.get('.datatable-name').first().should('contain', 'Jonathon McDermott')
     cy.get('input.localradio').eq(1).click()

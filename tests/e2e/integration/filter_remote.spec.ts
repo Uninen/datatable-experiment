@@ -12,7 +12,7 @@ describe('Test remote filters', () => {
   })
 
   it('Boolean filter should work correctly with remote data', () => {
-    cy.visit('/')
+    cy.visit('/remote/')
 
     cy.get('.datatable-name').first().should('contain', 'Jonathon McDermott')
     cy.get('input.remoteradio').eq(1).click()

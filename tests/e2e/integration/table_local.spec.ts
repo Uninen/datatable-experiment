@@ -21,14 +21,14 @@ describe('Test local table', () => {
   })
 
   it('Show correct artist names', () => {
-    cy.visit('/local/')
+    cy.visit('/')
 
     cy.get('.datatable-name').first().should('contain', 'Jonathon McDermott')
     cy.contains('div', 'Showing 1 to 12 of 500 results')
   })
 
   it('Sort the table by name', () => {
-    cy.visit('/local/')
+    cy.visit('/')
 
     // Sort by name
     cy.get('#sortby-name').click()

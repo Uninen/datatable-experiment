@@ -19,7 +19,7 @@
     "miragejs": "^0.1.41",
     "tailwindcss": "^1.9.6",
     "vue": "^3.0.2",
-    "vue-router": "^4.0.0-rc.3"
+    "vue-router": "^4.0.0-rc.5"
   },
   "devDependencies": {
     "@types/cypress": "^1.1.3",

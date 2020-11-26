@@ -18,7 +18,7 @@
     "minisearch": "^3.0.2",
     "miragejs": "^0.1.41",
     "tailwindcss": "^1.9.6",
-    "vue": "^3.0.2",
+    "vue": "^3.0.3",
     "vue-router": "^4.0.0-rc.5"
   },
   "devDependencies": {
@@ -27,7 +27,7 @@
     "@types/lodash-es": "^4.17.3",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
-    "@vue/compiler-sfc": "^3.0.2",
+    "@vue/compiler-sfc": "^3.0.3",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^7.0.0",
     "concurrently": "^5.3.0",
